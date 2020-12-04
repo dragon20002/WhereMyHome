@@ -2,12 +2,14 @@
     <string name="app_name">Where MyHome</string>
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 
-    <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="item_fragment_label">집 목록</string>
+    <string name="item_details_fragment_label">상세정보</string>
+    <string name="add">추가</string>
+    <string name="cancel">취소</string>
+    <string name="done">완료</string>
 </resources>

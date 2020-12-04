@@ -12,17 +12,17 @@
         tools:layout="@layout/fragment_item_list">
 
         <action
-            android:id="@+id/action_ItemFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
+            android:id="@+id/action_ItemFragment_to_ItemDetailsFragment"
+            app:destination="@id/ItemDetailsFragment" />
     </fragment>
     <fragment
-        android:id="@+id/FirstFragment"
-        android:name="com.minuminu.haruu.wheremyhome.FirstFragment"
-        android:label="@string/first_fragment_label"
-        tools:layout="@layout/fragment_first">
+        android:id="@+id/ItemDetailsFragment"
+        android:name="com.minuminu.haruu.wheremyhome.ItemDetailsFragment"
+        android:label="@string/item_details_fragment_label"
+        tools:layout="@layout/item_details_fragment">
 
         <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
+            android:id="@+id/action_ItemDetailsFragment_to_SecondFragment"
             app:destination="@id/SecondFragment" />
     </fragment>
     <fragment
@@ -30,9 +30,5 @@
         android:name="com.minuminu.haruu.wheremyhome.SecondFragment"
         android:label="@string/second_fragment_label"
         tools:layout="@layout/fragment_second">
-
-        <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
     </fragment>
 </navigation>

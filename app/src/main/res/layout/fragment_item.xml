@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/text_margin"
                 android:maxLines="2"
-                android:text="대전광역시 중구 산성동 303-64"
+                android:text="***** ***** ***** *****-*****"
                 android:textAppearance="?attr/textAppearanceListItem" />
         </LinearLayout>
 
