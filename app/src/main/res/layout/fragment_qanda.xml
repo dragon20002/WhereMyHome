@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/qanda_group"
+        android:layout_width="36dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_small"
+        android:layout_gravity="center_vertical"
+        android:text="내부"
+        android:textAlignment="center"
+        android:textAppearance="?attr/textAppearanceListItemSmall" />
+
+    <TextView
+        android:id="@+id/qanda_num"
+        android:layout_width="20dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_small"
+        android:layout_gravity="center_vertical"
+        android:text="12"
+        android:textAlignment="center"
+        android:textAppearance="?attr/textAppearanceListItemSmall" />
+
+    <TextView
+        android:id="@+id/qanda_question"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_small"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:text="천장/벽/장판 곰팡이 갯수"
+        android:textAppearance="?attr/textAppearanceListItemSmall" />
+
+    <LinearLayout
+        android:id="@+id/qanda_answer"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_small"
+        android:layout_gravity="center_vertical"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:background="@color/primary" />
+
+    <Button
+        android:layout_width="36dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_small"
+        android:layout_gravity="center_vertical"
+        android:text="..."
+        android:textStyle="bold"
+        android:textSize="12sp"
+        style="@style/Widget.MaterialComponents.Button.TextButton" />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_small"
+        android:layout_marginBottom="@dimen/margin_small"
+        android:text="\n"
+        android:textAppearance="?attr/textAppearanceListItemSmall" />
+
+</LinearLayout>

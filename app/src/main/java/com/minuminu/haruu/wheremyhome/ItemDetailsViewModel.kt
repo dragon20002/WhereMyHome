@@ -1,20 +1,21 @@
 package com.minuminu.haruu.wheremyhome
 
-import android.util.Log
+import android.os.Handler
+import android.os.Looper
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.minuminu.haruu.wheremyhome.dummy.DummyContent
 
-class ItemDetailsViewModel : ViewModel {
-    val itemLiveData = MutableLiveData<DummyContent.DummyItem>()
+class ItemDetailsViewModel : ViewModel() {
+    val itemLiveData = MutableLiveData<DummyContent.HomeInfo>()
+    val picDirLiveData = MutableLiveData<String>()
 
-    constructor() : super() {
-        // trigger item laod
-        Log.d(javaClass.name, "TODO : load data")
-    }
-
-    fun popupGoogleMap() {
-        // depending on the action, do necessary business logic calls and update the itemLiveData.
-        Log.d(javaClass.name, "TODO : popup google map")
+    fun setItemId(itemId: String) {
+        Handler(Looper.getMainLooper()).postDelayed({
+            DummyContent.ITEM_MAP[itemId]?.let { homeInfo ->
+                itemLiveData.postValue(homeInfo)
+                picDirLiveData.postValue(homeInfo.picDir)
+            }
+        }, 1000)
     }
 }
