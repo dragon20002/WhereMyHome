@@ -1,17 +1,20 @@
 package com.minuminu.haruu.wheremyhome
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.findNavController
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
+import com.minuminu.haruu.wheremyhome.db.AppDatabase
 import com.minuminu.haruu.wheremyhome.dummy.DummyContent
 
 /**
@@ -19,7 +22,22 @@ import com.minuminu.haruu.wheremyhome.dummy.DummyContent
  */
 class ItemFragment : Fragment() {
 
+    companion object {
+
+        const val ARG_COLUMN_COUNT = "column-count"
+
+        @JvmStatic
+        fun newInstance(columnCount: Int) =
+            ItemFragment().apply {
+                arguments = Bundle().apply {
+                    putInt(ARG_COLUMN_COUNT, columnCount)
+                }
+            }
+    }
+
     private var columnCount = 1
+    private lateinit var list: RecyclerView
+    private lateinit var adapter: MyItemRecyclerViewAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,40 +52,41 @@ class ItemFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_item_list, container, false)
 
-        val list = view.findViewById<RecyclerView>(R.id.list)
+        list = view.findViewById(R.id.list)
         val fab = view.findViewById<FloatingActionButton>(R.id.fab)
 
         // Set the adapter
-       with(list) {
-            layoutManager = when {
-                columnCount <= 1 -> LinearLayoutManager(context)
-                else -> GridLayoutManager(context, columnCount)
-            }
-            adapter = MyItemRecyclerViewAdapter(DummyContent.ITEMS)
+        list.layoutManager = when {
+            columnCount <= 1 -> LinearLayoutManager(context)
+            else -> GridLayoutManager(context, columnCount)
         }
+        Thread {
+            val homeInfos = AppDatabase.getDatabase(requireContext()).homeInfoDao().getAll()
+            adapter = MyItemRecyclerViewAdapter(
+                this@ItemFragment,
+                ArrayList(homeInfos)
+            )
+            list.adapter = adapter
+        }.start()
 
         fab.setOnClickListener {
-            // TODO : Add new row
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-
-            // Open a [Add] view
             findNavController().navigate(R.id.action_ItemFragment_to_ItemDetailsFragment)
         }
 
-        return view
-    }
+        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<DummyContent.HomeInfo>(
+            "item"
+        )?.observe(viewLifecycleOwner, {
+            Log.d(javaClass.name, "homeInfo - observe $it")
 
-    companion object {
-
-        const val ARG_COLUMN_COUNT = "column-count"
-
-        @JvmStatic
-        fun newInstance(columnCount: Int) =
-            ItemFragment().apply {
-                arguments = Bundle().apply {
-                    putInt(ARG_COLUMN_COUNT, columnCount)
+            Thread {
+                val homeInfos = AppDatabase.getDatabase(requireContext()).homeInfoDao().getAll()
+                adapter.values = ArrayList(homeInfos)
+                Handler(Looper.getMainLooper()).post {
+                    adapter.notifyDataSetChanged()
                 }
-            }
+            }.start()
+        })
+
+        return view
     }
 }

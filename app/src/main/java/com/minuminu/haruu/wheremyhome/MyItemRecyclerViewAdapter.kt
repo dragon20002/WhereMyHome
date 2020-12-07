@@ -6,15 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
-import androidx.navigation.findNavController
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.minuminu.haruu.wheremyhome.dummy.DummyContent
 import com.minuminu.haruu.wheremyhome.dummy.DummyContent.HomeInfo
 
 /**
  * [RecyclerView.Adapter] that can display a [HomeInfo].
  */
 class MyItemRecyclerViewAdapter(
-    private val values: List<HomeInfo>
+    val fragment: Fragment,
+    var values: ArrayList<DummyContent.HomeInfoWithQandas>
 ) : RecyclerView.Adapter<MyItemRecyclerViewAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -24,14 +27,14 @@ class MyItemRecyclerViewAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = values[position]
-        holder.idView.text = item.id
+        val item = values[position].homeInfo
+        holder.idView.text = (position + 1).toString()
         holder.nameView.text = item.name
         holder.descView.text = "${item.deposit} / ${item.rental} / ${item.expense} / ${item.score}"
         holder.btnEdit.setOnClickListener {
-            holder.itemView.findNavController()
+            fragment.findNavController()
                 .navigate(R.id.action_ItemFragment_to_ItemDetailsFragment, Bundle().apply {
-                    putString("itemId", item.id)
+                    putString("itemId", item.id?.toString())
                 })
         }
     }

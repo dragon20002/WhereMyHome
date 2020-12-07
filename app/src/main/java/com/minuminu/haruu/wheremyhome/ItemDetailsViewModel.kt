@@ -1,21 +1,28 @@
 package com.minuminu.haruu.wheremyhome
 
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.minuminu.haruu.wheremyhome.db.AppDatabase
 import com.minuminu.haruu.wheremyhome.dummy.DummyContent
 
 class ItemDetailsViewModel : ViewModel() {
-    val itemLiveData = MutableLiveData<DummyContent.HomeInfo>()
+    lateinit var db: AppDatabase
+
+    var isSaved = false
+    val itemLiveData = MutableLiveData<DummyContent.HomeInfoWithQandas>()
     val picDirLiveData = MutableLiveData<String>()
 
+    fun setDatabase(db: AppDatabase) {
+        this.db = db
+    }
+
     fun setItemId(itemId: String) {
-        Handler(Looper.getMainLooper()).postDelayed({
-            DummyContent.ITEM_MAP[itemId]?.let { homeInfo ->
+        Thread {
+            db.homeInfoDao().loadAllByIds(arrayOf(itemId)).takeIf {
+                it.isNotEmpty()
+            }?.get(0)?.let { homeInfo ->
                 itemLiveData.postValue(homeInfo)
-                picDirLiveData.postValue(homeInfo.picDir)
             }
-        }, 1000)
+        }.start()
     }
 }
