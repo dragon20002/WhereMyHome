@@ -27,44 +27,9 @@
                     android:id="@+id/btn_camera"
                     android:layout_width="50dp"
                     android:layout_height="100dp"
-                    android:layout_margin="@dimen/margin_mid"
+                    android:layout_margin="@dimen/margin_small"
                     android:src="@android:drawable/ic_menu_camera"
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
-
-                <ImageView
-                    android:layout_width="80dp"
-                    android:layout_height="100dp"
-                    android:layout_margin="@dimen/margin_mid"
-                    android:scaleType="fitCenter"
-                    android:background="@color/primary" />
-
-                <ImageView
-                    android:layout_width="80dp"
-                    android:layout_height="100dp"
-                    android:layout_margin="@dimen/margin_mid"
-                    android:scaleType="fitCenter"
-                    android:background="@color/primary" />
-
-                <ImageView
-                    android:layout_width="80dp"
-                    android:layout_height="100dp"
-                    android:layout_margin="@dimen/margin_mid"
-                    android:scaleType="fitCenter"
-                    android:background="@color/primary" />
-
-                <ImageView
-                    android:layout_width="80dp"
-                    android:layout_height="100dp"
-                    android:layout_margin="@dimen/margin_mid"
-                    android:scaleType="fitCenter"
-                    android:background="@color/primary" />
-
-                <ImageView
-                    android:layout_width="80dp"
-                    android:layout_height="100dp"
-                    android:layout_margin="@dimen/margin_mid"
-                    android:scaleType="fitCenter"
-                    android:background="@color/primary" />
             </LinearLayout>
         </HorizontalScrollView>
 

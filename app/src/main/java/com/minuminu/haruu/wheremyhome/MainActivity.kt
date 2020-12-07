@@ -8,7 +8,6 @@ import androidx.navigation.fragment.NavHostFragment
 import com.minuminu.haruu.wheremyhome.db.AppDatabase
 
 class MainActivity : AppCompatActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)

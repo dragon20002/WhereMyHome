@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <external-files-path name="pictures" path="Android/data/com.minuminu.haruu.wheremyhome/files/Pictures" />
+
+    <!-- Failed to find configured root that contains 이슈 처리 -->
+    <root-path name="root" path="." />
+</paths>

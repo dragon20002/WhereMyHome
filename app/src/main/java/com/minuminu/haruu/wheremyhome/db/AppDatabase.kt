@@ -5,10 +5,14 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.minuminu.haruu.wheremyhome.dao.HomeInfoDao
+import com.minuminu.haruu.wheremyhome.dao.PictureDao
 import com.minuminu.haruu.wheremyhome.dao.QandaDao
 import com.minuminu.haruu.wheremyhome.dummy.DummyContent
 
-@Database(entities = arrayOf(DummyContent.HomeInfo::class, DummyContent.Qanda::class), version = 1)
+@Database(
+    entities = [DummyContent.HomeInfo::class, DummyContent.Qanda::class, DummyContent.Picture::class],
+    version = 1
+)
 abstract class AppDatabase : RoomDatabase() {
     companion object {
         private lateinit var context: Context
@@ -24,4 +28,5 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun homeInfoDao(): HomeInfoDao
     abstract fun qandaDao(): QandaDao
+    abstract fun pictureDao(): PictureDao
 }

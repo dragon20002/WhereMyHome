@@ -32,7 +32,8 @@ object DummyContent {
             HomeInfo(
                 null, "Item $position", "서울시 $position",
             ),
-            createQandaTemplate()
+            createQandaTemplate(),
+            ArrayList<Picture>(),
         )
     }
 
@@ -136,12 +137,21 @@ object DummyContent {
         var answer: String = "", // 답변
         var remark: String = "", // 비고
         @ColumnInfo(name = "home_info_id")
-        var homeInfoId: Long = 0L, // join
+        var homeInfoId: Long? = null, // join
     ) {
         override fun toString(): String {
             return "Qanda(id=$id, group='$group', num=$num, question='$question', type='$type', answer='$answer', remark='$remark', homeInfoId=$homeInfoId)"
         }
     }
+
+    @Entity
+    data class Picture(
+        @PrimaryKey(autoGenerate = true)
+        val id: Long?,
+        val name: String = "", // 파일명
+        @ColumnInfo(name = "home_info_id")
+        var homeInfoId: Long? = null, // join
+    )
 
     data class HomeInfoWithQandas(
         @Embedded
@@ -150,6 +160,11 @@ object DummyContent {
             parentColumn = "id",
             entityColumn = "home_info_id",
         )
-        val qandas: List<Qanda>
+        val qandas: List<Qanda>,
+        @Relation(
+            parentColumn = "id",
+            entityColumn = "home_info_id",
+        )
+        val pictures: List<Picture>,
     )
 }
