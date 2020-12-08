@@ -72,8 +72,8 @@ class ItemDetailsFragment : Fragment(), MainActivity.OnBackPressed, RemarkDialog
             val today = Calendar.getInstance()
             DatePickerDialog(
                 requireContext(), (DatePickerDialog.OnDateSetListener { _, y, m, d ->
-                    val date = Calendar.getInstance().apply { set(y, m + 1, d) }.let {
-                        "${it[Calendar.YEAR]}년 ${it[Calendar.MONTH]}월 ${it[Calendar.DAY_OF_MONTH]}일"
+                    val date = Calendar.getInstance().apply { set(y, m, d) }.let {
+                        "${it[Calendar.YEAR]}년 ${it[Calendar.MONTH] + 1}월 ${it[Calendar.DAY_OF_MONTH]}일"
                     }
                     etStartDate.setText(date)
                 }),
@@ -86,8 +86,8 @@ class ItemDetailsFragment : Fragment(), MainActivity.OnBackPressed, RemarkDialog
             val today = Calendar.getInstance()
             DatePickerDialog(
                 requireContext(), (DatePickerDialog.OnDateSetListener { _, y, m, d ->
-                    val date = Calendar.getInstance().apply { set(y, m + 1, d) }.let {
-                        "${it[Calendar.YEAR]}년 ${it[Calendar.MONTH]}월 ${it[Calendar.DAY_OF_MONTH]}일"
+                    val date = Calendar.getInstance().apply { set(y, m, d) }.let {
+                        "${it[Calendar.YEAR]}년 ${it[Calendar.MONTH] + 1}월 ${it[Calendar.DAY_OF_MONTH]}일"
                     }
                     etEndDate.setText(date)
                 }),

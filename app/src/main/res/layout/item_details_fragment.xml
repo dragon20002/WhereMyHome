@@ -183,13 +183,13 @@
                     android:id="@+id/et_start_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:ems="10"
+                    android:ems="20"
                     android:hint="계약가능일(시작)"
                     android:inputType="none"
                     android:clickable="true"
                     android:cursorVisible="false"
                     android:focusable="false"
-                    android:maxLength="10" />
+                    android:maxLength="20" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -210,13 +210,13 @@
                     android:id="@+id/et_end_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:ems="10"
+                    android:ems="20"
                     android:hint="계약가능일(종료)"
                     android:inputType="none"
                     android:clickable="true"
                     android:cursorVisible="false"
                     android:focusable="false"
-                    android:maxLength="10" />
+                    android:maxLength="20" />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
