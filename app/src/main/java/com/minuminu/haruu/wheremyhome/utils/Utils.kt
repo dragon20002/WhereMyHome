@@ -49,7 +49,7 @@ object Utils {
     }
 
     fun resizeBitmap(bitmap: Bitmap, toWidth: Float, toHeight: Float): Bitmap {
-        val scaleFactor = Math.max(bitmap.width / toWidth, bitmap.height / toHeight)
+        val scaleFactor = Math.min(bitmap.width / toWidth, bitmap.height / toHeight)
         return Bitmap.createScaledBitmap(
             bitmap,
             (bitmap.width / scaleFactor).toInt(),

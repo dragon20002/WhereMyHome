@@ -66,7 +66,9 @@ class ItemFragment : Fragment() {
                 this@ItemFragment,
                 ArrayList(homeInfos)
             )
-            list.adapter = adapter
+            Handler(Looper.getMainLooper()).post {
+                list.adapter = adapter
+            }
         }.start()
 
         fab.setOnClickListener {

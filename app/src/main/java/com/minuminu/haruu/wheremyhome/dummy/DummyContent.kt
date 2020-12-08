@@ -9,28 +9,10 @@ import java.util.*
  * Helper class for providing sample content
  */
 object DummyContent {
-
-    val ITEMS: MutableList<HomeInfoWithQandas> = ArrayList()
-    val ITEM_MAP: MutableMap<String, HomeInfoWithQandas> =
-        HashMap() //A map of sample (dummy) items, by ID.
-    private val COUNT = 25
-
-    init {
-        // Add some sample items.
-        for (i in 1..COUNT) {
-            addItem(createDummyItem(i))
-        }
-    }
-
-    private fun addItem(item: HomeInfoWithQandas) {
-        ITEMS.add(item)
-        ITEM_MAP[item.homeInfo.id.toString()] = item
-    }
-
-    private fun createDummyItem(position: Int): HomeInfoWithQandas {
+    public fun createDummyItem(): HomeInfoWithQandas {
         return HomeInfoWithQandas(
             HomeInfo(
-                null, "Item $position", "서울시 $position",
+                null, "", "",
             ),
             createQandaTemplate(),
             ArrayList<Picture>(),

@@ -22,13 +22,21 @@
         tools:layout="@layout/item_details_fragment">
 
         <action
-            android:id="@+id/action_ItemDetailsFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
+            android:id="@+id/action_ItemDetailsFragment_to_PictureFullScreenFragment"
+            app:destination="@id/PictureFullScreenFragment" />
+        <action
+            android:id="@+id/action_ItemDetailsFragment_to_MapsFragment"
+            app:destination="@id/MapsFragment" />
     </fragment>
     <fragment
-        android:id="@+id/SecondFragment"
-        android:name="com.minuminu.haruu.wheremyhome.SecondFragment"
-        android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_second">
+        android:id="@+id/PictureFullScreenFragment"
+        android:name="com.minuminu.haruu.wheremyhome.PictureFullscreenFragment"
+        android:label="전체화면"
+        tools:layout="@layout/fragment_picture_fullscreen">
     </fragment>
+    <fragment
+        android:id="@+id/MapsFragment"
+        android:name="com.minuminu.haruu.wheremyhome.MapsFragment"
+        android:label="지도"
+        tools:layout="@layout/fragment_maps" />
 </navigation>

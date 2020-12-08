@@ -1,6 +1,7 @@
 package com.minuminu.haruu.wheremyhome
 
 import android.app.Activity.RESULT_OK
+import android.app.DatePickerDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -16,7 +17,7 @@ import android.widget.*
 import androidx.core.content.FileProvider
 import androidx.core.view.get
 import androidx.core.view.iterator
-import androidx.core.view.setPadding
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -26,8 +27,10 @@ import com.minuminu.haruu.wheremyhome.dummy.DummyContent
 import com.minuminu.haruu.wheremyhome.utils.Utils
 import java.io.File
 import java.io.IOException
+import java.util.*
+import kotlin.collections.ArrayList
 
-class ItemDetailsFragment : Fragment(), MainActivity.OnBackPressed {
+class ItemDetailsFragment : Fragment(), MainActivity.OnBackPressed, RemarkDialogFragment.RemarkDialogListener {
 
     companion object {
         private const val REQUEST_TAKE_PHOTO = 1
@@ -37,25 +40,86 @@ class ItemDetailsFragment : Fragment(), MainActivity.OnBackPressed {
 
     private lateinit var viewModel: ItemDetailsViewModel
 
+    private lateinit var etName: TextInputEditText
+    private lateinit var etAddress: TextInputEditText
+    private lateinit var etDeposit: TextInputEditText
+    private lateinit var etRental: TextInputEditText
+    private lateinit var etExpense: TextInputEditText
+    private lateinit var etStartDate: TextInputEditText
+    private lateinit var etEndDate: TextInputEditText
+    private lateinit var btnCamera: ImageButton
+    private lateinit var btnLocation: ImageButton
+    private lateinit var listQanda: LinearLayout
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.item_details_fragment, container, false)
 
-        view.findViewById<ImageButton>(R.id.btn_camera).setOnClickListener {
-            dispatchTakePictureIntent()
+        etName = view.findViewById(R.id.et_name)
+        etAddress = view.findViewById(R.id.et_address)
+        etDeposit = view.findViewById(R.id.et_deposit)
+        etRental = view.findViewById(R.id.et_rental)
+        etExpense = view.findViewById(R.id.et_expense)
+        etStartDate = view.findViewById(R.id.et_start_date)
+        etEndDate = view.findViewById(R.id.et_end_date)
+        btnCamera = view.findViewById(R.id.btn_camera)
+        btnLocation = view.findViewById(R.id.btn_location)
+        listQanda = view.findViewById(R.id.qanda_list)
+
+        etStartDate.setOnClickListener {
+            val today = Calendar.getInstance()
+            DatePickerDialog(
+                requireContext(), (DatePickerDialog.OnDateSetListener { _, y, m, d ->
+                    val date = Calendar.getInstance().apply { set(y, m + 1, d) }.let {
+                        "${it[Calendar.YEAR]}년 ${it[Calendar.MONTH]}월 ${it[Calendar.DAY_OF_MONTH]}일"
+                    }
+                    etStartDate.setText(date)
+                }),
+                today[Calendar.YEAR],
+                today[Calendar.MONTH],
+                today[Calendar.DAY_OF_MONTH]
+            ).show()
+        }
+        etEndDate.setOnClickListener {
+            val today = Calendar.getInstance()
+            DatePickerDialog(
+                requireContext(), (DatePickerDialog.OnDateSetListener { _, y, m, d ->
+                    val date = Calendar.getInstance().apply { set(y, m + 1, d) }.let {
+                        "${it[Calendar.YEAR]}년 ${it[Calendar.MONTH]}월 ${it[Calendar.DAY_OF_MONTH]}일"
+                    }
+                    etEndDate.setText(date)
+                }),
+                today[Calendar.YEAR],
+                today[Calendar.MONTH],
+                today[Calendar.DAY_OF_MONTH]
+            ).show()
+        }
+        btnCamera.setOnClickListener { dispatchTakePictureIntent() }
+        btnLocation.setOnClickListener {
+            // 지도
+            findNavController().navigate(
+                R.id.action_ItemDetailsFragment_to_MapsFragment,
+                Bundle().apply {
+                    putString("address", viewModel.itemLiveData.value?.homeInfo?.address)
+                })
         }
 
-        view.findViewById<ImageButton>(R.id.btn_location).setOnClickListener {
-            // TODO : popup google map
-            Log.d(javaClass.name, "TODO : popup google map")
-        }
+        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>(
+            "address"
+        )?.observe(viewLifecycleOwner, { address ->
+            Log.d(javaClass.name, "address - observe $address")
+
+            viewModel.itemLiveData.value?.let { value ->
+                value.homeInfo.address = address
+                viewModel.itemLiveData.postValue(value)
+            }
+        })
 
         // Q&A Form template
-        val listContainer = view.findViewById<LinearLayout>(R.id.qanda_list)
         DummyContent.createQandaTemplate().forEach {
-            val qandaLayout = inflater.inflate(R.layout.fragment_qanda, listContainer, false)
+            val qandaLayout = inflater.inflate(R.layout.fragment_qanda, listQanda, false)
             with(qandaLayout) {
                 findViewById<TextView>(R.id.qanda_group)?.text = it.group
                 findViewById<TextView>(R.id.qanda_num)?.text = it.num.toString()
@@ -73,7 +137,7 @@ class ItemDetailsFragment : Fragment(), MainActivity.OnBackPressed {
                     } //"Boolean"
                 })
             }
-            listContainer.addView(qandaLayout)
+            listQanda.addView(qandaLayout)
         }
 
         return view
@@ -83,39 +147,20 @@ class ItemDetailsFragment : Fragment(), MainActivity.OnBackPressed {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(ItemDetailsViewModel::class.java).apply {
             setDatabase(AppDatabase.getDatabase(requireContext()))
+            itemLiveData.removeObservers(viewLifecycleOwner)
+            picturesLiveData.removeObservers(viewLifecycleOwner)
         }
 
         viewModel.itemLiveData.observe(viewLifecycleOwner, {
             Log.d(javaClass.name, it.toString())
 
-            view?.findViewById<TextInputEditText>(R.id.et_name)?.text?.apply {
-                clear()
-                insert(0, it.homeInfo.name)
-            }
-            view?.findViewById<TextInputEditText>(R.id.et_address)?.text?.apply {
-                clear()
-                insert(0, it.homeInfo.address)
-            }
-            view?.findViewById<TextInputEditText>(R.id.et_deposit)?.text?.apply {
-                clear()
-                insert(0, it.homeInfo.deposit.toString())
-            }
-            view?.findViewById<TextInputEditText>(R.id.et_rental)?.text?.apply {
-                clear()
-                insert(0, it.homeInfo.rental.toString())
-            }
-            view?.findViewById<TextInputEditText>(R.id.et_expense)?.text?.apply {
-                clear()
-                insert(0, it.homeInfo.expense.toString())
-            }
-            view?.findViewById<TextInputEditText>(R.id.et_start_date)?.text?.apply {
-                clear()
-                insert(0, it.homeInfo.startDate)
-            }
-            view?.findViewById<TextInputEditText>(R.id.et_end_date)?.text?.apply {
-                clear()
-                insert(0, it.homeInfo.endDate)
-            }
+            etName.setText(it.homeInfo.name)
+            etAddress.setText(it.homeInfo.address)
+            etDeposit.setText(it.homeInfo.deposit.toString())
+            etRental.setText(it.homeInfo.rental.toString())
+            etExpense.setText(it.homeInfo.expense.toString())
+            etStartDate.setText(it.homeInfo.startDate)
+            etEndDate.setText(it.homeInfo.endDate)
 
             val qandaLayoutIterator = view?.findViewById<LinearLayout>(R.id.qanda_list)?.iterator()
             qandaLayoutIterator?.run {
@@ -136,7 +181,7 @@ class ItemDetailsFragment : Fragment(), MainActivity.OnBackPressed {
                                     "Int" -> (this as EditText?)?.apply {
                                         setEms(4)
                                         maxEms = 4
-                                        text.insert(0, qanda.answer)
+                                        setText(qanda.answer)
                                         inputType =
                                             InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_SIGNED
                                         textAlignment = View.TEXT_ALIGNMENT_CENTER
@@ -145,6 +190,18 @@ class ItemDetailsFragment : Fragment(), MainActivity.OnBackPressed {
                                         isChecked = qanda.answer.toBoolean()
                                     } //"Boolean"
                                 }
+                            }
+                        }
+                        findViewById<Button>(R.id.qanda_remark)?.apply {
+                            tag = qanda.remark
+                            setOnClickListener {
+                                RemarkDialogFragment().also { dialog ->
+                                    dialog.caller = this
+                                    dialog.listener = this@ItemDetailsFragment
+                                }.show(
+                                    requireActivity().supportFragmentManager,
+                                    "RemarkDialogFragment"
+                                )
                             }
                         }
                     }
@@ -174,18 +231,36 @@ class ItemDetailsFragment : Fragment(), MainActivity.OnBackPressed {
                             resources.getDimensionPixelSize(R.dimen.margin_small),
                         )
                         scaleType = ImageView.ScaleType.FIT_CENTER
-                        val imageFile = Utils.loadImageFile(requireContext(), picture.name).let { bitmap ->
-                            Utils.resizeBitmap(bitmap, widthPx, heightPx)
-                        }
+                        val imageFile =
+                            Utils.loadImageFile(requireContext(), picture.name).let { bitmap ->
+                                Utils.resizeBitmap(bitmap, widthPx, heightPx)
+                            }
                         setImageBitmap(imageFile)
+                        setOnClickListener {
+                            // 전체화면
+                            findNavController().navigate(
+                                R.id.action_ItemDetailsFragment_to_PictureFullScreenFragment,
+                                Bundle().apply {
+                                    putString("pictureName", picture.name)
+                                })
+                        }
+
                         addView(this)
                     }
                 }
             }
         })
 
-        arguments?.run {
-            getString("itemId")?.let {
+        if (arguments == null) {
+            Log.d(javaClass.name, "add mode")
+
+            viewModel.itemLiveData.postValue(DummyContent.createDummyItem())
+            viewModel.picturesLiveData.postValue(ArrayList())
+        } else {
+            Log.d(javaClass.name, "modify mode")
+
+            arguments?.getString("itemId")?.let {
+                Log.d(javaClass.name, "itemId $it")
                 viewModel.setItemId(it)
             }
         }
@@ -204,9 +279,8 @@ class ItemDetailsFragment : Fragment(), MainActivity.OnBackPressed {
 
         val qandas =
             (viewModel.itemLiveData.value?.qandas ?: DummyContent.createQandaTemplate()).apply {
-                val qandaLayoutIterator =
-                    view?.findViewById<LinearLayout>(R.id.qanda_list)?.iterator()
-                qandaLayoutIterator?.run {
+                val qandaLayoutIterator = listQanda.iterator()
+                qandaLayoutIterator.run {
                     Log.d(javaClass.name, "save qanda size : ${this@apply.size}")
 
                     this@apply.forEach { qanda ->
@@ -231,6 +305,8 @@ class ItemDetailsFragment : Fragment(), MainActivity.OnBackPressed {
                                         }
                                     }
                                 }.orEmpty()
+                            qanda.remark =
+                                findViewById<Button>(R.id.qanda_remark)?.tag as String
                         }
                     }
                 }
@@ -253,17 +329,13 @@ class ItemDetailsFragment : Fragment(), MainActivity.OnBackPressed {
         val homeInfo = DummyContent.HomeInfoWithQandas(
             homeInfo = DummyContent.HomeInfo(
                 viewModel.itemLiveData.value?.homeInfo?.id,
-                view?.findViewById<TextInputEditText>(R.id.et_name)?.text?.toString().orEmpty(),
-                view?.findViewById<TextInputEditText>(R.id.et_address)?.text?.toString().orEmpty(),
-                view?.findViewById<TextInputEditText>(R.id.et_deposit)?.text?.toString()
-                    ?.toIntOrNull() ?: 0,
-                view?.findViewById<TextInputEditText>(R.id.et_rental)?.text?.toString()
-                    ?.toIntOrNull() ?: 0,
-                view?.findViewById<TextInputEditText>(R.id.et_expense)?.text?.toString()
-                    ?.toFloatOrNull() ?: 0f,
-                view?.findViewById<TextInputEditText>(R.id.et_start_date)?.text?.toString()
-                    .orEmpty(),
-                view?.findViewById<TextInputEditText>(R.id.et_end_date)?.text?.toString().orEmpty(),
+                etName.text.toString(),
+                etAddress.text.toString(),
+                etDeposit.text.toString().toIntOrNull() ?: 0,
+                etRental.text.toString().toIntOrNull() ?: 0,
+                etExpense.text.toString().toFloatOrNull() ?: 0f,
+                etStartDate.text.toString(),
+                etEndDate.text.toString(),
                 score,
             ),
             qandas = qandas,
@@ -329,6 +401,13 @@ class ItemDetailsFragment : Fragment(), MainActivity.OnBackPressed {
         return false
     }
 
+    override fun onDialogPositiveClick(dialog: DialogFragment, remark: String, caller: View?) {
+        (caller as Button?)?.tag = remark
+    }
+
+    override fun onDialogNegativeClick(dialog: DialogFragment) {
+    }
+
     private fun dispatchTakePictureIntent() {
         Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
             takePictureIntent.resolveActivity(requireContext().packageManager!!)?.also {
@@ -357,4 +436,5 @@ class ItemDetailsFragment : Fragment(), MainActivity.OnBackPressed {
             }
         }
     }
+
 }
