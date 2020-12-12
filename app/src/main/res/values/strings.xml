@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Where MyHome</string>
+    <string name="app_name">내집어디?</string>
     <string name="action_settings">Settings</string>
 
     <!-- Strings used for fragments for navigation -->

@@ -45,7 +45,7 @@ class PictureFullscreenFragment : Fragment() {
      * system UI. This is to prevent the jarring behavior of controls going away
      * while interacting with activity UI.
      */
-    private val delayHideTouchListener = View.OnTouchListener { v, e ->
+    private val delayHideTouchListener = View.OnTouchListener { v, _ ->
         v.performClick()
         if (AUTO_HIDE) {
             delayedHide(AUTO_HIDE_DELAY_MILLIS)

@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -75,19 +76,23 @@ class ItemFragment : Fragment() {
             findNavController().navigate(R.id.action_ItemFragment_to_ItemDetailsFragment)
         }
 
-        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<DummyContent.HomeInfo>(
-            "item"
-        )?.observe(viewLifecycleOwner, {
-            Log.d(javaClass.name, "homeInfo - observe $it")
+        findNavController().addOnDestinationChangedListener { _, dest, args ->
+            when (dest.id) {
+                R.id.ItemDetailsFragment -> {
+                    args?.get("item")?.let {
+                        Log.d(javaClass.name, "homeInfo - observe $")
+                    }
 
-            Thread {
-                val homeInfos = AppDatabase.getDatabase(requireContext()).homeInfoDao().getAll()
-                adapter.values = ArrayList(homeInfos)
-                Handler(Looper.getMainLooper()).post {
-                    adapter.notifyDataSetChanged()
+                    Thread {
+                        val homeInfos = AppDatabase.getDatabase(requireContext()).homeInfoDao().getAll()
+                        adapter.values = ArrayList(homeInfos)
+                        Handler(Looper.getMainLooper()).post {
+                            adapter.notifyDataSetChanged()
+                        }
+                    }.start()
                 }
-            }.start()
-        })
+            }
+        }
 
         return view
     }

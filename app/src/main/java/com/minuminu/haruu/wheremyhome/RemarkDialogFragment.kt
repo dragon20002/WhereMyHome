@@ -10,6 +10,7 @@ import com.google.android.material.textfield.TextInputEditText
 class RemarkDialogFragment: DialogFragment() {
     var caller: View? = null
     var listener: RemarkDialogListener? = null
+    var remark: String? = null
 
     lateinit var etRemark: TextInputEditText
 
@@ -28,8 +29,8 @@ class RemarkDialogFragment: DialogFragment() {
             // Pass null as the parent view because its going in the dialog layout
             val view = inflater.inflate(R.layout.dialog_remark, null)
             etRemark = view.findViewById(R.id.et_remark)
-            caller?.tag?.let { tag ->
-                etRemark.setText(tag as String)
+            remark?.let {
+                etRemark.setText(it)
             }
 
             builder.setView(view)

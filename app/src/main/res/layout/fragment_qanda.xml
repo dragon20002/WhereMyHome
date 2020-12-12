@@ -1,66 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <TextView
-        android:id="@+id/qanda_group"
-        android:layout_width="36dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_small"
-        android:layout_gravity="center_vertical"
-        android:text="내부"
-        android:textAlignment="center"
-        android:textAppearance="?attr/textAppearanceListItemSmall" />
+    <data>
 
-    <TextView
-        android:id="@+id/qanda_num"
-        android:layout_width="20dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_small"
-        android:layout_gravity="center_vertical"
-        android:text="12"
-        android:textAlignment="center"
-        android:textAppearance="?attr/textAppearanceListItemSmall" />
+        <import type="android.view.View" />
 
-    <TextView
-        android:id="@+id/qanda_question"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_small"
-        android:layout_gravity="center_vertical"
-        android:layout_weight="1"
-        android:text="천장/벽/장판 곰팡이 갯수"
-        android:textAppearance="?attr/textAppearanceListItemSmall" />
+        <variable
+            name="qanda"
+            type="com.minuminu.haruu.wheremyhome.dummy.DummyContent.QandaViewData" />
+    </data>
 
     <LinearLayout
-        android:id="@+id/qanda_answer"
-        android:layout_width="100dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_small"
-        android:layout_gravity="center_vertical"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:background="@color/primary" />
+        android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/qanda_remark"
-        android:layout_width="36dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_small"
-        android:layout_gravity="center_vertical"
-        android:text="..."
-        android:textStyle="bold"
-        android:textSize="12sp"
-        style="@style/Widget.MaterialComponents.Button.TextButton" />
+        <TextView
+            android:id="@+id/qanda_group"
+            android:layout_width="36dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="@dimen/margin_small"
+            android:text="@={qanda.group}"
+            android:textAlignment="center"
+            android:textAppearance="?attr/textAppearanceListItemSmall" />
 
-    <TextView
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_small"
-        android:layout_marginBottom="@dimen/margin_small"
-        android:text="\n"
-        android:textAppearance="?attr/textAppearanceListItemSmall" />
+        <TextView
+            android:id="@+id/qanda_num"
+            android:layout_width="24dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="@dimen/margin_small"
+            android:text="@={qanda.num}"
+            android:textAlignment="center"
+            android:textAppearance="?attr/textAppearanceListItemSmall" />
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/qanda_question"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="@dimen/margin_small"
+            android:layout_weight="1"
+            android:text="@={qanda.question}"
+            android:textAppearance="?attr/textAppearanceListItemSmall" />
+
+        <LinearLayout
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="@dimen/margin_small"
+            android:background="@color/primary"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <com.minuminu.haruu.wheremyhome.EditTextWithButton
+                android:id="@+id/et_answer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="4"
+                android:maxLength="4"
+                android:inputType="number|numberSigned"
+                android:maxEms="4"
+                android:text="@={qanda.strAnswer}"
+                android:textAlignment="center"
+                android:visibility='@{qanda.type.contentEquals("Int") ? View.VISIBLE : View.GONE}' />
+
+            <CheckBox
+                android:id="@+id/cbx_answer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="@={qanda.blnAnswer}"
+                android:text='@{qanda.blnAnswer == true ? "예" : "아니오"}'
+                android:textAlignment="center"
+                android:visibility='@{qanda.type.contentEquals("Boolean") ? View.VISIBLE : View.GONE}' />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_remark"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="36dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="@dimen/margin_small"
+            android:text="..."
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginBottom="@dimen/margin_small"
+            android:text="\n"
+            android:textAppearance="?attr/textAppearanceListItemSmall" />
+
+        <TextView
+            android:id="@+id/qanda_remark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:text="@={qanda.remark}"/>
+
+    </LinearLayout>
+</layout>
