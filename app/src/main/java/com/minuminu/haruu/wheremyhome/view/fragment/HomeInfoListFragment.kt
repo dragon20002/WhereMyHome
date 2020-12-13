@@ -37,14 +37,25 @@ class HomeInfoListFragment : Fragment() {
     }
 
     private var columnCount = 1
-    private lateinit var list: RecyclerView
-    private lateinit var adapter: HomeInfoItemRecyclerViewAdapter
+    private var list: RecyclerView? = null
+    private var adapter: HomeInfoItemRecyclerViewAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             columnCount = it.getInt(ARG_COLUMN_COUNT)
         }
+
+        Thread {
+            val homeInfos = AppDatabase.getDatabase(requireContext()).homeInfoDao().getAll()
+            adapter = HomeInfoItemRecyclerViewAdapter(
+                this@HomeInfoListFragment,
+                ArrayList(homeInfos)
+            )
+            Handler(Looper.getMainLooper()).post {
+                list?.adapter = adapter
+            }
+        }.start()
     }
 
     override fun onCreateView(
@@ -58,6 +69,7 @@ class HomeInfoListFragment : Fragment() {
                 columnCount <= 1 -> LinearLayoutManager(context)
                 else -> GridLayoutManager(context, columnCount)
             }
+            this@apply.adapter = adapter
         }
 
         view.findViewById<FloatingActionButton>(R.id.fab).setOnClickListener {
@@ -68,19 +80,18 @@ class HomeInfoListFragment : Fragment() {
             "homeInfo"
         )?.observe(viewLifecycleOwner, { homeInfo ->
             Log.d(javaClass.name, "homeInfo - navController $homeInfo")
-            // nothing to do...
-        })
 
-        Thread {
-            val homeInfos = AppDatabase.getDatabase(requireContext()).homeInfoDao().getAll()
-            adapter = HomeInfoItemRecyclerViewAdapter(
-                this@HomeInfoListFragment,
-                ArrayList(homeInfos)
-            )
-            Handler(Looper.getMainLooper()).post {
-                list.adapter = adapter
-            }
-        }.start()
+            Thread {
+                val homeInfos = AppDatabase.getDatabase(requireContext()).homeInfoDao().getAll()
+                adapter = HomeInfoItemRecyclerViewAdapter(
+                    this@HomeInfoListFragment,
+                    ArrayList(homeInfos)
+                )
+                Handler(Looper.getMainLooper()).post {
+                    list?.adapter = adapter
+                }
+            }.start()
+        })
 
         return view
     }

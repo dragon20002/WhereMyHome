@@ -45,13 +45,21 @@ class HomeInfoDetailsFragment : Fragment(), MainActivity.OnBackPressed {
     private var viewModel: HomeInfoDetailsViewModel? = null
     private var binding: FragmentHomeInfoDetailsBinding? = null
 
-    @SuppressLint("RestrictedApi")
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        viewModel = ViewModelProvider(this).get(HomeInfoDetailsViewModel::class.java).apply {
+            init(AppDatabase.getDatabase(requireContext()))
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater,
             R.layout.fragment_home_info_details, container, false)
+        binding?.viewModel = viewModel
         val view = binding?.root
 
         view?.findViewById<TextInputEditText>(R.id.et_start_date)?.setOnClickListener { v ->
@@ -92,18 +100,7 @@ class HomeInfoDetailsFragment : Fragment(), MainActivity.OnBackPressed {
                 })
         }
 
-        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>(
-            "address"
-        )?.observe(viewLifecycleOwner, { address ->
-            Log.d(javaClass.name, "address - navController $address")
-
-            viewModel?.address?.set(address)
-        })
-
-        viewModel = viewModel ?: ViewModelProvider(this).get(HomeInfoDetailsViewModel::class.java).apply {
-            init(AppDatabase.getDatabase(requireContext()))
-            itemLiveData.removeObservers(viewLifecycleOwner)
-
+        viewModel?.run {
             itemLiveData.observe(viewLifecycleOwner, {
                 // Log.d(javaClass.name, "homeInfoWithQandas - observe $it")
 
@@ -114,27 +111,35 @@ class HomeInfoDetailsFragment : Fragment(), MainActivity.OnBackPressed {
                 expense.set(it.homeInfo.expense.toString())
                 startDate.set(it.homeInfo.startDate)
                 endDate.set(it.homeInfo.endDate)
-                pictureList.addAll(it.pictures)
-
-                val qandas = ArrayList<QandaViewData>()
-                it.qandas.forEach { qanda ->
-                    qandas.add(
-                        QandaViewData(
-                            qanda.id,
-                            qanda.group,
-                            qanda.num.toString(),
-                            qanda.question,
-                            qanda.type,
-                            qanda.answer,
-                            qanda.remark
-                        )
-                    )
+                for (i in it.pictures.indices) {
+                    if (i < pictureList.size) {
+                        pictureList[i] = it.pictures[i]
+                    } else {
+                        pictureList.add(it.pictures[i])
+                    }
                 }
-                qandaList.addAll(qandas)
+
+                for (i in it.qandas.indices) {
+                    val qanda: QandaViewData = it.qandas[i].let { qanda ->
+                        QandaViewData(qanda.id, qanda.group, qanda.num.toString(),
+                            qanda.question, qanda.type, qanda.answer, qanda.remark)
+                    }
+                    if (i < qandaList.size) {
+                        qandaList[i] = qanda
+                    } else {
+                        qandaList.add(qanda)
+                    }
+                }
             })
         }
 
-        binding?.viewModel = viewModel
+        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>(
+            "address"
+        )?.observe(viewLifecycleOwner, { address ->
+            Log.d(javaClass.name, "address - navController $address")
+
+            viewModel?.address?.set(address)
+        })
 
         if (arguments == null) {
             Log.d(javaClass.name, "add mode")

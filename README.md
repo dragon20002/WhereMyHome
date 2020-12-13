@@ -173,6 +173,15 @@ class ItemFragment : Fragment() {
   private var viewModel: ItemViewModel? = null
   private var binding: ItemFragmentBinding? = null
 
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+
+    // viewModel 생성
+    viewModel = ViewModelProvider(this).get(HomeInfoDetailsViewModel::class.java).apply {
+      init(AppDatabase.getDatabase(requireContext()))
+    }
+  }
+
   override fun onCreateView(
     inflater: LayoutInflater, container: ViewGroup?,
     savedInstanceState: Bundle?
@@ -183,54 +192,49 @@ class ItemFragment : Fragment() {
      * LayoutInflater 대신 DataBindingUtil의 inflate()를 호출하여 view 생성
      */
     binding = DataBindingUtil.inflate(inflater, R.layout.item_fragment, container, false)
+    binding?.viewModel = viewModel
     val view = binding?.root
 
     // 이벤트 등록 등의 작업 수행
     ...view?.findViewById(...).setOnClickListener {...}...
 
-    /**
-     * viewModel 생성
-     *
-     * @code if (viewModel != null)
-     *
-     * @desc 기존 viewModel이 있으면 그대로 사용
-     *
-     * @remark NavController를 사용하여 Fragment 이동 후 '뒤로가기' 버튼을
-     *   동작시키면 onCreateView가 다시 호출되는 Android 이슈가 있음.
-     *   해당 이슈에 대응하기 위한 조치.
-     */
-    if (viewModel != null) {
-      viewModel = ViewModelProvider(this).get(ItemViewModel::class.java).apply {
-        init(AppDatabase.getDatabase(requireContext()))
-        itemLiveData.removeObservers(viewLifecycleOwner)
+    viewModel?.run {
+      // db -> liveData
+      itemLiveData.observe(viewLifecycleOwner, { it ->
+        // [dataBinding 사용] liveData -> observable -> view 적용
+        // - ObservableField의 경우 바인딩된 view에 바로 값 세팅
+        name.set(it.name)
+        address.set(it.address)
+        deposit.set(it.deposit.toString())
+        rental.set(it.rental.toString())
+        expense.set(it.expense.toString())
+        startDate.set(it.startDate)
+        endDate.set(it.endDate)
 
-        // db -> liveData
-        itemLiveData.observe(viewLifecycleOwner, { it ->
-          /**
-           * [dataBinding 사용] liveData -> observable -> view 적용
-           *
-           * - ObservableField의 경우 바인딩된 view에 바로 값 세팅
-           * - ObservableList의 경우 @BindingAdapter 함수에 직접
-           *   바인딩하는 코드를 작성해야함
-           */
-          name.set(it.name)
-          address.set(it.address)
-          deposit.set(it.deposit.toString())
-          rental.set(it.rental.toString())
-          expense.set(it.expense.toString())
-          startDate.set(it.startDate)
-          endDate.set(it.endDate)
-          pictureList.addAll(it.pictures)
-          qandaList.addAll(it.qandas)
+        // - ObservableList의 경우 @BindingAdapter 함수에 직접 바인딩하는 코드를 작성해야함
+        for (i in it.pictures.indices) {
+          if (i < pictureList.size) {
+            pictureList[i] = it.pictures[i]
+          } else {
+            pictureList.add(it.pictures[i])
+          }
+        }
+        for (i in it.qandas.indices) {
+          val qanda: QandaViewData = it.qandas[i].let { qanda ->
+            QandaViewData(qanda.id, qanda.group, qanda.num.toString(),
+              qanda.question, qanda.type, qanda.answer, qanda.remark)
+          }
+          if (i < qandaList.size) {
+            qandaList[i] = qanda
+          } else {
+            qandaList.add(qanda)
+          }
+        }
 
-          // [dataBinding 사용안하는 경우] 뷰에 직접 넣어줘야 한다
-          // ...findViewById(...)?.setText(it.name)...
-        })
-      }
+        // [dataBinding 사용안하는 경우] 뷰에 직접 넣어줘야 한다
+        // ...findViewById(...)?.setText(it.name)...
+      })
     }
-
-    // binding viewModel 세팅
-    binding?.viewModel = viewModel
 
     // 값 세팅
     if (arguments == null) { // [Add Mode]
@@ -262,6 +266,92 @@ class ItemFragment : Fragment() {
     viewModel?.pictureList?.add(...)
   }
 }
+```
+
+- `BindingAdapter`
+
+```kotlin
+object HomeInfoDetailsBindingAdapter {
+
+  // 사진 추가/삭제 시 호출되어 뷰의 데이터를 갱신한다
+  @BindingAdapter("pictures", "layout") // 이곳에 속성을 추가하면 xml에서 바인딩 가능해진다
+  @JvmStatic // @BindingAdapter 함수는 static 필수
+  fun setPictureList(viewGroup: ViewGroup, // 바인딩 대상 뷰
+      pictures: List<Picture>, // @BindingAdapter에 추가한 속성1
+      layout: Int) { // @BindingAdapter에 추가한 속성2
+    val pictureViewCnt = viewGroup.childCount - 1
+    if (pictureViewCnt >= pictures.size)
+      return
+
+    val inflater =
+      viewGroup.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+
+    for (i in pictures.indices) {
+      val picture = pictures[i]
+
+      // [이미 존재하는 사진] 기존 뷰에 데이터만 수정
+      if (i < pictureViewCnt) {
+        val binding = DataBindingUtil.getBinding<ItemPictureBinding>(viewGroup.getChildAt(i + 1))
+        if (binding != null) {
+          // binding.picture = picture
+          continue
+        }
+      }
+
+      // [새로 추가된 사진] 새로운 뷰 생성
+      DataBindingUtil.inflate<ItemPictureBinding>(inflater, layout, viewGroup, true)?.let {
+        it.picture = picture
+        it.root.findViewById<ImageView>(R.id.ivPicture)?.setOnClickListener {
+          // 전체화면
+          viewGroup.findNavController().navigate(
+            R.id.action_HomeInfoDetailsFragment_to_PictureFullScreenFragment,
+            Bundle().apply {
+              putString("pictureName", picture.name)
+            })
+        }
+      }
+    }
+  }
+
+  @BindingAdapter("pictureName")
+  @JvmStatic
+  fun setImageBitmap(iv: ImageView, pictureName: String) {
+    var imageFile = Utils.loadSnapshotFile(iv.context, pictureName)
+    if (imageFile == null) {
+      imageFile = Utils.loadImageFile(iv.context, pictureName).let {
+        Utils.resizeBitmap(it, iv.width.toFloat(), iv.height.toFloat())
+      }
+      Utils.createSnapshotFile(iv.context, pictureName, imageFile)
+    }
+    iv.setImageBitmap(imageFile)
+  }
+}
+```
+
+- `layout`
+
+```xml
+...
+// ObservableField<String> 바인딩
+<com.google.android.material.textfield.TextInputEditText
+    android:id="@+id/et_name"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    // android:text="@{viewModel.name}" // 단방향 바인딩
+    android:text="@={viewModel.name}"   // 양방향 바인딩 (표현식 사용 시 단방향 바인딩만 가능하다)
+    android:ems="255"
+    android:hint="@string/name"
+    android:inputType="text"
+    android:maxLength="255" />
+...
+
+// ObservableList<Picture> 바인딩
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:pictures="@{viewModel.pictureList}" // @BindingAdapter에 추가한 속성1
+    app:layout="@{@layout/item_picture}"    // @BindingAdapter에 추가한 속성2
+    android:orientation="horizontal">
 ```
 
 ### NavController
@@ -312,7 +402,7 @@ class ItemFragment : Fragment() {
 import androidx.navigation.fragment.findNavController
 ...
 findNavController().navigate(
-  R.id.action_ItemFragment_to_MapsFragment,
+  R.id.action_ItemFragment_to_MapsFragment, // @navigation action id
   Bundle().apply {
     putString("address", address)
   })
