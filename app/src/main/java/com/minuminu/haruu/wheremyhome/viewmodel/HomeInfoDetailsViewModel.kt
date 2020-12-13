@@ -1,4 +1,4 @@
-package com.minuminu.haruu.wheremyhome
+package com.minuminu.haruu.wheremyhome.viewmodel
 
 import android.util.Log
 import androidx.databinding.ObservableArrayList
@@ -6,19 +6,18 @@ import androidx.databinding.ObservableField
 import androidx.databinding.ObservableList
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.minuminu.haruu.wheremyhome.data.*
 import com.minuminu.haruu.wheremyhome.db.AppDatabase
-import com.minuminu.haruu.wheremyhome.dummy.DummyContent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class ItemDetailsViewModel : ViewModel() {
+class HomeInfoDetailsViewModel : ViewModel() {
     var db: AppDatabase? = null
 
-    var isSaved = false
     var currentImageName = ""
 
     // db - viewModel
-    val itemLiveData = MutableLiveData<DummyContent.HomeInfoWithQandas>()
+    val itemLiveData = MutableLiveData<HomeInfoWithQandas>()
 
     // viewModel - view
     val name = ObservableField<String>()
@@ -28,8 +27,8 @@ class ItemDetailsViewModel : ViewModel() {
     val expense = ObservableField<String>()
     val startDate = ObservableField<String>()
     val endDate = ObservableField<String>()
-    val pictureList: ObservableList<DummyContent.Picture> = ObservableArrayList()
-    val qandaList: ObservableList<DummyContent.QandaViewData> = ObservableArrayList()
+    val pictureList: ObservableList<Picture> = ObservableArrayList()
+    val qandaList: ObservableList<QandaViewData> = ObservableArrayList()
 
     fun init(db: AppDatabase) {
         this.db = db
@@ -45,7 +44,7 @@ class ItemDetailsViewModel : ViewModel() {
         }.start()
     }
 
-    suspend fun saveItem(): DummyContent.HomeInfo {
+    suspend fun saveItem(): HomeInfo {
         val score: Int = qandaList.let {
             var sum = 0
             it.forEach { qanda ->
@@ -62,8 +61,8 @@ class ItemDetailsViewModel : ViewModel() {
             sum
         }
 
-        val homeInfoWithQandas = DummyContent.HomeInfoWithQandas(
-            homeInfo = DummyContent.HomeInfo(
+        val homeInfoWithQandas = HomeInfoWithQandas(
+            homeInfo = HomeInfo(
                 itemLiveData.value?.homeInfo?.id,
                 name.get(),
                 address.get(),
@@ -74,10 +73,10 @@ class ItemDetailsViewModel : ViewModel() {
                 endDate.get(),
                 score,
             ),
-            qandas = ArrayList<DummyContent.Qanda>().apply {
+            qandas = ArrayList<Qanda>().apply {
                 qandaList.toList().forEach {
                     add(
-                        DummyContent.Qanda(
+                        Qanda(
                             it.id,
                             it.group,
                             it.num.toIntOrNull() ?: 0,

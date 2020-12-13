@@ -5,7 +5,7 @@
     android:background="?attr/fullscreenBackgroundColor"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PictureFullscreenFragment">
+    tools:context=".view.fragment.PictureFullscreenFragment">
 
     <!-- The primary full-screen view. This can be replaced with whatever view
          is needed to present your content, e.g. VideoView, SurfaceView,
@@ -24,7 +24,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:keepScreenOn="true"
-        android:gravity="center" />
+        android:gravity="center"
+        android:contentDescription="@string/picture"/>
 
     <!-- This FrameLayout insets its children based on system windows using
          android:fitsSystemWindows. -->

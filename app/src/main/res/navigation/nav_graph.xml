@@ -3,40 +3,60 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/ItemFragment">
+    app:startDestination="@id/HomeInfoListFragment">
 
     <fragment
-        android:id="@+id/ItemFragment"
-        android:name="com.minuminu.haruu.wheremyhome.ItemFragment"
+        android:id="@+id/HomeInfoListFragment"
+        android:name="com.minuminu.haruu.wheremyhome.view.fragment.HomeInfoListFragment"
         android:label="@string/item_fragment_label"
-        tools:layout="@layout/fragment_item_list">
+        tools:layout="@layout/fragment_home_info_list">
 
         <action
-            android:id="@+id/action_ItemFragment_to_ItemDetailsFragment"
-            app:destination="@id/ItemDetailsFragment" />
+            android:id="@+id/action_HomeInfoListFragment_to_HomeInfoDetailsFragment"
+            app:destination="@id/HomeInfoDetailsFragment" />
     </fragment>
     <fragment
-        android:id="@+id/ItemDetailsFragment"
-        android:name="com.minuminu.haruu.wheremyhome.ItemDetailsFragment"
+        android:id="@+id/HomeInfoDetailsFragment"
+        android:name="com.minuminu.haruu.wheremyhome.view.fragment.HomeInfoDetailsFragment"
         android:label="@string/item_details_fragment_label"
-        tools:layout="@layout/item_details_fragment">
+        tools:layout="@layout/fragment_home_info_details">
+
+        <argument
+            android:name="itemId"
+            app:argType="string" />
+
+        <argument
+            android:name="item"
+            android:defaultValue="@null"
+            app:argType="com.minuminu.haruu.wheremyhome.data.HomeInfo"
+            app:nullable="true" />
 
         <action
-            android:id="@+id/action_ItemDetailsFragment_to_PictureFullScreenFragment"
+            android:id="@+id/action_HomeInfoDetailsFragment_to_PictureFullScreenFragment"
             app:destination="@id/PictureFullScreenFragment" />
         <action
-            android:id="@+id/action_ItemDetailsFragment_to_MapsFragment"
+            android:id="@+id/action_HomeInfoDetailsFragment_to_MapsFragment"
             app:destination="@id/MapsFragment" />
     </fragment>
     <fragment
         android:id="@+id/PictureFullScreenFragment"
-        android:name="com.minuminu.haruu.wheremyhome.PictureFullscreenFragment"
-        android:label="전체화면"
+        android:name="com.minuminu.haruu.wheremyhome.view.fragment.PictureFullscreenFragment"
+        android:label="@string/fullscreen"
         tools:layout="@layout/fragment_picture_fullscreen">
+
+        <argument
+            android:name="picture"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/MapsFragment"
-        android:name="com.minuminu.haruu.wheremyhome.MapsFragment"
-        android:label="지도"
-        tools:layout="@layout/fragment_maps" />
+        android:name="com.minuminu.haruu.wheremyhome.view.fragment.MapsFragment"
+        android:label="@string/map"
+        tools:layout="@layout/fragment_maps">
+
+        <argument
+            android:name="address"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
 </navigation>

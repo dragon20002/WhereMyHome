@@ -1,12 +1,11 @@
-package com.minuminu.haruu.wheremyhome
+package com.minuminu.haruu.wheremyhome.view.fragment
 
+import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
@@ -20,32 +19,39 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputEditText
-import com.minuminu.haruu.wheremyhome.databinding.ItemDetailsFragmentBinding
+import com.minuminu.haruu.wheremyhome.R
+import com.minuminu.haruu.wheremyhome.data.DataUtil
+import com.minuminu.haruu.wheremyhome.data.Picture
+import com.minuminu.haruu.wheremyhome.data.QandaViewData
+import com.minuminu.haruu.wheremyhome.databinding.FragmentHomeInfoDetailsBinding
 import com.minuminu.haruu.wheremyhome.db.AppDatabase
-import com.minuminu.haruu.wheremyhome.dummy.DummyContent
 import com.minuminu.haruu.wheremyhome.utils.Utils
+import com.minuminu.haruu.wheremyhome.view.activity.MainActivity
+import com.minuminu.haruu.wheremyhome.viewmodel.HomeInfoDetailsViewModel
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.IOException
 import java.util.*
 import kotlin.collections.ArrayList
 
-class ItemDetailsFragment : Fragment(), MainActivity.OnBackPressed {
+class HomeInfoDetailsFragment : Fragment(), MainActivity.OnBackPressed {
 
     companion object {
         private const val REQUEST_TAKE_PHOTO = 1
 
-        fun newInstance() = ItemDetailsFragment()
+        fun newInstance() = HomeInfoDetailsFragment()
     }
 
-    private var viewModel: ItemDetailsViewModel? = null
-    private var binding: ItemDetailsFragmentBinding? = null
+    private var viewModel: HomeInfoDetailsViewModel? = null
+    private var binding: FragmentHomeInfoDetailsBinding? = null
 
+    @SuppressLint("RestrictedApi")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = DataBindingUtil.inflate(inflater, R.layout.item_details_fragment, container, false)
+        binding = DataBindingUtil.inflate(inflater,
+            R.layout.fragment_home_info_details, container, false)
         val view = binding?.root
 
         view?.findViewById<TextInputEditText>(R.id.et_start_date)?.setOnClickListener { v ->
@@ -80,33 +86,26 @@ class ItemDetailsFragment : Fragment(), MainActivity.OnBackPressed {
         view?.findViewById<ImageButton>(R.id.btn_location)?.setOnClickListener {
             // 지도
             findNavController().navigate(
-                R.id.action_ItemDetailsFragment_to_MapsFragment,
+                R.id.action_HomeInfoDetailsFragment_to_MapsFragment,
                 Bundle().apply {
-                    putString("address", viewModel?.itemLiveData?.value?.homeInfo?.address)
+                    putString("address", viewModel?.address?.get())
                 })
         }
 
-        findNavController().addOnDestinationChangedListener { _, dest, args ->
-            when (dest.id) {
-                R.id.MapsFragment -> {
-                    args?.getString("address")?.let { address ->
-                        Log.d(javaClass.name, "address - observe $address")
+        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>(
+            "address"
+        )?.observe(viewLifecycleOwner, { address ->
+            Log.d(javaClass.name, "address - navController $address")
 
-                        viewModel?.itemLiveData?.value?.let { value ->
-                            value.homeInfo.address = address
-                            viewModel?.itemLiveData?.postValue(value)
-                        }
-                    }
-                }
-            }
-        }
+            viewModel?.address?.set(address)
+        })
 
-        viewModel = viewModel ?: ViewModelProvider(this).get(ItemDetailsViewModel::class.java).apply {
+        viewModel = viewModel ?: ViewModelProvider(this).get(HomeInfoDetailsViewModel::class.java).apply {
             init(AppDatabase.getDatabase(requireContext()))
             itemLiveData.removeObservers(viewLifecycleOwner)
 
             itemLiveData.observe(viewLifecycleOwner, {
-                Log.d(javaClass.name, it.toString())
+                // Log.d(javaClass.name, "homeInfoWithQandas - observe $it")
 
                 name.set(it.homeInfo.name)
                 address.set(it.homeInfo.address)
@@ -117,10 +116,10 @@ class ItemDetailsFragment : Fragment(), MainActivity.OnBackPressed {
                 endDate.set(it.homeInfo.endDate)
                 pictureList.addAll(it.pictures)
 
-                val qandas = ArrayList<DummyContent.QandaViewData>()
+                val qandas = ArrayList<QandaViewData>()
                 it.qandas.forEach { qanda ->
                     qandas.add(
-                        DummyContent.QandaViewData(
+                        QandaViewData(
                             qanda.id,
                             qanda.group,
                             qanda.num.toString(),
@@ -140,9 +139,9 @@ class ItemDetailsFragment : Fragment(), MainActivity.OnBackPressed {
         if (arguments == null) {
             Log.d(javaClass.name, "add mode")
 
-            viewModel?.itemLiveData?.postValue(DummyContent.createDummyItem())
+            viewModel?.itemLiveData?.postValue(DataUtil.createDummyItem())
             viewModel?.pictureList?.addAll(ArrayList())
-            viewModel?.qandaList?.addAll(DummyContent.createQandaTemplate())
+            viewModel?.qandaList?.addAll(DataUtil.createQandaTemplate())
         } else {
             Log.d(javaClass.name, "modify mode")
 
@@ -158,32 +157,26 @@ class ItemDetailsFragment : Fragment(), MainActivity.OnBackPressed {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
             viewModel?.currentImageName?.let { imageName ->
-                val picture = DummyContent.Picture(null, imageName)
+                val picture = Picture(null, imageName)
                 viewModel?.pictureList?.add(picture)
             }
         }
     }
 
     override fun onBackPressed(): Boolean {
-        val isSaved = viewModel?.isSaved ?: true
-        if (isSaved)
-            return true
-
         viewModel?.viewModelScope?.launch {
             val homeInfo = viewModel?.saveItem()
 
             // Notify data changed
-            arguments?.putParcelable("item", homeInfo)
+            findNavController().previousBackStackEntry?.savedStateHandle?.set("homeInfo", homeInfo)
 
-            if (!isSaved) {
-                viewModel?.isSaved = true
-                activity?.onBackPressed()
-            }
+            findNavController().popBackStack()
         }
 
         return false
     }
 
+    @SuppressLint("QueryPermissionsNeeded")
     private fun dispatchTakePictureIntent() {
         Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
             takePictureIntent.resolveActivity(requireContext().packageManager!!)?.also {

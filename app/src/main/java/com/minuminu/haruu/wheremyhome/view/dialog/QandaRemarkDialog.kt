@@ -1,4 +1,4 @@
-package com.minuminu.haruu.wheremyhome
+package com.minuminu.haruu.wheremyhome.view.dialog
 
 import android.app.AlertDialog
 import android.app.Dialog
@@ -6,8 +6,9 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.textfield.TextInputEditText
+import com.minuminu.haruu.wheremyhome.R
 
-class RemarkDialogFragment: DialogFragment() {
+class QandaRemarkDialog: DialogFragment() {
     var caller: View? = null
     var listener: RemarkDialogListener? = null
     var remark: String? = null
@@ -27,7 +28,7 @@ class RemarkDialogFragment: DialogFragment() {
 
             // Inflate and set the layout for the dialog
             // Pass null as the parent view because its going in the dialog layout
-            val view = inflater.inflate(R.layout.dialog_remark, null)
+            val view = inflater.inflate(R.layout.dialog_qanda_remark, null)
             etRemark = view.findViewById(R.id.et_remark)
             remark?.let {
                 etRemark.setText(it)

@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="255"
-            android:hint="비고"
+            android:hint="@string/remark"
             android:inputType="text"
             android:maxLength="255" />
     </com.google.android.material.textfield.TextInputLayout>

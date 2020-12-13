@@ -4,16 +4,16 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Update
-import com.minuminu.haruu.wheremyhome.dummy.DummyContent
+import com.minuminu.haruu.wheremyhome.data.Qanda
 
 @Dao
 interface QandaDao {
     @Insert
-    fun insertAll(vararg qandas: DummyContent.Qanda): List<Long>
+    fun insertAll(vararg qandas: Qanda): List<Long>
 
     @Update
-    fun updateAll(vararg qandas: DummyContent.Qanda): Int
+    fun updateAll(vararg qandas: Qanda): Int
 
     @Delete
-    fun delete(qanda: DummyContent.Qanda)
+    fun delete(qanda: Qanda)
 }

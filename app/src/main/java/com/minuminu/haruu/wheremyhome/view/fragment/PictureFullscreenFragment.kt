@@ -1,9 +1,9 @@
-package com.minuminu.haruu.wheremyhome
+package com.minuminu.haruu.wheremyhome.view.fragment
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,12 +14,14 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.minuminu.haruu.wheremyhome.R
 import com.minuminu.haruu.wheremyhome.utils.Utils
 
 /**
  * An example full-screen fragment that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
+@Suppress("DEPRECATION")
 class PictureFullscreenFragment : Fragment() {
     private lateinit var hideHandler: Handler
     @Suppress("InlinedApi")
@@ -66,6 +68,7 @@ class PictureFullscreenFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_picture_fullscreen, container, false)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -85,7 +88,7 @@ class PictureFullscreenFragment : Fragment() {
         // while interacting with the UI.
         btnCancel?.setOnTouchListener(delayHideTouchListener)
         btnCancel?.setOnClickListener {
-            findNavController().popBackStack(R.id.ItemDetailsFragment, false)
+            findNavController().popBackStack(R.id.HomeInfoDetailsFragment, false)
         }
 
         arguments?.getString("pictureName")?.let {

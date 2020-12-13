@@ -1,4 +1,4 @@
-package com.minuminu.haruu.wheremyhome
+package com.minuminu.haruu.wheremyhome.view.component
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -10,6 +10,7 @@ import android.view.View
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import com.minuminu.haruu.wheremyhome.R
 
 class EditTextWithButton : AppCompatEditText, View.OnTouchListener {
     private var drwMinus: Drawable? = null

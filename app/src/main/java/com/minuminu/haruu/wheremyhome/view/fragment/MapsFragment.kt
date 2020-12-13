@@ -1,4 +1,4 @@
-package com.minuminu.haruu.wheremyhome
+package com.minuminu.haruu.wheremyhome.view.fragment
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -29,6 +29,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.minuminu.haruu.wheremyhome.R
+import com.minuminu.haruu.wheremyhome.view.activity.MainActivity
 import java.io.IOException
 import java.util.*
 
@@ -178,7 +180,9 @@ class MapsFragment : Fragment(), MainActivity.OnBackPressed {
             "address",
             currentMarker?.title
         )
-        return true
+
+        findNavController().popBackStack()
+        return false
     }
 
     override fun onRequestPermissionsResult(

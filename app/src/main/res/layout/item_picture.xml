@@ -4,11 +4,11 @@
 
     <data>
 
-        <import type="com.minuminu.haruu.wheremyhome.ItemDetailsViewModel" />
+        <import type="com.minuminu.haruu.wheremyhome.viewmodel.HomeInfoDetailsViewModel" />
 
         <variable
             name="picture"
-            type="com.minuminu.haruu.wheremyhome.dummy.DummyContent.Picture" />
+            type="com.minuminu.haruu.wheremyhome.data.Picture" />
     </data>
 
     <ImageButton
@@ -19,6 +19,7 @@
         android:layout_marginBottom="@dimen/margin_small"
         android:layout_marginEnd="@dimen/margin_small"
         android:scaleType="fitCenter"
+        android:contentDescription="@string/picture"
         app:pictureName="@{picture.name}"
         style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
 </layout>

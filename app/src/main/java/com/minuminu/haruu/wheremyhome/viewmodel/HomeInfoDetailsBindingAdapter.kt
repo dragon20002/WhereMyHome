@@ -1,4 +1,4 @@
-package com.minuminu.haruu.wheremyhome
+package com.minuminu.haruu.wheremyhome.viewmodel
 
 import android.content.Context
 import android.os.Bundle
@@ -12,17 +12,20 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.findNavController
-import com.minuminu.haruu.wheremyhome.databinding.FragmentQandaBinding
+import com.minuminu.haruu.wheremyhome.R
+import com.minuminu.haruu.wheremyhome.databinding.ItemQandaBinding
 import com.minuminu.haruu.wheremyhome.databinding.ItemPictureBinding
-import com.minuminu.haruu.wheremyhome.dummy.DummyContent
+import com.minuminu.haruu.wheremyhome.data.Picture
+import com.minuminu.haruu.wheremyhome.data.QandaViewData
 import com.minuminu.haruu.wheremyhome.utils.Utils
+import com.minuminu.haruu.wheremyhome.view.dialog.QandaRemarkDialog
 
-object ItemDetailsBindingAdapter {
+object HomeInfoDetailsBindingAdapter {
 
     @BindingAdapter("pictures", "layout")
     @JvmStatic
-    fun setPictureList(viewGroup: ViewGroup, pictures: List<DummyContent.Picture>, layout: Int) {
-        Log.d(ItemDetailsViewModel::class.simpleName, "pictures - observe : ${pictures.size}")
+    fun setPictureList(viewGroup: ViewGroup, pictures: List<Picture>, layout: Int) {
+        Log.d(HomeInfoDetailsViewModel::class.simpleName, "pictures - observe : ${pictures.size}")
 
         val pictureViewCnt = viewGroup.childCount - 1
         if (pictureViewCnt >= pictures.size)
@@ -53,7 +56,7 @@ object ItemDetailsBindingAdapter {
                 it.root.findViewById<ImageView>(R.id.ivPicture)?.setOnClickListener {
                     // 전체화면
                     viewGroup.findNavController().navigate(
-                        R.id.action_ItemDetailsFragment_to_PictureFullScreenFragment,
+                        R.id.action_HomeInfoDetailsFragment_to_PictureFullScreenFragment,
                         Bundle().apply {
                             putString("pictureName", picture.name)
                         })
@@ -67,7 +70,7 @@ object ItemDetailsBindingAdapter {
     fun setImageBitmap(iv: ImageView, pictureName: String) {
         var imageFile = Utils.loadSnapshotFile(iv.context, pictureName)
         if (imageFile == null) {
-            Log.d(ItemDetailsBindingAdapter::class.simpleName, "loadSnapshotFile is failed")
+            Log.d(HomeInfoDetailsBindingAdapter::class.simpleName, "loadSnapshotFile is failed")
 
             imageFile = Utils.loadImageFile(iv.context, pictureName).let {
                 Utils.resizeBitmap(it, iv.width.toFloat(), iv.height.toFloat())
@@ -79,8 +82,8 @@ object ItemDetailsBindingAdapter {
 
     @BindingAdapter("qandas", "layout")
     @JvmStatic
-    fun setQandaList(viewGroup: ViewGroup, qandas: List<DummyContent.QandaViewData>, layout: Int) {
-        Log.d(ItemDetailsViewModel::class.simpleName, "qandas - observe : ${qandas.size}")
+    fun setQandaList(viewGroup: ViewGroup, qandas: List<QandaViewData>, layout: Int) {
+        Log.d(HomeInfoDetailsViewModel::class.simpleName, "qandas - observe : ${qandas.size}")
 
         if (viewGroup.childCount >= qandas.size)
             return
@@ -93,14 +96,14 @@ object ItemDetailsBindingAdapter {
 
             if (i < viewGroup.childCount) {
                 val binding =
-                    DataBindingUtil.getBinding<FragmentQandaBinding>(viewGroup.getChildAt(i + 1))
+                    DataBindingUtil.getBinding<ItemQandaBinding>(viewGroup.getChildAt(i + 1))
                 if (binding != null) {
                     binding.qanda = qanda
                     continue
                 }
             }
 
-            DataBindingUtil.inflate<FragmentQandaBinding>(
+            DataBindingUtil.inflate<ItemQandaBinding>(
                 inflater,
                 layout,
                 viewGroup,
@@ -115,9 +118,9 @@ object ItemDetailsBindingAdapter {
                     }
                 }
                 binding.root.findViewById<Button>(R.id.btn_remark)?.setOnClickListener { view ->
-                    RemarkDialogFragment().also { dialog ->
+                    QandaRemarkDialog().also { dialog ->
                         dialog.caller = binding.root.findViewById(R.id.qanda_remark)
-                        dialog.listener = object : RemarkDialogFragment.RemarkDialogListener {
+                        dialog.listener = object : QandaRemarkDialog.RemarkDialogListener {
                             override fun onDialogPositiveClick(
                                 dialog: DialogFragment, remark: String, caller: View?
                             ) {

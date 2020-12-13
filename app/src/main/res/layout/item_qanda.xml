@@ -7,7 +7,7 @@
 
         <variable
             name="qanda"
-            type="com.minuminu.haruu.wheremyhome.dummy.DummyContent.QandaViewData" />
+            type="com.minuminu.haruu.wheremyhome.data.QandaViewData" />
     </data>
 
     <LinearLayout
@@ -22,7 +22,7 @@
             android:layout_gravity="center_vertical"
             android:layout_margin="@dimen/margin_small"
             android:text="@={qanda.group}"
-            android:textAlignment="center"
+            android:gravity="center"
             android:textAppearance="?attr/textAppearanceListItemSmall" />
 
         <TextView
@@ -32,7 +32,7 @@
             android:layout_gravity="center_vertical"
             android:layout_margin="@dimen/margin_small"
             android:text="@={qanda.num}"
-            android:textAlignment="center"
+            android:gravity="center"
             android:textAppearance="?attr/textAppearanceListItemSmall" />
 
         <TextView
@@ -54,7 +54,7 @@
             android:gravity="center"
             android:orientation="horizontal">
 
-            <com.minuminu.haruu.wheremyhome.EditTextWithButton
+            <com.minuminu.haruu.wheremyhome.view.component.EditTextWithButton
                 android:id="@+id/et_answer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -83,7 +83,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_margin="@dimen/margin_small"
-            android:text="..."
+            android:text="@string/ellipsis"
             android:textSize="12sp"
             android:textStyle="bold" />
 
@@ -92,7 +92,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_small"
             android:layout_marginBottom="@dimen/margin_small"
-            android:text="\n"
+            android:text="@string/cr"
             android:textAppearance="?attr/textAppearanceListItemSmall" />
 
         <TextView

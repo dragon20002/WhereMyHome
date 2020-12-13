@@ -7,10 +7,12 @@ import androidx.room.RoomDatabase
 import com.minuminu.haruu.wheremyhome.dao.HomeInfoDao
 import com.minuminu.haruu.wheremyhome.dao.PictureDao
 import com.minuminu.haruu.wheremyhome.dao.QandaDao
-import com.minuminu.haruu.wheremyhome.dummy.DummyContent
+import com.minuminu.haruu.wheremyhome.data.HomeInfo
+import com.minuminu.haruu.wheremyhome.data.Picture
+import com.minuminu.haruu.wheremyhome.data.Qanda
 
 @Database(
-    entities = [DummyContent.HomeInfo::class, DummyContent.Qanda::class, DummyContent.Picture::class],
+    entities = [HomeInfo::class, Qanda::class, Picture::class],
     version = 1
 )
 abstract class AppDatabase : RoomDatabase() {

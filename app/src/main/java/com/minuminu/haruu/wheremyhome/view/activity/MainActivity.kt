@@ -1,4 +1,4 @@
-package com.minuminu.haruu.wheremyhome
+package com.minuminu.haruu.wheremyhome.view.activity
 
 import android.Manifest
 import android.app.AlertDialog
@@ -10,6 +10,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.NavHostFragment
+import com.minuminu.haruu.wheremyhome.R
 import com.minuminu.haruu.wheremyhome.db.AppDatabase
 
 class MainActivity : AppCompatActivity() {
