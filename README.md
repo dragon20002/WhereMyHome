@@ -268,7 +268,7 @@ class ItemFragment : Fragment() {
 
 - `Fragment` 간 이동을 `@navigation/nav_graph.xml`에 명시적으로 작성하여 `FragmentTransaction` 보다 쉽고 편하게 관리할 수 있다.
 
-  ![navigation](readme_img/navigation.jpg)
+  ![navigation](readme_img/navigation.JPG)
 
 - `@navigation`
 
