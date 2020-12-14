@@ -2,6 +2,12 @@
 
 집 보러 다닐 때 메모하는 앱
 
+- `MVVM` 집 상세화면([`HomeInfoDetailsFragment.kt`](app/src/main/java/com/minuminu/haruu/wheremyhome/view/fragment/HomeInfoDetailsFragment.kt))에만 MVVM 적용하여 개발해봤다. 적용 과정은 [3.1.](#viewmodel) 참고. 나머지 뷰는 기본적인 구조로 개발
+
+- `Android Room` Android DB API. [공식가이드](https://developer.android.com/training/data-storage/room) 참고
+
+- `Navigation Component` MainActivity 1개와 여러 개의 Fragment로 개발하였다. Fragment 이동 시 `Navigation Component` 활용. 관련 내용은 [3.2.](#navcontroller)나 [공식가이드](https://developer.android.com/guide/navigation/navigation-getting-started) 참고.
+
 ## 목차
 
 [1.](#화면-설명) 화면 설명<br>
