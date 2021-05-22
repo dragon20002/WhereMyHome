@@ -1,17 +1,14 @@
 package com.minuminu.haruu.wheremyhome.view.fragment
 
 import android.annotation.SuppressLint
-import android.app.Activity.RESULT_OK
 import android.app.DatePickerDialog
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -29,7 +26,6 @@ import com.minuminu.haruu.wheremyhome.utils.Utils
 import com.minuminu.haruu.wheremyhome.view.activity.MainActivity
 import com.minuminu.haruu.wheremyhome.viewmodel.HomeInfoDetailsViewModel
 import kotlinx.coroutines.launch
-import java.io.File
 import java.io.IOException
 import java.util.*
 import kotlin.collections.ArrayList
@@ -37,10 +33,18 @@ import kotlin.collections.ArrayList
 class HomeInfoDetailsFragment : Fragment(), MainActivity.OnBackPressed {
 
     companion object {
-        private const val REQUEST_TAKE_PHOTO = 1
-
         fun newInstance() = HomeInfoDetailsFragment()
     }
+
+    private val requestTakePhoto =
+        registerForActivityResult(ActivityResultContracts.TakePicture()) { isSuccess ->
+            if (isSuccess) {
+                viewModel?.currentImageName?.let { imageName ->
+                    val picture = Picture(null, imageName)
+                    viewModel?.pictureList?.add(picture)
+                }
+            }
+        }
 
     private var viewModel: HomeInfoDetailsViewModel? = null
     private var binding: FragmentHomeInfoDetailsBinding? = null
@@ -57,8 +61,10 @@ class HomeInfoDetailsFragment : Fragment(), MainActivity.OnBackPressed {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = DataBindingUtil.inflate(inflater,
-            R.layout.fragment_home_info_details, container, false)
+        binding = DataBindingUtil.inflate(
+            inflater,
+            R.layout.fragment_home_info_details, container, false
+        )
         binding?.viewModel = viewModel
         val view = binding?.root
 
@@ -90,7 +96,8 @@ class HomeInfoDetailsFragment : Fragment(), MainActivity.OnBackPressed {
                 today[Calendar.DAY_OF_MONTH]
             ).show()
         }
-        view?.findViewById<ImageButton>(R.id.btn_camera)?.setOnClickListener { dispatchTakePictureIntent() }
+        view?.findViewById<ImageButton>(R.id.btn_camera)
+            ?.setOnClickListener { dispatchTakePictureIntent() }
         view?.findViewById<ImageButton>(R.id.btn_location)?.setOnClickListener {
             // 지도
             findNavController().navigate(
@@ -121,8 +128,10 @@ class HomeInfoDetailsFragment : Fragment(), MainActivity.OnBackPressed {
 
                 for (i in it.qandas.indices) {
                     val qanda: QandaViewData = it.qandas[i].let { qanda ->
-                        QandaViewData(qanda.id, qanda.group, qanda.num.toString(),
-                            qanda.question, qanda.type, qanda.answer, qanda.remark)
+                        QandaViewData(
+                            qanda.id, qanda.group, qanda.num.toString(),
+                            qanda.question, qanda.type, qanda.answer, qanda.remark
+                        )
                     }
                     if (i < qandaList.size) {
                         qandaList[i] = qanda
@@ -159,15 +168,6 @@ class HomeInfoDetailsFragment : Fragment(), MainActivity.OnBackPressed {
         return view
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
-            viewModel?.currentImageName?.let { imageName ->
-                val picture = Picture(null, imageName)
-                viewModel?.pictureList?.add(picture)
-            }
-        }
-    }
-
     override fun onBackPressed(): Boolean {
         viewModel?.viewModelScope?.launch {
             val homeInfo = viewModel?.saveItem()
@@ -183,32 +183,24 @@ class HomeInfoDetailsFragment : Fragment(), MainActivity.OnBackPressed {
 
     @SuppressLint("QueryPermissionsNeeded")
     private fun dispatchTakePictureIntent() {
-        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
-            takePictureIntent.resolveActivity(requireContext().packageManager!!)?.also {
-                // Create file
-                val imageFile: File? = try {
-                    Utils.createImageFile(requireContext())
-                } catch (ex: IOException) {
-                    Log.e(javaClass.name, "Fail to create image file")
-                    null
-                }
-
-                // Request Take photo
-                imageFile?.also {
-                    viewModel?.currentImageName = it.name
-
-                    val imageUri: Uri = FileProvider.getUriForFile(
-                        requireContext(),
-                        "com.minuminu.haruu.wheremyhome",
-                        it
-                    )
-                    Log.d(javaClass.name, "imageUri = $imageUri")
-
-                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
-                    startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO)
-                }
-            }
+        // Create file
+        val imageUri = try {
+            Utils.createImageFile(requireContext())
+        } catch (ex: IOException) {
+            Log.e(javaClass.name, "Fail to create image file")
+            null
+        }?.also {
+            viewModel?.currentImageName = it.name
+        }?.let {
+            FileProvider.getUriForFile(
+                requireContext(),
+                "com.minuminu.haruu.wheremyhome",
+                it
+            )
         }
-    }
+        Log.d(javaClass.name, "imageUri = $imageUri")
 
+        // Request Take photo
+        requestTakePhoto.launch(imageUri)
+    }
 }

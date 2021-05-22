@@ -2,6 +2,7 @@ package com.minuminu.haruu.wheremyhome.view.fragment
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity.RESULT_OK
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
@@ -16,6 +17,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -39,9 +41,17 @@ class MapsFragment : Fragment(), MainActivity.OnBackPressed {
         const val UPDATE_INTERVAL_MS = 1000L
         const val FASTEST_UPDATE_INTERVAL_MS = 500L
         val DEFAULT_LOCATION = LatLng(37.56, 126.97)
-        const val GPS_ENABLE_REQUEST_CODE = 1
     }
-    private var needRequest = false
+
+    private val requestLocationSettings =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK)
+                if (checkLocationServicesStatus()) {
+                    if (checkLocationServicesStatus()) {
+                        Log.d(javaClass.name, "onActivityResult : GPS 활성화 되어있음")
+                    }
+                }
+        }
 
     private var mapFragment: SupportMapFragment? = null
     private var googleMap: GoogleMap? = null
@@ -49,22 +59,24 @@ class MapsFragment : Fragment(), MainActivity.OnBackPressed {
     private var fusedLocationClient: FusedLocationProviderClient? = null
     private lateinit var locationRequest: LocationRequest
     private lateinit var location: Location
-    private val locationCallback = object:LocationCallback() {
+    private val locationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult?) {
-            super.onLocationResult(locationResult)
+            locationResult?.let {
+                super.onLocationResult(locationResult)
 
-            locationResult?.locations?.let { locations ->
-                location = locations[locations.size - 1]
+                locationResult.locations.let { locations ->
+                    location = locations[locations.size - 1]
 
-                currentPosition = LatLng(location.latitude, location.longitude).also {
-                    val markerTitle = getCurrentAddress(it)
-                    val markerSnippet = "${it.latitude}/${it.longitude}"
-                    Log.d(javaClass.name, "onLocationResult $markerSnippet")
+                    currentPosition = LatLng(location.latitude, location.longitude).also {
+                        val markerTitle = getCurrentAddress(it)
+                        val markerSnippet = "${it.latitude}/${it.longitude}"
+                        Log.d(javaClass.name, "onLocationResult $markerSnippet")
 
-                    // 현재 위치에 마커 생성하고 위치로 이동
-                    setCurrentLocation(location, markerTitle, markerSnippet)
+                        // 현재 위치에 마커 생성하고 위치로 이동
+                        setCurrentLocation(location, markerTitle, markerSnippet)
+                    }
+                    currentLocation = location
                 }
-                currentLocation = location
             }
         }
     }
@@ -82,7 +94,10 @@ class MapsFragment : Fragment(), MainActivity.OnBackPressed {
         setDefaultLocation()
 
         // 2 권한 확인
-        val hasFineLocationPermission = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+        val hasFineLocationPermission = ContextCompat.checkSelfPermission(
+            requireContext(),
+            Manifest.permission.ACCESS_FINE_LOCATION
+        )
 
         // 3 권한 처리
         if (hasFineLocationPermission == PackageManager.PERMISSION_GRANTED) {
@@ -90,7 +105,11 @@ class MapsFragment : Fragment(), MainActivity.OnBackPressed {
             startLocationUpdates()
         } else {
             // 3-2 (거부됨) 팝업 확인 후 권한 재요청
-            if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION)) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(
+                    requireActivity(),
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                )
+            ) {
                 AlertDialog.Builder(requireContext()).setMessage("위치 접근 권한이 필요합니다.")
                     .setPositiveButton("확인") { _, _ ->
                         ActivityCompat.requestPermissions(
@@ -117,10 +136,11 @@ class MapsFragment : Fragment(), MainActivity.OnBackPressed {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_maps, container, false)
 
-        locationRequest = LocationRequest()
-            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-            .setInterval(UPDATE_INTERVAL_MS)
-            .setFastestInterval(FASTEST_UPDATE_INTERVAL_MS)
+        locationRequest = LocationRequest.create().apply {
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+            interval = UPDATE_INTERVAL_MS
+            fastestInterval = FASTEST_UPDATE_INTERVAL_MS
+        }
 
         LocationSettingsRequest.Builder().apply {
             addLocationRequest(locationRequest)
@@ -148,7 +168,11 @@ class MapsFragment : Fragment(), MainActivity.OnBackPressed {
         super.onStart()
         if (checkPermission()) {
             Log.d(javaClass.name, "onStart : call fusedLocationClient.requestLocationUpdate")
-            fusedLocationClient?.requestLocationUpdates(locationRequest, locationCallback, null)
+            fusedLocationClient?.requestLocationUpdates(
+                locationRequest,
+                locationCallback,
+                Looper.myLooper()!!
+            )
             googleMap?.isMyLocationEnabled = true
         }
     }
@@ -157,21 +181,6 @@ class MapsFragment : Fragment(), MainActivity.OnBackPressed {
         super.onStop()
         Log.d(javaClass.name, "onStop : call stopLocationUpdates")
         fusedLocationClient?.removeLocationUpdates(locationCallback)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        when (requestCode) {
-            GPS_ENABLE_REQUEST_CODE -> {
-                if (checkLocationServicesStatus()) {
-                    if (checkLocationServicesStatus()) {
-                        Log.d(javaClass.name, "onActivityResult : GPS 활성화 되어있음")
-
-                        needRequest = true
-                        return
-                    }
-                }
-            }
-        }
     }
 
     override fun onBackPressed(): Boolean {
@@ -203,7 +212,11 @@ class MapsFragment : Fragment(), MainActivity.OnBackPressed {
                 startLocationUpdates()
             }
         } else {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), MainActivity.REQUIRED_PERMISSIONS[0])) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(
+                    requireActivity(),
+                    MainActivity.REQUIRED_PERMISSIONS[0]
+                )
+            ) {
                 AlertDialog.Builder(requireContext()).setMessage("위치권한 요청이 거부되었습니다.")
                     .setPositiveButton("종료") { _, _ ->
                         activity?.finish()
@@ -216,16 +229,26 @@ class MapsFragment : Fragment(), MainActivity.OnBackPressed {
         if (!checkLocationServicesStatus()) {
             Log.d(javaClass.name, "startLocationUpdates : call showDialogForLocationServiceSetting")
 
-            showDialogForLocationServiceStting()
+            showDialogForLocationServiceSetting()
         } else {
-            val hasFineLocationPermission = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+            val hasFineLocationPermission = ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
             if (hasFineLocationPermission != PackageManager.PERMISSION_GRANTED) {
                 Log.d(javaClass.name, "no permission")
                 return
             }
 
-            Log.d(javaClass.name, "startLocationUpdates : call fusedLocationClient.requestLocationUpdates")
-            fusedLocationClient?.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper())
+            Log.d(
+                javaClass.name,
+                "startLocationUpdates : call fusedLocationClient.requestLocationUpdates"
+            )
+            fusedLocationClient?.requestLocationUpdates(
+                locationRequest,
+                locationCallback,
+                Looper.myLooper()!!
+            )
         }
     }
 
@@ -290,11 +313,14 @@ class MapsFragment : Fragment(), MainActivity.OnBackPressed {
     }
 
     private fun checkPermission(): Boolean {
-        val hasFineLocationPermission = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+        val hasFineLocationPermission = ContextCompat.checkSelfPermission(
+            requireContext(),
+            Manifest.permission.ACCESS_FINE_LOCATION
+        )
         return hasFineLocationPermission == PackageManager.PERMISSION_GRANTED
     }
 
-    private fun showDialogForLocationServiceStting() {
+    private fun showDialogForLocationServiceSetting() {
         AlertDialog.Builder(requireContext())
             .setTitle("위치 서비스 비활성화")
             .setMessage("앱을 사용하기 위해 위치 서비스가 필요합니다.")
@@ -302,7 +328,7 @@ class MapsFragment : Fragment(), MainActivity.OnBackPressed {
             .setPositiveButton("설정") { _, _ ->
                 val callGpsSettingIntent =
                     Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-                activity?.startActivityForResult(callGpsSettingIntent, GPS_ENABLE_REQUEST_CODE)
+                requestLocationSettings.launch(callGpsSettingIntent)
             }
             .setNegativeButton("취소") { dialog, _ ->
                 dialog.cancel()

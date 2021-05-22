@@ -13,7 +13,7 @@ class QandaRemarkDialog: DialogFragment() {
     var listener: RemarkDialogListener? = null
     var remark: String? = null
 
-    lateinit var etRemark: TextInputEditText
+    private lateinit var etRemark: TextInputEditText
 
     interface RemarkDialogListener {
         fun onDialogPositiveClick(dialog: DialogFragment, remark: String, caller: View?)

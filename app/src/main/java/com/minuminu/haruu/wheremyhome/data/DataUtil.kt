@@ -6,7 +6,7 @@ import java.util.*
  * Helper class for providing sample content
  */
 object DataUtil {
-    public fun createDummyItem(): HomeInfoWithQandas {
+    fun createDummyItem(): HomeInfoWithQandas {
         return HomeInfoWithQandas(
             HomeInfo(
                 null, "", "",
@@ -16,7 +16,7 @@ object DataUtil {
         )
     }
 
-    public fun createQandaTemplate(): List<QandaViewData> {
+    fun createQandaTemplate(): List<QandaViewData> {
         return arrayListOf(
             QandaViewData(null, "내부", "1", "햇빛 채광 점수", "Int"),
             QandaViewData(null, "내부", "2", "물 샌 흔적 갯수(-)", "Int"),

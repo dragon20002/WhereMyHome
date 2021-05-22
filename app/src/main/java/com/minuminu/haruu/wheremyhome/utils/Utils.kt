@@ -4,7 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
-import android.media.ExifInterface
+import androidx.exifinterface.media.ExifInterface
 import android.os.Environment
 import android.util.DisplayMetrics
 import android.util.Log
@@ -63,9 +63,9 @@ object Utils {
         val imageFile =
             File("$storageDir/resize_$name")
 
-        val fout = FileOutputStream(imageFile)
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 60, fout)
-        fout.close()
+        val fOut = FileOutputStream(imageFile)
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 60, fOut)
+        fOut.close()
 
         return imageFile
     }

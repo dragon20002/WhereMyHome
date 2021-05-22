@@ -12,7 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class HomeInfoDetailsViewModel : ViewModel() {
-    var db: AppDatabase? = null
+    private var db: AppDatabase? = null
 
     var currentImageName = ""
 
