@@ -13,13 +13,13 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:gravity="center">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/item_number"
@@ -31,6 +31,13 @@
                 android:gravity="center"
                 android:textStyle="bold"
                 android:textAppearance="?attr/textAppearanceListItem" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="@dimen/margin_small">
 
             <TextView
                 android:id="@+id/item_name"
@@ -40,21 +47,19 @@
                 android:maxLines="2"
                 android:text="***** ***** ***** *****-*****"
                 android:textAppearance="?attr/textAppearanceListItem" />
+            <TextView
+                android:id="@+id/item_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:layout_marginBottom="@dimen/margin_mid"
+                android:text="보증금(원) / 월세(원) / 관리비(원) / 점수(점)"
+                android:textAppearance="?attr/textAppearanceListItemSmall"/>
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/item_desc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:maxLines="1"
-            android:layout_marginBottom="@dimen/margin_mid"
-            android:text="보증금(원) / 월세(원) / 관리비(원) / 점수(점)"
-            android:textAppearance="?attr/textAppearanceListItemSmall"/>
-
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_mid"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="horizontal"
             android:gravity="center">
 
@@ -62,7 +67,7 @@
                 android:id="@+id/btn_edit"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:src="@android:drawable/ic_menu_edit"
+                android:src="@drawable/ic_baseline_arrow_forward_ios_32"
                 android:contentDescription="@string/modify"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
         </LinearLayout>
