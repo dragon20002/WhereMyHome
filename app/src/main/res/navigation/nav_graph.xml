@@ -28,7 +28,7 @@
         <argument
             android:name="item"
             android:defaultValue="@null"
-            app:argType="com.minuminu.haruu.wheremyhome.data.HomeInfo"
+            app:argType="com.minuminu.haruu.wheremyhome.db.data.HomeInfo"
             app:nullable="true" />
     </fragment>
 </navigation>

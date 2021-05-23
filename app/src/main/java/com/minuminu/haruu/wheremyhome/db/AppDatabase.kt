@@ -4,12 +4,12 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.minuminu.haruu.wheremyhome.dao.HomeInfoDao
-import com.minuminu.haruu.wheremyhome.dao.PictureDao
-import com.minuminu.haruu.wheremyhome.dao.QandaDao
-import com.minuminu.haruu.wheremyhome.data.HomeInfo
-import com.minuminu.haruu.wheremyhome.data.Picture
-import com.minuminu.haruu.wheremyhome.data.Qanda
+import com.minuminu.haruu.wheremyhome.db.dao.HomeInfoDao
+import com.minuminu.haruu.wheremyhome.db.dao.PictureDao
+import com.minuminu.haruu.wheremyhome.db.dao.QandaDao
+import com.minuminu.haruu.wheremyhome.db.data.HomeInfo
+import com.minuminu.haruu.wheremyhome.db.data.Picture
+import com.minuminu.haruu.wheremyhome.db.data.Qanda
 
 @Database(
     entities = [HomeInfo::class, Qanda::class, Picture::class],

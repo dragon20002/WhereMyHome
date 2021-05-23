@@ -20,9 +20,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputEditText
 import com.minuminu.haruu.wheremyhome.R
-import com.minuminu.haruu.wheremyhome.data.DataUtil
-import com.minuminu.haruu.wheremyhome.data.Picture
-import com.minuminu.haruu.wheremyhome.data.QandaViewData
+import com.minuminu.haruu.wheremyhome.db.data.DataUtil
+import com.minuminu.haruu.wheremyhome.db.data.Picture
+import com.minuminu.haruu.wheremyhome.db.data.QandaViewData
 import com.minuminu.haruu.wheremyhome.databinding.FragmentHomeInfoDetailsBinding
 import com.minuminu.haruu.wheremyhome.db.AppDatabase
 import com.minuminu.haruu.wheremyhome.utils.Utils

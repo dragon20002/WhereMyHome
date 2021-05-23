@@ -1,4 +1,4 @@
-package com.minuminu.haruu.wheremyhome.data
+package com.minuminu.haruu.wheremyhome.db.data
 
 import android.os.Parcel
 import android.os.Parcelable

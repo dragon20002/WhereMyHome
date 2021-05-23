@@ -1,8 +1,8 @@
-package com.minuminu.haruu.wheremyhome.dao
+package com.minuminu.haruu.wheremyhome.db.dao
 
 import androidx.room.*
-import com.minuminu.haruu.wheremyhome.data.HomeInfo
-import com.minuminu.haruu.wheremyhome.data.HomeInfoWithQandas
+import com.minuminu.haruu.wheremyhome.db.data.HomeInfo
+import com.minuminu.haruu.wheremyhome.db.data.HomeInfoWithQandas
 
 @Dao
 interface HomeInfoDao {

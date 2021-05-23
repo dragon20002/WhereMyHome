@@ -1,6 +1,5 @@
 package com.minuminu.haruu.wheremyhome.view.fragment
 
-import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -15,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.minuminu.haruu.wheremyhome.R
-import com.minuminu.haruu.wheremyhome.data.HomeInfo
+import com.minuminu.haruu.wheremyhome.db.data.HomeInfo
 import com.minuminu.haruu.wheremyhome.db.AppDatabase
 import com.minuminu.haruu.wheremyhome.viewmodel.HomeInfoItemRecyclerViewAdapter
 

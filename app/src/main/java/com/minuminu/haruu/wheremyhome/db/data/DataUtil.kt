@@ -1,4 +1,4 @@
-package com.minuminu.haruu.wheremyhome.data
+package com.minuminu.haruu.wheremyhome.db.data
 
 import java.util.*
 

@@ -6,7 +6,7 @@ import androidx.databinding.ObservableField
 import androidx.databinding.ObservableList
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.minuminu.haruu.wheremyhome.data.*
+import com.minuminu.haruu.wheremyhome.db.data.*
 import com.minuminu.haruu.wheremyhome.db.AppDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

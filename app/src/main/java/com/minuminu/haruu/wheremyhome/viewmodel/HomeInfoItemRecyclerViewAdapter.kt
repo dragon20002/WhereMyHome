@@ -10,8 +10,8 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.minuminu.haruu.wheremyhome.R
-import com.minuminu.haruu.wheremyhome.data.HomeInfo
-import com.minuminu.haruu.wheremyhome.data.HomeInfoWithQandas
+import com.minuminu.haruu.wheremyhome.db.data.HomeInfo
+import com.minuminu.haruu.wheremyhome.db.data.HomeInfoWithQandas
 
 /**
  * [RecyclerView.Adapter] that can display a [HomeInfo].

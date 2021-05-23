@@ -2,7 +2,6 @@ package com.minuminu.haruu.wheremyhome.viewmodel
 
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -12,12 +11,11 @@ import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
-import androidx.navigation.findNavController
 import com.minuminu.haruu.wheremyhome.R
 import com.minuminu.haruu.wheremyhome.databinding.ItemQandaBinding
 import com.minuminu.haruu.wheremyhome.databinding.ItemPictureBinding
-import com.minuminu.haruu.wheremyhome.data.Picture
-import com.minuminu.haruu.wheremyhome.data.QandaViewData
+import com.minuminu.haruu.wheremyhome.db.data.Picture
+import com.minuminu.haruu.wheremyhome.db.data.QandaViewData
 import com.minuminu.haruu.wheremyhome.utils.Utils
 import com.minuminu.haruu.wheremyhome.view.activity.PictureFullscreenActivity
 import com.minuminu.haruu.wheremyhome.view.dialog.QandaRemarkDialog

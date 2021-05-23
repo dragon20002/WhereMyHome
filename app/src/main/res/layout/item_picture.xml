@@ -8,7 +8,7 @@
 
         <variable
             name="picture"
-            type="com.minuminu.haruu.wheremyhome.data.Picture" />
+            type="com.minuminu.haruu.wheremyhome.db.data.Picture" />
     </data>
 
     <ImageButton

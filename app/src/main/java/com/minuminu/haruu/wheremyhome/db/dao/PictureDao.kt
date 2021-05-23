@@ -1,10 +1,10 @@
-package com.minuminu.haruu.wheremyhome.dao
+package com.minuminu.haruu.wheremyhome.db.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Update
-import com.minuminu.haruu.wheremyhome.data.Picture
+import com.minuminu.haruu.wheremyhome.db.data.Picture
 
 @Dao
 interface PictureDao {

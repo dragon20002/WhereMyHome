@@ -7,7 +7,7 @@
 
         <variable
             name="qanda"
-            type="com.minuminu.haruu.wheremyhome.data.QandaViewData" />
+            type="com.minuminu.haruu.wheremyhome.db.data.QandaViewData" />
     </data>
 
     <LinearLayout
