@@ -7,37 +7,39 @@
     app:cardBackgroundColor="@color/white"
     app:cardCornerRadius="8dp"
     app:cardElevation="4dp"
-    app:cardUseCompatPadding="true"
-    app:cardPreventCornerOverlap="true">
+    app:cardPreventCornerOverlap="true"
+    app:cardUseCompatPadding="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
+        android:baselineAligned="false"
+        android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:gravity="center"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/item_number"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_margin="@dimen/margin_mid"
-                android:text="1"
-                android:textColor="@color/primary_dark"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:gravity="center"
-                android:textStyle="bold"
-                android:textAppearance="?attr/textAppearanceListItem" />
+                android:text="1"
+                android:textAppearance="?attr/textAppearanceListItem"
+                android:textColor="@color/primary_dark"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_margin="@dimen/margin_small">
+            android:layout_margin="@dimen/margin_small"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/item_name"
@@ -47,29 +49,29 @@
                 android:maxLines="2"
                 android:text="***** ***** ***** *****-*****"
                 android:textAppearance="?attr/textAppearanceListItem" />
+
             <TextView
                 android:id="@+id/item_desc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxLines="1"
                 android:layout_marginBottom="@dimen/margin_mid"
+                android:maxLines="1"
                 android:text="보증금(원) / 월세(원) / 관리비(원) / 점수(점)"
-                android:textAppearance="?attr/textAppearanceListItemSmall"/>
+                android:textAppearance="?attr/textAppearanceListItemSmall" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
             android:gravity="center">
 
             <ImageButton
                 android:id="@+id/btn_edit"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:src="@drawable/ic_baseline_arrow_forward_ios_32"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:contentDescription="@string/modify"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+                android:src="@drawable/ic_baseline_arrow_forward_ios_24" />
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

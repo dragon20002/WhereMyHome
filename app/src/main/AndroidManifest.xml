@@ -15,6 +15,7 @@
 
     <application
         android:allowBackup="true"
+        android:fullBackupContent="@xml/backup_descriptor"
         android:icon="@drawable/ic_free_icon_house_3799665"
         android:label="@string/app_name"
         android:roundIcon="@drawable/ic_free_icon_house_3799665"
@@ -44,6 +45,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".view.activity.MapsActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.WhereMyHome.NoActionBar" />
+
+        <activity
+            android:name=".view.activity.PictureFullscreenActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.WhereMyHome.NoActionBar" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

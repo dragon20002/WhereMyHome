@@ -1,6 +1,7 @@
 package com.minuminu.haruu.wheremyhome.viewmodel
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -18,6 +19,7 @@ import com.minuminu.haruu.wheremyhome.databinding.ItemPictureBinding
 import com.minuminu.haruu.wheremyhome.data.Picture
 import com.minuminu.haruu.wheremyhome.data.QandaViewData
 import com.minuminu.haruu.wheremyhome.utils.Utils
+import com.minuminu.haruu.wheremyhome.view.activity.PictureFullscreenActivity
 import com.minuminu.haruu.wheremyhome.view.dialog.QandaRemarkDialog
 
 object HomeInfoDetailsBindingAdapter {
@@ -55,11 +57,9 @@ object HomeInfoDetailsBindingAdapter {
                 it.picture = picture
                 it.root.findViewById<ImageView>(R.id.ivPicture)?.setOnClickListener {
                     // 전체화면
-                    viewGroup.findNavController().navigate(
-                        R.id.action_HomeInfoDetailsFragment_to_PictureFullScreenFragment,
-                        Bundle().apply {
-                            putString("pictureName", picture.name)
-                        })
+                    inflater.context.startActivity(Intent(inflater.context, PictureFullscreenActivity::class.java).apply {
+                        putExtra("pictureName", picture.name)
+                    })
                 }
             }
         }

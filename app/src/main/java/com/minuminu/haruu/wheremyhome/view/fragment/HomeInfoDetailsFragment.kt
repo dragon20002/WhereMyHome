@@ -1,12 +1,15 @@
 package com.minuminu.haruu.wheremyhome.view.fragment
 
 import android.annotation.SuppressLint
+import android.app.Activity.RESULT_OK
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageButton
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
@@ -23,19 +26,28 @@ import com.minuminu.haruu.wheremyhome.data.QandaViewData
 import com.minuminu.haruu.wheremyhome.databinding.FragmentHomeInfoDetailsBinding
 import com.minuminu.haruu.wheremyhome.db.AppDatabase
 import com.minuminu.haruu.wheremyhome.utils.Utils
-import com.minuminu.haruu.wheremyhome.view.activity.MainActivity
+import com.minuminu.haruu.wheremyhome.view.activity.MapsActivity
 import com.minuminu.haruu.wheremyhome.viewmodel.HomeInfoDetailsViewModel
 import kotlinx.coroutines.launch
 import java.io.IOException
 import java.util.*
 import kotlin.collections.ArrayList
 
-class HomeInfoDetailsFragment : Fragment(), MainActivity.OnBackPressed {
+class HomeInfoDetailsFragment : Fragment() {
 
     companion object {
         fun newInstance() = HomeInfoDetailsFragment()
     }
 
+    private val requestGoogleMap =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                result.data?.extras?.getString("address")
+                    ?.also { address ->
+                        viewModel?.address?.set(address)
+                    }
+            }
+        }
     private val requestTakePhoto =
         registerForActivityResult(ActivityResultContracts.TakePicture()) { isSuccess ->
             if (isSuccess) {
@@ -69,6 +81,9 @@ class HomeInfoDetailsFragment : Fragment(), MainActivity.OnBackPressed {
         val view = binding?.root
 
         view?.findViewById<TextInputEditText>(R.id.et_start_date)?.setOnClickListener { v ->
+            viewModel?.isEditing?.get()?.takeIf { isEditing -> !isEditing }
+                ?.run { return@setOnClickListener }
+
             val today = Calendar.getInstance()
             DatePickerDialog(
                 requireContext(), (DatePickerDialog.OnDateSetListener { _, y, m, d ->
@@ -83,6 +98,9 @@ class HomeInfoDetailsFragment : Fragment(), MainActivity.OnBackPressed {
             ).show()
         }
         view?.findViewById<TextInputEditText>(R.id.et_end_date)?.setOnClickListener { v ->
+            viewModel?.isEditing?.get()?.takeIf { isEditing -> !isEditing }
+                ?.run { return@setOnClickListener }
+
             val today = Calendar.getInstance()
             DatePickerDialog(
                 requireContext(), (DatePickerDialog.OnDateSetListener { _, y, m, d ->
@@ -97,14 +115,43 @@ class HomeInfoDetailsFragment : Fragment(), MainActivity.OnBackPressed {
             ).show()
         }
         view?.findViewById<ImageButton>(R.id.btn_camera)
-            ?.setOnClickListener { dispatchTakePictureIntent() }
+            ?.setOnClickListener {
+                viewModel?.isEditing?.get()?.takeIf { isEditing -> !isEditing }
+                    ?.run { return@setOnClickListener }
+
+                dispatchTakePictureIntent()
+            }
         view?.findViewById<ImageButton>(R.id.btn_location)?.setOnClickListener {
+            viewModel?.isEditing?.get()?.takeIf { isEditing -> !isEditing }
+                ?.run { return@setOnClickListener }
+
             // 지도
-            findNavController().navigate(
-                R.id.action_HomeInfoDetailsFragment_to_MapsFragment,
-                Bundle().apply {
-                    putString("address", viewModel?.address?.get())
-                })
+            requestGoogleMap.launch(Intent(requireContext(), MapsActivity::class.java).apply {
+                putExtra("address", viewModel?.address?.get())
+            })
+        }
+        view?.findViewById<Button>(R.id.btn_edit)?.setOnClickListener {
+            viewModel?.isEditing?.set(true)
+        }
+        view?.findViewById<Button>(R.id.btn_cancel)?.setOnClickListener {
+            arguments?.getString("itemId")?.let {
+                Log.d(javaClass.name, "itemId $it")
+                viewModel?.setItemId(it)
+            }
+            viewModel?.isEditing?.set(false)
+        }
+        view?.findViewById<Button>(R.id.btn_done)?.setOnClickListener {
+            viewModel?.viewModelScope?.launch {
+                val homeInfo = viewModel?.saveItem()
+
+                // Notify data changed
+                findNavController().previousBackStackEntry?.savedStateHandle?.set(
+                    "homeInfo",
+                    homeInfo
+                )
+
+                findNavController().popBackStack()
+            }
         }
 
         viewModel?.run {
@@ -142,14 +189,6 @@ class HomeInfoDetailsFragment : Fragment(), MainActivity.OnBackPressed {
             })
         }
 
-        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>(
-            "address"
-        )?.observe(viewLifecycleOwner, { address ->
-            Log.d(javaClass.name, "address - navController $address")
-
-            viewModel?.address?.set(address)
-        })
-
         if (arguments == null) {
             Log.d(javaClass.name, "add mode")
 
@@ -166,19 +205,6 @@ class HomeInfoDetailsFragment : Fragment(), MainActivity.OnBackPressed {
         }
 
         return view
-    }
-
-    override fun onBackPressed(): Boolean {
-        viewModel?.viewModelScope?.launch {
-            val homeInfo = viewModel?.saveItem()
-
-            // Notify data changed
-            findNavController().previousBackStackEntry?.savedStateHandle?.set("homeInfo", homeInfo)
-
-            findNavController().popBackStack()
-        }
-
-        return false
     }
 
     @SuppressLint("QueryPermissionsNeeded")

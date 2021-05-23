@@ -1,5 +1,6 @@
 package com.minuminu.haruu.wheremyhome.view.fragment
 
+import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -42,18 +43,18 @@ class HomeInfoListFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d(javaClass.name, "onCreate")
         arguments?.let {
             columnCount = it.getInt(ARG_COLUMN_COUNT)
         }
 
         Thread {
             val homeInfos = AppDatabase.getDatabase(requireContext()).homeInfoDao().getAll()
-            adapter = HomeInfoItemRecyclerViewAdapter(
-                this@HomeInfoListFragment,
-                ArrayList(homeInfos)
-            )
             Handler(Looper.getMainLooper()).post {
-                list?.adapter = adapter
+                list?.adapter = HomeInfoItemRecyclerViewAdapter(
+                    this@HomeInfoListFragment,
+                    ArrayList(homeInfos)
+                )
             }
         }.start()
     }
@@ -62,6 +63,7 @@ class HomeInfoListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        Log.d(javaClass.name, "onCreateView")
         val view = inflater.inflate(R.layout.fragment_home_info_list, container, false)
 
         list = view.findViewById<RecyclerView>(R.id.list).apply {

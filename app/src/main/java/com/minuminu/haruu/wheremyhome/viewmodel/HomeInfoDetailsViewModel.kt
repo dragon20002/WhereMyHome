@@ -20,6 +20,7 @@ class HomeInfoDetailsViewModel : ViewModel() {
     val itemLiveData = MutableLiveData<HomeInfoWithQandas>()
 
     // viewModel - view
+    val isEditing = ObservableField(false)
     val name = ObservableField<String>()
     val address = ObservableField<String>()
     val deposit = ObservableField<String>()

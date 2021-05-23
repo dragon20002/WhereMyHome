@@ -4,6 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
+        <import type="android.text.InputType" />
+
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="com.minuminu.haruu.wheremyhome.viewmodel.HomeInfoDetailsViewModel" />
@@ -19,6 +24,37 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <!-- toolbar -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end">
+
+                <Button
+                    android:id="@+id/btn_edit"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/modify"
+                    android:visibility='@{viewModel.isEditing ? View.GONE : View.VISIBLE}' />
+
+                <Button
+                    android:id="@+id/btn_cancel"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cancel"
+                    android:visibility='@{viewModel.isEditing ? View.VISIBLE : View.GONE}' />
+
+                <Button
+                    android:id="@+id/btn_done"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/done"
+                    android:visibility='@{viewModel.isEditing ? View.VISIBLE : View.GONE}' />
+            </LinearLayout>
+
             <!-- pictures -->
             <HorizontalScrollView
                 android:layout_width="match_parent"
@@ -29,31 +65,31 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    app:pictures="@{viewModel.pictureList}"
-                    app:layout="@{@layout/item_picture}">
+                    app:layout="@{@layout/item_picture}"
+                    app:pictures="@{viewModel.pictureList}">
 
                     <ImageButton
                         android:id="@+id/btn_camera"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                         android:layout_width="50dp"
                         android:layout_height="100dp"
                         android:layout_margin="@dimen/margin_small"
-                        android:src="@android:drawable/ic_menu_camera"
                         android:contentDescription="@string/add_picture"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+                        android:src="@android:drawable/ic_menu_camera" />
                 </LinearLayout>
             </HorizontalScrollView>
 
             <!-- name -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/ly_name"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_mid"
                 app:counterEnabled="true"
                 app:counterMaxLength="255"
                 app:errorEnabled="true"
-                app:hintEnabled="true"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+                app:hintEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_name"
@@ -61,7 +97,7 @@
                     android:layout_height="wrap_content"
                     android:ems="255"
                     android:hint="@string/name"
-                    android:inputType="text"
+                    android:inputType="@{viewModel.isEditing ? InputType.TYPE_CLASS_TEXT : InputType.TYPE_NULL}"
                     android:maxLength="255"
                     android:text="@={viewModel.name}" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -74,6 +110,7 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/ly_address"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/margin_mid"
@@ -81,8 +118,7 @@
                     app:counterEnabled="true"
                     app:counterMaxLength="255"
                     app:errorEnabled="true"
-                    app:hintEnabled="true"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+                    app:hintEnabled="true">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/et_address"
@@ -90,37 +126,37 @@
                         android:layout_height="wrap_content"
                         android:ems="255"
                         android:hint="@string/address"
-                        android:inputType="text"
+                        android:inputType="@{viewModel.isEditing ? InputType.TYPE_CLASS_TEXT : InputType.TYPE_NULL}"
                         android:maxLength="255"
                         android:text="@={viewModel.address}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <ImageButton
                     android:id="@+id/btn_location"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:src="@android:drawable/ic_dialog_map"
                     android:contentDescription="@string/see_map"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+                    android:src="@android:drawable/ic_dialog_map" />
             </LinearLayout>
 
             <!-- 보증금 / 월세 -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:baselineAligned="false">
+                android:baselineAligned="false"
+                android:orientation="horizontal">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/ly_deposit"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/margin_mid"
-                    app:errorEnabled="true"
-                    app:hintEnabled="true"
                     android:layout_weight="1"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+                    app:errorEnabled="true"
+                    app:hintEnabled="true">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/et_deposit"
@@ -128,20 +164,20 @@
                         android:layout_height="wrap_content"
                         android:ems="8"
                         android:hint="@string/deposit"
-                        android:inputType="number"
+                        android:inputType="@{viewModel.isEditing ? InputType.TYPE_CLASS_NUMBER : InputType.TYPE_NULL}"
                         android:maxLength="8"
                         android:text="@={viewModel.deposit}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/ly_rental"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/margin_mid"
-                    app:errorEnabled="true"
-                    app:hintEnabled="true"
                     android:layout_weight="1"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+                    app:errorEnabled="true"
+                    app:hintEnabled="true">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/et_rental"
@@ -149,20 +185,20 @@
                         android:layout_height="wrap_content"
                         android:ems="8"
                         android:hint="@string/rental"
-                        android:inputType="number"
+                        android:inputType="@{viewModel.isEditing ? InputType.TYPE_CLASS_NUMBER : InputType.TYPE_NULL}"
                         android:maxLength="8"
                         android:text="@={viewModel.rental}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/ly_expense"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/margin_mid"
-                    app:errorEnabled="true"
-                    app:hintEnabled="true"
                     android:layout_weight="1"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+                    app:errorEnabled="true"
+                    app:hintEnabled="true">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/et_expense"
@@ -170,7 +206,7 @@
                         android:layout_height="wrap_content"
                         android:ems="8"
                         android:hint="@string/expense"
-                        android:inputType="numberDecimal"
+                        android:inputType="@{viewModel.isEditing ? InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL : InputType.TYPE_NULL}"
                         android:maxLength="8"
                         android:text="@={viewModel.expense}" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -180,18 +216,18 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:baselineAligned="false">
+                android:baselineAligned="false"
+                android:orientation="horizontal">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/ly_start_date"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/margin_mid"
-                    app:errorEnabled="true"
-                    app:hintEnabled="true"
                     android:layout_weight="1"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+                    app:errorEnabled="true"
+                    app:hintEnabled="true">
 
                     <!-- *** Click-only ***
                          clickable: true
@@ -201,12 +237,12 @@
                         android:id="@+id/et_start_date"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:ems="20"
-                        android:hint="@string/start_date"
-                        android:inputType="none"
                         android:clickable="true"
                         android:cursorVisible="false"
+                        android:ems="20"
                         android:focusable="false"
+                        android:hint="@string/start_date"
+                        android:inputType="none"
                         android:maxLength="20"
                         android:text="@={viewModel.startDate}"
                         tools:ignore="KeyboardInaccessibleWidget" />
@@ -214,13 +250,13 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/ly_end_date"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/margin_mid"
-                    app:errorEnabled="true"
-                    app:hintEnabled="true"
                     android:layout_weight="1"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+                    app:errorEnabled="true"
+                    app:hintEnabled="true">
 
                     <!-- *** Click-only ***
                          clickable: true
@@ -230,12 +266,12 @@
                         android:id="@+id/et_end_date"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:ems="20"
-                        android:hint="@string/end_date"
-                        android:inputType="none"
                         android:clickable="true"
                         android:cursorVisible="false"
+                        android:ems="20"
                         android:focusable="false"
+                        android:hint="@string/end_date"
+                        android:inputType="none"
                         android:maxLength="20"
                         android:text="@={viewModel.endDate}"
                         tools:ignore="KeyboardInaccessibleWidget" />
@@ -257,8 +293,8 @@
                     android:layout_margin="@dimen/margin_small"
                     android:text="@string/group"
                     android:textAlignment="center"
-                    android:textStyle="bold"
-                    android:textAppearance="?attr/textAppearanceListItemSmall" />
+                    android:textAppearance="?attr/textAppearanceListItemSmall"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="24dp"
@@ -266,8 +302,8 @@
                     android:layout_margin="@dimen/margin_small"
                     android:text="@string/number"
                     android:textAlignment="center"
-                    android:textStyle="bold"
-                    android:textAppearance="?attr/textAppearanceListItemSmall" />
+                    android:textAppearance="?attr/textAppearanceListItemSmall"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -276,8 +312,8 @@
                     android:layout_weight="1"
                     android:text="@string/question"
                     android:textAlignment="center"
-                    android:textStyle="bold"
-                    android:textAppearance="?attr/textAppearanceListItemSmall" />
+                    android:textAppearance="?attr/textAppearanceListItemSmall"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="100dp"
@@ -285,8 +321,8 @@
                     android:layout_margin="@dimen/margin_small"
                     android:text="@string/answer"
                     android:textAlignment="center"
-                    android:textStyle="bold"
-                    android:textAppearance="?attr/textAppearanceListItemSmall" />
+                    android:textAppearance="?attr/textAppearanceListItemSmall"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="36dp"
@@ -294,10 +330,11 @@
                     android:layout_margin="@dimen/margin_small"
                     android:text="@string/remark"
                     android:textAlignment="center"
-                    android:textStyle="bold"
-                    android:textAppearance="?attr/textAppearanceListItemSmall" />
+                    android:textAppearance="?attr/textAppearanceListItemSmall"
+                    android:textStyle="bold" />
 
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -305,8 +342,8 @@
                 android:layout_marginRight="8dp"
                 android:layout_marginBottom="8dp"
                 android:orientation="vertical"
-                app:qandas="@{viewModel.qandaList}"
-                app:layout="@{@layout/item_qanda}" />
+                app:layout="@{@layout/item_qanda}"
+                app:qandas="@{viewModel.qandaList}" />
         </LinearLayout>
     </ScrollView>
 </layout>
