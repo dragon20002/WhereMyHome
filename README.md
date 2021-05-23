@@ -6,7 +6,7 @@
 
 - `Android Room` Android DB API. [공식가이드](https://developer.android.com/training/data-storage/room) 참고
 
-- `Navigation Component` MainActivity 1개와 여러 개의 Fragment로 개발하였다. Fragment 이동 시 `Navigation Component` 활용. 관련 내용은 [3.2.](#navcontroller)나 [공식가이드](https://developer.android.com/guide/navigation/navigation-getting-started) 참고.
+- `Navigation Component` Fragment 이동 시 `Navigation Component` 활용. 관련 내용은 [3.2.](#navcontroller)나 [공식가이드](https://developer.android.com/guide/navigation/navigation-getting-started) 참고.
 
 ## 목차
 
@@ -39,7 +39,7 @@
   [`HomeInfoListFragment.kt`](app/src/main/java/com/minuminu/haruu/wheremyhome/view/fragment/HomeInfoListFragment.kt) |
   [`HomeInfoItemRecyclerViewAdapter.kt`](app/src/main/java/com/minuminu/haruu/wheremyhome/view/viewmodel/HomeInfoItemRecyclerViewAdapter.kt)
 
-  ![목록](readme_img/1-home-list.jpg)
+  ![목록](readme_img/1-home-list.png)
 
 ### 2. 집 상세 화면
 
@@ -51,17 +51,15 @@
 
 - 지도(🗺) 버튼을 눌러 현재 위치 가져오기
 
-- 뒤로가기(↩) 버튼을 누르면 수정사항이 저장됨
-
   [`HomeInfoDetailsFragment.kt`](app/src/main/java/com/minuminu/haruu/wheremyhome/view/fragment/HomeInfoDetailsFragment.kt) |
   [`HomeInfoDetailsViewModel.kt`](app/src/main/java/com/minuminu/haruu/wheremyhome/view/viewmodel/HomeInfoDetailsViewModel.kt) |
   [`HomeInfoDetailsBindingAdapter.kt`](app/src/main/java/com/minuminu/haruu/wheremyhome/view/viewmodel/HomeInfoDetailsBindingAdapter.kt)
 
-  ![상세](readme_img/2-home-details.jpg)
+  ![상세](readme_img/2-home-details.png) ![상세-2](readme_img/2-home-details-2.png)
 
 ### 3. 사진 전체화면
 
-- 뒤로가기(↩)를 누르거나 화면 터치 후 표시되는 '닫기' 버튼을 눌러 나감
+- 사진 전체화면
 
   [`PictureFullScreenFragment.kt`](app/src/main/java/com/minuminu/haruu/wheremyhome/view/fragment/PictureFullScreenFragment.kt)
 
@@ -73,21 +71,13 @@
 
 - 비고(···) 버튼을 눌러 비고 항목 작성하는 팝업 노출
 
-  ![QandA](readme_img/4-home-qanda.png)  
-
-### 5. 비고 작성 팝업
-
-- 작성 후 저장
-
   [`QandaRemarkDialog.kt`](app/src/main/java/com/minuminu/haruu/wheremyhome/view/dialog/QandaRemarkDialog.kt)
 
-  ![remark](readme_img/5-home-remark.png)
+  ![QandA](readme_img/4-home-qanda.png) ![remark](readme_img/5-home-remark.png)
 
 ### 6. 현재 위치 지도
 
-- 현재 위치를 표시함
-
-- 뒤로가기를 누르면 현재 위치의 주소를 상세화면의 '위치' 입력란에 저장
+- 현재 위치를 찾음
 
   [`MapsFragment.kt`](app/src/main/java/com/minuminu/haruu/wheremyhome/view/fragment/MapsFragment.kt)
 
@@ -100,8 +90,6 @@
 - Q&A 점수가 항목별 가중치가 없어 의미없음
 
 - 사진 전체화면에서 '좌우 스와이프' 기능, '사진 저장' 기능 추가 필요
-
-- 지도(🗺) 버튼을 누르면 바로 현재 위치를 찾기 때문에 이전에 입력했던 정보가 지워짐. 지도 화면 내부에 '현재위치 찾기' 버튼을 별도 추가 필요
 
 - 그리고 가장 중요한 실사용 후기... 대충 만들어서 실제 사용해봤는데 방을 금방금방 보다보니 조목조목 체크하기 귀찮아져서 실제 쓸모는 없을 것 같다. 사진, 월세, 위치 저장 기능 정도만 사용.
 
@@ -344,7 +332,7 @@ object HomeInfoDetailsBindingAdapter {
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     // android:text="@{viewModel.name}" // 단방향 바인딩
-    android:text="@={viewModel.name}"   // 양방향 바인딩 (표현식 사용 시 단방향 바인딩만 가능하다)
+    android:text="@={viewModel.name}"   // 양방향 바인딩 (표현식 사용 시 양방향 바인딩만 사용불가)
     android:ems="255"
     android:hint="@string/name"
     android:inputType="text"
@@ -362,7 +350,7 @@ object HomeInfoDetailsBindingAdapter {
 
 ### NavController
 
-- `Fragment` 간 이동을 `@navigation/nav_graph.xml`에 명시적으로 작성하여 `FragmentTransaction` 보다 쉽고 편하게 관리할 수 있다.
+- `Fragment` 간 이동을 `@navigation/nav_graph.xml`에 명시적으로 작성하여 `FragmentTransaction`을 사용하는 것보다 쉽고 편하게 관리할 수 있다.
 
   ![navigation](readme_img/nav_graph.jpg)
 
