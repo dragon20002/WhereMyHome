@@ -109,75 +109,7 @@ object HomeInfoDetailsBindingAdapter {
                 positionStart: Int,
                 itemCount: Int
             ) {
-                if (qandas == null) return
-                Log.d(
-                    HomeInfoDetailsViewModel::class.simpleName,
-                    "qandas - observe : ${qandas.size}"
-                )
-
-                if (viewGroup.childCount >= qandas.size)
-                    return
-
-                val inflater =
-                    viewGroup.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-
-                for (i in qandas.indices) {
-                    val qanda = qandas[i]
-
-                    if (i < viewGroup.childCount) {
-                        val binding =
-                            DataBindingUtil.getBinding<ItemQandaBinding>(viewGroup.getChildAt(i + 1))
-                        if (binding != null) {
-                            binding.qanda = qanda
-                            binding.viewModel = viewModel
-                            continue
-                        }
-                    }
-
-                    DataBindingUtil.inflate<ItemQandaBinding>(
-                        inflater,
-                        layout,
-                        viewGroup,
-                        true
-                    )?.let { binding ->
-                        binding.qanda = qanda
-                        binding.viewModel = viewModel
-                        binding.root.findViewById<CheckBox>(R.id.cbx_answer)
-                            ?.setOnClickListener { view ->
-                                val cbx = view as CheckBox
-                                cbx.text = when (cbx.isChecked) {
-                                    true -> "예"
-                                    else -> "아니오"
-                                }
-                            }
-                        binding.root.findViewById<Button>(R.id.btn_remark)
-                            ?.setOnClickListener { view ->
-                                QandaRemarkDialog().also { dialog ->
-                                    dialog.caller = binding.root.findViewById(R.id.qanda_remark)
-                                    dialog.listener =
-                                        object : QandaRemarkDialog.RemarkDialogListener {
-                                            override fun onDialogPositiveClick(
-                                                dialog: DialogFragment,
-                                                remark: String,
-                                                caller: View?
-                                            ) {
-                                                if (viewModel.isEditing.get() != false) {
-                                                    qanda.remark = remark
-                                                }
-                                            }
-
-                                            override fun onDialogNegativeClick(dialog: DialogFragment) {
-                                            }
-                                        }
-                                    dialog.remark = qanda.remark
-                                    dialog.viewModel = viewModel
-                                }.show(
-                                    (view.context as FragmentActivity).supportFragmentManager,
-                                    "RemarkDialogFragment"
-                                )
-                            }
-                    }
-                }
+                updateQandaList(viewGroup, layout, viewModel, qandas)
             }
 
             override fun onItemRangeMoved(
@@ -196,5 +128,83 @@ object HomeInfoDetailsBindingAdapter {
             }
         })
 
+        updateQandaList(viewGroup, layout, viewModel, viewModel.qandaList)
+    }
+
+    private fun updateQandaList(
+        viewGroup: ViewGroup,
+        layout: Int,
+        viewModel: HomeInfoDetailsViewModel,
+        qandas: ObservableList<QandaViewData>?
+    ) {
+        if (qandas == null) return
+        Log.d(
+            HomeInfoDetailsViewModel::class.simpleName,
+            "qandas - observe : ${qandas.size}"
+        )
+
+        if (viewGroup.childCount >= qandas.size)
+            return
+
+        val inflater =
+            viewGroup.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+
+        for (i in qandas.indices) {
+            val qanda = qandas[i]
+
+            if (i < viewGroup.childCount) {
+                val binding =
+                    DataBindingUtil.getBinding<ItemQandaBinding>(viewGroup.getChildAt(i + 1))
+                if (binding != null) {
+                    binding.qanda = qanda
+                    binding.viewModel = viewModel
+                    continue
+                }
+            }
+
+            DataBindingUtil.inflate<ItemQandaBinding>(
+                inflater,
+                layout,
+                viewGroup,
+                true
+            )?.let { binding ->
+                binding.qanda = qanda
+                binding.viewModel = viewModel
+                binding.root.findViewById<CheckBox>(R.id.cbx_answer)
+                    ?.setOnClickListener { view ->
+                        val cbx = view as CheckBox
+                        cbx.text = when (cbx.isChecked) {
+                            true -> "예"
+                            else -> "아니오"
+                        }
+                    }
+                binding.root.findViewById<Button>(R.id.btn_remark)
+                    ?.setOnClickListener { view ->
+                        QandaRemarkDialog().also { dialog ->
+                            dialog.caller = binding.root.findViewById(R.id.qanda_remark)
+                            dialog.listener =
+                                object : QandaRemarkDialog.RemarkDialogListener {
+                                    override fun onDialogPositiveClick(
+                                        dialog: DialogFragment,
+                                        remark: String,
+                                        caller: View?
+                                    ) {
+                                        if (viewModel.isEditing.get() != false) {
+                                            qanda.remark = remark
+                                        }
+                                    }
+
+                                    override fun onDialogNegativeClick(dialog: DialogFragment) {
+                                    }
+                                }
+                            dialog.remark = qanda.remark
+                            dialog.viewModel = viewModel
+                        }.show(
+                            (view.context as FragmentActivity).supportFragmentManager,
+                            "RemarkDialogFragment"
+                        )
+                    }
+            }
+        }
     }
 }
