@@ -16,13 +16,21 @@ class EditTextWithButton : AppCompatEditText, View.OnTouchListener {
     private var drwMinus: Drawable? = null
     private var drwPlus: Drawable? = null
 
-    constructor(context: Context) : super(context) { init() }
-    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) { init() }
+    constructor(context: Context) : super(context) {
+        init()
+    }
+
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
+        init()
+    }
+
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
         context,
         attrs,
         defStyleAttr
-    ) { init() }
+    ) {
+        init()
+    }
 
     @SuppressLint("ClickableViewAccessibility")
     private fun init() {
@@ -45,6 +53,8 @@ class EditTextWithButton : AppCompatEditText, View.OnTouchListener {
     }
 
     override fun onTouch(view: View?, event: MotionEvent?): Boolean {
+        view?.isEnabled?.takeIf { !it }?.apply { return false }
+
         event?.let {
             drwMinus?.let { drawable ->
                 if ((it.x > paddingStart) and (it.x < paddingStart + drawable.intrinsicWidth)) {

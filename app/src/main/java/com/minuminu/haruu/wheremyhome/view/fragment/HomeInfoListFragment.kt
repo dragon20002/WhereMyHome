@@ -1,8 +1,6 @@
 package com.minuminu.haruu.wheremyhome.view.fragment
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -14,9 +12,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.minuminu.haruu.wheremyhome.R
-import com.minuminu.haruu.wheremyhome.db.data.HomeInfo
 import com.minuminu.haruu.wheremyhome.db.AppDatabase
 import com.minuminu.haruu.wheremyhome.viewmodel.HomeInfoItemRecyclerViewAdapter
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * A fragment representing a list of Items.
@@ -38,31 +38,18 @@ class HomeInfoListFragment : Fragment() {
 
     private var columnCount = 1
     private var list: RecyclerView? = null
-    private var adapter: HomeInfoItemRecyclerViewAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d(javaClass.name, "onCreate")
         arguments?.let {
             columnCount = it.getInt(ARG_COLUMN_COUNT)
         }
-
-        Thread {
-            val homeInfos = AppDatabase.getDatabase(requireContext()).homeInfoDao().getAll()
-            Handler(Looper.getMainLooper()).post {
-                list?.adapter = HomeInfoItemRecyclerViewAdapter(
-                    this@HomeInfoListFragment,
-                    ArrayList(homeInfos)
-                )
-            }
-        }.start()
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Log.d(javaClass.name, "onCreateView")
         val view = inflater.inflate(R.layout.fragment_home_info_list, container, false)
 
         list = view.findViewById<RecyclerView>(R.id.list).apply {
@@ -77,22 +64,16 @@ class HomeInfoListFragment : Fragment() {
             findNavController().navigate(R.id.action_HomeInfoListFragment_to_HomeInfoDetailsFragment)
         }
 
-        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<HomeInfo>(
-            "homeInfo"
-        )?.observe(viewLifecycleOwner, { homeInfo ->
-            Log.d(javaClass.name, "homeInfo - navController $homeInfo")
-
-            Thread {
-                val homeInfos = AppDatabase.getDatabase(requireContext()).homeInfoDao().getAll()
-                adapter = HomeInfoItemRecyclerViewAdapter(
-                    this@HomeInfoListFragment,
-                    ArrayList(homeInfos)
-                )
-                Handler(Looper.getMainLooper()).post {
-                    list?.adapter = adapter
-                }
-            }.start()
-        })
+        CoroutineScope(Dispatchers.IO).launch {
+            val homeInfos = AppDatabase.getDatabase(requireContext()).homeInfoDao().getAll()
+            val adapter = HomeInfoItemRecyclerViewAdapter(
+                this@HomeInfoListFragment,
+                ArrayList(homeInfos)
+            )
+            launch(Dispatchers.Main) {
+                list?.adapter = adapter
+            }
+        }
 
         return view
     }

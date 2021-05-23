@@ -24,7 +24,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/cancel" />
+            android:text="@string/cancel"
+            android:textColor="@color/primary_dark" />
 
         <Button
             android:id="@+id/btn_map_done"
@@ -32,6 +33,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/done" />
+            android:text="@string/done"
+            android:textColor="@color/primary_dark" />
     </LinearLayout>
 </LinearLayout>

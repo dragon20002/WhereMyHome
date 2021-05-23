@@ -20,11 +20,11 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputEditText
 import com.minuminu.haruu.wheremyhome.R
+import com.minuminu.haruu.wheremyhome.databinding.FragmentHomeInfoDetailsBinding
+import com.minuminu.haruu.wheremyhome.db.AppDatabase
 import com.minuminu.haruu.wheremyhome.db.data.DataUtil
 import com.minuminu.haruu.wheremyhome.db.data.Picture
 import com.minuminu.haruu.wheremyhome.db.data.QandaViewData
-import com.minuminu.haruu.wheremyhome.databinding.FragmentHomeInfoDetailsBinding
-import com.minuminu.haruu.wheremyhome.db.AppDatabase
 import com.minuminu.haruu.wheremyhome.utils.Utils
 import com.minuminu.haruu.wheremyhome.view.activity.MapsActivity
 import com.minuminu.haruu.wheremyhome.viewmodel.HomeInfoDetailsViewModel
@@ -80,9 +80,40 @@ class HomeInfoDetailsFragment : Fragment() {
         binding?.viewModel = viewModel
         val view = binding?.root
 
+        view?.findViewById<Button>(R.id.btn_edit)?.setOnClickListener {
+            viewModel?.isEditing?.set(true)
+        }
+        view?.findViewById<Button>(R.id.btn_cancel)?.setOnClickListener {
+            val itemId = arguments?.getString("itemId")
+            Log.d(javaClass.name, "itemId $itemId")
+
+            if (itemId === null) {
+                findNavController().popBackStack()
+            } else {
+                viewModel?.setItemId(itemId)
+                viewModel?.isEditing?.set(false)
+            }
+        }
+        view?.findViewById<Button>(R.id.btn_done)?.setOnClickListener {
+            viewModel?.viewModelScope?.launch {
+                val homeInfo = viewModel?.saveItem()
+                Log.d(javaClass.name, "homeInfo $homeInfo")
+
+                findNavController().popBackStack()
+            }
+        }
+        view?.findViewById<ImageButton>(R.id.btn_camera)
+            ?.setOnClickListener {
+                dispatchTakePictureIntent()
+            }
+        view?.findViewById<ImageButton>(R.id.btn_location)?.setOnClickListener {
+            // 지도
+            requestGoogleMap.launch(Intent(requireContext(), MapsActivity::class.java).apply {
+                putExtra("address", viewModel?.address?.get())
+            })
+        }
         view?.findViewById<TextInputEditText>(R.id.et_start_date)?.setOnClickListener { v ->
-            viewModel?.isEditing?.get()?.takeIf { isEditing -> !isEditing }
-                ?.run { return@setOnClickListener }
+            viewModel?.isEditing?.get()?.takeIf { !it }?.also { return@setOnClickListener }
 
             val today = Calendar.getInstance()
             DatePickerDialog(
@@ -98,8 +129,7 @@ class HomeInfoDetailsFragment : Fragment() {
             ).show()
         }
         view?.findViewById<TextInputEditText>(R.id.et_end_date)?.setOnClickListener { v ->
-            viewModel?.isEditing?.get()?.takeIf { isEditing -> !isEditing }
-                ?.run { return@setOnClickListener }
+            viewModel?.isEditing?.get()?.takeIf { !it }?.also { return@setOnClickListener }
 
             val today = Calendar.getInstance()
             DatePickerDialog(
@@ -113,45 +143,6 @@ class HomeInfoDetailsFragment : Fragment() {
                 today[Calendar.MONTH],
                 today[Calendar.DAY_OF_MONTH]
             ).show()
-        }
-        view?.findViewById<ImageButton>(R.id.btn_camera)
-            ?.setOnClickListener {
-                viewModel?.isEditing?.get()?.takeIf { isEditing -> !isEditing }
-                    ?.run { return@setOnClickListener }
-
-                dispatchTakePictureIntent()
-            }
-        view?.findViewById<ImageButton>(R.id.btn_location)?.setOnClickListener {
-            viewModel?.isEditing?.get()?.takeIf { isEditing -> !isEditing }
-                ?.run { return@setOnClickListener }
-
-            // 지도
-            requestGoogleMap.launch(Intent(requireContext(), MapsActivity::class.java).apply {
-                putExtra("address", viewModel?.address?.get())
-            })
-        }
-        view?.findViewById<Button>(R.id.btn_edit)?.setOnClickListener {
-            viewModel?.isEditing?.set(true)
-        }
-        view?.findViewById<Button>(R.id.btn_cancel)?.setOnClickListener {
-            arguments?.getString("itemId")?.let {
-                Log.d(javaClass.name, "itemId $it")
-                viewModel?.setItemId(it)
-            }
-            viewModel?.isEditing?.set(false)
-        }
-        view?.findViewById<Button>(R.id.btn_done)?.setOnClickListener {
-            viewModel?.viewModelScope?.launch {
-                val homeInfo = viewModel?.saveItem()
-
-                // Notify data changed
-                findNavController().previousBackStackEntry?.savedStateHandle?.set(
-                    "homeInfo",
-                    homeInfo
-                )
-
-                findNavController().popBackStack()
-            }
         }
 
         viewModel?.run {
@@ -173,35 +164,34 @@ class HomeInfoDetailsFragment : Fragment() {
                     }
                 }
 
-                for (i in it.qandas.indices) {
-                    val qanda: QandaViewData = it.qandas[i].let { qanda ->
-                        QandaViewData(
-                            qanda.id, qanda.group, qanda.num.toString(),
-                            qanda.question, qanda.type, qanda.answer, qanda.remark
-                        )
-                    }
-                    if (i < qandaList.size) {
-                        qandaList[i] = qanda
-                    } else {
-                        qandaList.add(qanda)
-                    }
-                }
+                qandaList.addAll(it.qandas.map { qanda ->
+                    QandaViewData(
+                        qanda.id,
+                        qanda.group,
+                        qanda.num.toString(),
+                        qanda.question,
+                        qanda.type,
+                        qanda.answer,
+                        qanda.remark
+                    )
+                })
             })
         }
 
-        if (arguments == null) {
+        val itemId = arguments?.getString("itemId")
+        Log.d(javaClass.name, "itemId $itemId")
+
+        if (itemId === null) {
             Log.d(javaClass.name, "add mode")
 
+            viewModel?.isEditing?.set(true)
             viewModel?.itemLiveData?.postValue(DataUtil.createDummyItem())
             viewModel?.pictureList?.addAll(ArrayList())
             viewModel?.qandaList?.addAll(DataUtil.createQandaTemplate())
         } else {
             Log.d(javaClass.name, "modify mode")
 
-            arguments?.getString("itemId")?.let {
-                Log.d(javaClass.name, "itemId $it")
-                viewModel?.setItemId(it)
-            }
+            viewModel?.setItemId(itemId)
         }
 
         return view

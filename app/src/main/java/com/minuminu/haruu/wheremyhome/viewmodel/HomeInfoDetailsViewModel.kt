@@ -8,7 +8,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.minuminu.haruu.wheremyhome.db.data.*
 import com.minuminu.haruu.wheremyhome.db.AppDatabase
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class HomeInfoDetailsViewModel : ViewModel() {
@@ -36,13 +38,13 @@ class HomeInfoDetailsViewModel : ViewModel() {
     }
 
     fun setItemId(itemId: String) {
-        Thread {
+        CoroutineScope(Dispatchers.IO).launch {
             db?.homeInfoDao()?.loadAllByIds(arrayOf(itemId))?.takeIf {
                 it.isNotEmpty()
             }?.get(0)?.let { homeInfo ->
                 itemLiveData.postValue(homeInfo)
             }
-        }.start()
+        }
     }
 
     suspend fun saveItem(): HomeInfo {

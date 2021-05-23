@@ -3,11 +3,17 @@
 
     <data>
 
+        <import type="android.text.InputType" />
+
         <import type="android.view.View" />
 
         <variable
             name="qanda"
             type="com.minuminu.haruu.wheremyhome.db.data.QandaViewData" />
+
+        <variable
+            name="viewModel"
+            type="com.minuminu.haruu.wheremyhome.viewmodel.HomeInfoDetailsViewModel" />
     </data>
 
     <LinearLayout
@@ -21,8 +27,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_margin="@dimen/margin_small"
-            android:text="@={qanda.group}"
             android:gravity="center"
+            android:text="@={qanda.group}"
             android:textAppearance="?attr/textAppearanceListItemSmall" />
 
         <TextView
@@ -31,8 +37,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_margin="@dimen/margin_small"
-            android:text="@={qanda.num}"
             android:gravity="center"
+            android:text="@={qanda.num}"
             android:textAppearance="?attr/textAppearanceListItemSmall" />
 
         <TextView
@@ -50,7 +56,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_margin="@dimen/margin_small"
-            android:background="@color/primary"
             android:gravity="center"
             android:orientation="horizontal">
 
@@ -59,9 +64,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="4"
-                android:maxLength="4"
+                android:enabled="@{viewModel.isEditing}"
                 android:inputType="number|numberSigned"
                 android:maxEms="4"
+                android:maxLength="4"
                 android:text="@={qanda.strAnswer}"
                 android:textAlignment="center"
                 android:visibility='@{qanda.type.contentEquals("Int") ? View.VISIBLE : View.GONE}' />
@@ -71,6 +77,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="@={qanda.blnAnswer}"
+                android:enabled="@{viewModel.isEditing}"
                 android:text='@{qanda.blnAnswer == true ? "예" : "아니오"}'
                 android:textAlignment="center"
                 android:visibility='@{qanda.type.contentEquals("Boolean") ? View.VISIBLE : View.GONE}' />
@@ -99,8 +106,8 @@
             android:id="@+id/qanda_remark"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:text="@={qanda.remark}"/>
+            android:text="@={qanda.remark}"
+            android:visibility="gone" />
 
     </LinearLayout>
 </layout>
