@@ -15,8 +15,7 @@
 &nbsp;&nbsp;[1.2.](#2-집-상세-화면) 집 상세 화면<br>
 &nbsp;&nbsp;[1.3.](#3-사진-전체화면) 사진 전체화면<br>
 &nbsp;&nbsp;[1.4.](#4-qa-작성) Q&A 작성<br>
-&nbsp;&nbsp;[1.5.](#5-비고-작성-팝업) 비고 작성 팝업<br>
-&nbsp;&nbsp;[1.6.](#6-현재-위치-지도) 현재 위치 지도<br>
+&nbsp;&nbsp;[1.5.](#6-현재-위치-지도) 현재 위치 지도<br>
 [2.](#개선할-점) 개선할 점<br>
 [3.](#스터디) 스터디<br>
 &nbsp;&nbsp;[3.1.](#viewmodel) ViewModel<br>
@@ -55,7 +54,7 @@
   [`HomeInfoDetailsViewModel.kt`](app/src/main/java/com/minuminu/haruu/wheremyhome/view/viewmodel/HomeInfoDetailsViewModel.kt) |
   [`HomeInfoDetailsBindingAdapter.kt`](app/src/main/java/com/minuminu/haruu/wheremyhome/view/viewmodel/HomeInfoDetailsBindingAdapter.kt)
 
-  ![상세](readme_img/2-home-details.png) ![상세-2](readme_img/2-home-details-2.png)
+  ![상세](readme_img/2-1-home-details.png) ![상세-2](readme_img/2-2-home-details.png)
 
 ### 3. 사진 전체화면
 
@@ -73,15 +72,15 @@
 
   [`QandaRemarkDialog.kt`](app/src/main/java/com/minuminu/haruu/wheremyhome/view/dialog/QandaRemarkDialog.kt)
 
-  ![QandA](readme_img/4-home-qanda.png) ![remark](readme_img/5-home-remark.png)
+  ![QandA](readme_img/4-1-home-qanda.png) ![remark](readme_img/4-2-home-remark.png)
 
-### 6. 현재 위치 지도
+### 5. 현재 위치 지도
 
 - 현재 위치를 찾음
 
   [`MapsFragment.kt`](app/src/main/java/com/minuminu/haruu/wheremyhome/view/fragment/MapsFragment.kt)
 
-  ![map](readme_img/6-home-location-map.png)
+  ![map](readme_img/5-home-location-map.png)
 
 ## 개선할 점
 

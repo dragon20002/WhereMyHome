@@ -58,6 +58,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.WhereMyHome.NoActionBar" />
 
+        <activity
+            android:name=".view.activity.SettingsActivity"
+            android:label="@string/action_settings"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.WhereMyHome.NoActionBar" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.minuminu.haruu.wheremyhome"
