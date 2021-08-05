@@ -22,15 +22,24 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/item_number"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:gravity="center"
-                android:text="1"
-                android:textAppearance="?attr/textAppearanceListItem"
-                android:textColor="@color/primary_dark"
-                android:textStyle="bold" />
+            <ImageView
+                android:id="@+id/item_thumbnail"
+                android:layout_width="80dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="@dimen/margin_small"
+                android:layout_marginEnd="@dimen/margin_small"
+                android:scaleType="fitCenter"
+                android:contentDescription="@string/picture"
+                android:background="@color/primary" />
+<!--            <TextView-->
+<!--                android:id="@+id/item_number"-->
+<!--                android:layout_width="32dp"-->
+<!--                android:layout_height="32dp"-->
+<!--                android:gravity="center"-->
+<!--                android:text="1"-->
+<!--                android:textAppearance="?attr/textAppearanceListItem"-->
+<!--                android:textColor="@color/primary_dark"-->
+<!--                android:textStyle="bold" />-->
         </LinearLayout>
 
         <LinearLayout

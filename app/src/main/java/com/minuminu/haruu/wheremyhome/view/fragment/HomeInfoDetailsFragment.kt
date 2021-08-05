@@ -81,6 +81,9 @@ class HomeInfoDetailsFragment : Fragment() {
         binding?.viewModel = viewModel
         val view = binding?.root
 
+        view?.findViewById<Button>(R.id.btn_go_to_list)?.setOnClickListener {
+            findNavController().popBackStack()
+        }
         view?.findViewById<Button>(R.id.btn_edit)?.setOnClickListener {
             viewModel?.isEditing?.set(true)
         }

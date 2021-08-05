@@ -25,38 +25,57 @@
             android:orientation="vertical">
 
             <!-- toolbar -->
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="end">
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/btn_go_to_list"
+                    style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/go_to_list"
+                    android:textColor="@color/primary_dark"
+                    app:icon="@drawable/ic_arrow_back_24"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
 
                 <Button
                     android:id="@+id/btn_edit"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/modify"
                     android:textColor="@color/primary_dark"
-                    android:visibility='@{viewModel.isEditing ? View.GONE : View.VISIBLE}' />
+                    android:visibility='@{viewModel.isEditing ? View.GONE : View.VISIBLE}'
+                    app:icon="@drawable/ic_edit_24"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
 
                 <Button
                     android:id="@+id/btn_cancel"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/cancel"
                     android:textColor="@color/primary_dark"
-                    android:visibility='@{viewModel.isEditing ? View.VISIBLE : View.GONE}' />
+                    android:visibility='@{viewModel.isEditing ? View.VISIBLE : View.GONE}'
+                    app:icon="@drawable/ic_clear_24"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/btn_done" />
 
                 <Button
                     android:id="@+id/btn_done"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/done"
                     android:textColor="@color/primary_dark"
-                    android:visibility='@{viewModel.isEditing ? View.VISIBLE : View.GONE}' />
-            </LinearLayout>
+                    android:visibility='@{viewModel.isEditing ? View.VISIBLE : View.GONE}'
+                    app:icon="@drawable/ic_done_24"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <!-- pictures -->
             <HorizontalScrollView

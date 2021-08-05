@@ -90,6 +90,8 @@ class HomeInfoDetailsViewModel : ViewModel() {
             sum
         }
 
+        val thumbnail: String? = pictureList.firstOrNull()?.name
+
         val homeInfoWithQandas = HomeInfoWithQandas(
             homeInfo = HomeInfo(
                 homeInfoLiveData.value?.id,
@@ -101,6 +103,7 @@ class HomeInfoDetailsViewModel : ViewModel() {
                 startDate.get(),
                 endDate.get(),
                 score,
+                thumbnail,
             ),
             qandas = ArrayList<Qanda>().apply {
                 qandaList.toList().forEach {

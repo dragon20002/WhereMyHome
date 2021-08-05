@@ -31,4 +31,5 @@
     <string name="cr">\n</string>
     <string name="fullscreen">전체화면</string>
     <string name="map">지도</string>
+    <string name="go_to_list">목록으로</string>
 </resources>

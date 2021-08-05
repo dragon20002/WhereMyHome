@@ -20,6 +20,7 @@ data class HomeInfo(
     @ColumnInfo(name = "end_date")
     var endDate: String? = "", // 계약가능일(종료)
     var score: Int = 0, // 점수
+    var thumbnail: String? = "", // 썸네일 (사진목록 중 첫번째 사진)
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readValue(Long::class.java.classLoader) as? Long,
