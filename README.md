@@ -30,9 +30,9 @@
 
 - 집 이름/보증금/월세/관리비/Q&A점수 정보를 표시
 
-- 수정(🖍) 버튼을 눌러 항목 수정
+- 항목을 터치하면 상세화면으로 이동
 
-- 추가(➕) 버튼을 눌러 새로운 집 정보 추가
+- 추가(➕) 플로팅 버튼을 눌러 새로운 집 정보 추가
 
   [`MainActivity.kt`](app/src/main/java/com/minuminu/haruu/wheremyhome/view/main/MainActivity.kt) |
   [`HomeInfoListFragment.kt`](app/src/main/java/com/minuminu/haruu/wheremyhome/view/homeinfolist/HomeInfoListFragment.kt) |
@@ -62,7 +62,7 @@
 
   [`PictureFullScreenActivity.kt`](app/src/main/java/com/minuminu/haruu/wheremyhome/view/picturefullscreen/PictureFullScreenActivity.kt)
 
-  ![전체화면](readme_img/3-full-screen-img.jpg)
+  ![전체화면](readme_img/3-full-screen-img.png)
 
 ### 4. Q&A 작성
 
@@ -115,6 +115,10 @@ class ItemViewModel : ViewModel() {
    *
    * 데이터소스(DB, Network 등)로부터 viewModel 값을 받아오는 역할을 한다.
    * LiveData가 값을 받아오면 observer들은 뷰에 값을 갱신하는 작업을 해주면 된다.
+   *
+   * Activity의 OnCreate나 Fragment의 OnCreateView에서
+   * itemLiveData.observe...를 호출하여 하단의 Observable에 매핑하는 부분을
+   * 작성한다.
    */
   val itemLiveData = MutableLiveData<Item>()
 
@@ -126,6 +130,9 @@ class ItemViewModel : ViewModel() {
    *     DB/Network -> viewModel -> view
    *
    * ObservableXXX는 값이 변경되면 연결된 layout view를 갱신하는 역할을 한다.
+   *
+   * LiveData로부터 값을 매핑받으면 xml이나 databindingAdapter에서 값을 뷰에
+   * 표시한다
    */
   val name = ObservableField<String>()
   val address = ObservableField<String>()
@@ -204,25 +211,13 @@ class ItemFragment : Fragment() {
         startDate.set(it.startDate)
         endDate.set(it.endDate)
 
-        // - ObservableList의 경우 @BindingAdapter 함수에 직접 바인딩하는 코드를 작성해야함
-        for (i in it.pictures.indices) {
-          if (i < pictureList.size) {
-            pictureList[i] = it.pictures[i]
-          } else {
-            pictureList.add(it.pictures[i])
-          }
-        }
-        for (i in it.qandas.indices) {
-          val qanda: QandaViewData = it.qandas[i].let { qanda ->
-            QandaViewData(qanda.id, qanda.group, qanda.num.toString(),
-              qanda.question, qanda.type, qanda.answer, qanda.remark)
-          }
-          if (i < qandaList.size) {
-            qandaList[i] = qanda
-          } else {
-            qandaList.add(qanda)
-          }
-        }
+        // - ObservableList의 경우 `RecyclerViewAdapter` 및 `DatabindingAdapter`에서 아이템별로 바인딩하는 코드를 작성해야함
+        pictureList.clear()
+        pictureList.addAll(it.pictures)
+
+        qandaList.clear()
+        qandaList.addAll(it.qandas)
+
 
         // [dataBinding 사용안하는 경우] 뷰에 직접 넣어줘야 한다
         // ...findViewById(...)?.setText(it.name)...
@@ -236,7 +231,7 @@ class ItemFragment : Fragment() {
       viewModel?.qandaList?.addAll(createDummyQandaList())
     } else { // [Edit Mode]
       arguments?.getString("itemId")?.let {
-        viewModel?.setItemId(it)
+        viewModel?.loadItemById(it)
       }
     }
 
@@ -252,11 +247,6 @@ class ItemFragment : Fragment() {
     // android:text="@{item.name}" // 단방향 바인딩 (사용자가 수정한 값은 조회불가)
     // android:text="@={item.name}" // 양방향 바인딩 (사용자가 수정한 값은 조회가능)
     viewModel?.name?.get()
-
-    // 리스트 항목 추가사항을 뷰에 적용 하려면...
-    // [listAdapter 사용 시] <ListView android:adapter=@{pictureListAdapter} ...>
-    // [BindingAdapter 사용 시] @BindingAdapter 함수를 정의하여 직접 바인딩
-    // viewModel?.pictureList?.add(...)
   }
 }
 ```
@@ -267,58 +257,35 @@ class ItemFragment : Fragment() {
 object HomeInfoDetailsBindingAdapter {
 
   // 사진 추가/삭제 시 호출되어 뷰의 데이터를 갱신한다
-  @BindingAdapter("pictures", "layout") // 이곳에 속성을 추가하면 xml에서 바인딩 가능해진다
+  @BindingAdapter("pictures") // 이곳에 속성을 추가하면 xml에서 바인딩 가능해진다
   @JvmStatic // @BindingAdapter 함수는 static 필수
-  fun setPictureList(viewGroup: ViewGroup, // 바인딩 대상 뷰
-      pictures: List<Picture>, // @BindingAdapter에 추가한 속성1
-      layout: Int) { // @BindingAdapter에 추가한 속성2
-    val pictureViewCnt = viewGroup.childCount - 1
-    if (pictureViewCnt >= pictures.size)
-      return
-
-    val inflater =
-      viewGroup.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-
-    for (i in pictures.indices) {
-      val picture = pictures[i]
-
-      // [이미 존재하는 사진] 기존 뷰에 데이터만 수정
-      if (i < pictureViewCnt) {
-        val binding = DataBindingUtil.getBinding<ItemPictureBinding>(viewGroup.getChildAt(i + 1))
-        if (binding != null) {
-          // binding.picture = picture
-          continue
-        }
-      }
-
-      // [새로 추가된 사진] 새로운 뷰 생성
-      DataBindingUtil.inflate<ItemPictureBinding>(inflater, layout, viewGroup, true)?.let {
-        it.picture = picture
-        it.root.findViewById<ImageView>(R.id.ivPicture)?.setOnClickListener {
-          // 전체화면
-          viewGroup.findNavController().navigate(
-            R.id.action_HomeInfoDetailsFragment_to_PictureFullScreenFragment,
-            Bundle().apply {
-              putString("pictureName", picture.name)
-            })
-        }
-      }
-    }
+  fun setPictureList(recyclerView: RecyclerView, // 바인딩 대상 뷰
+      pictures: List<Picture>) { // @BindingAdapter에 추가한 속성1
+  
+      val adapter = recyclerView.adapter as PictureItemRecyclerViewAdapter
+      adapter.submitList(ArrayList<PictureViewData>().apply {
+          addAll(pictures) // diffUtil이 동작하도록 새로운 Array에 넣어줘야 한다.
+      })
   }
 
-  @BindingAdapter("pictureName")
+  @BindingAdapter("pictureName", "deleted")
   @JvmStatic
-  fun setImageBitmap(iv: ImageView, pictureName: String) {
-    var imageFile = Utils.loadSnapshotFile(iv.context, pictureName)
-    if (imageFile == null) {
-      imageFile = Utils.loadImageFile(iv.context, pictureName).let {
-        Utils.resizeBitmap(it, iv.width.toFloat(), iv.height.toFloat())
+  fun setImageBitmap(iv: ImageView, pictureName: String, deleted: Boolean) {
+      var imageFile = AppUtils.loadSnapshotFile(iv.context, pictureName)
+      if (imageFile == null) {
+          Log.d(HomeInfoDetailsBindingAdapter::class.simpleName, "loadSnapshotFile is failed")
+
+          imageFile = AppUtils.loadImageFile(iv.context, pictureName).let {
+              AppUtils.resizeBitmap(it, iv.width.toFloat(), iv.height.toFloat())
+          }
+          AppUtils.createSnapshotFile(iv.context, pictureName, imageFile)
       }
-      Utils.createSnapshotFile(iv.context, pictureName, imageFile)
-    }
-    iv.setImageBitmap(imageFile)
+      iv.setImageBitmap(imageFile)
+      iv.alpha = when (deleted) {
+          true -> 0.3f
+          else -> 1f
+      }
   }
-}
 ```
 
 - `layout`
@@ -331,7 +298,7 @@ object HomeInfoDetailsBindingAdapter {
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:text="@{viewModel.name}" // 단방향 바인딩
-    android:text="@={viewModel.name}" // 양방향 바인딩 (표현식 사용 시 양방향 바인딩만 사용불가)
+    android:text="@={viewModel.name}" // 양방향 바인딩 (표현식 사용 시 양방향 바인딩은 사용불가)
     android:ems="255"
     android:hint="@string/name"
     android:inputType="text"
@@ -339,12 +306,14 @@ object HomeInfoDetailsBindingAdapter {
 ...
 
 // ObservableList<Picture> 바인딩
-<LinearLayout
+<androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/rv_pictures"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    app:layoutManager="LinearLayoutManager"
     app:pictures="@{viewModel.pictureList}" // @BindingAdapter에 추가한 속성1
-    app:layout="@{@layout/item_picture}"    // @BindingAdapter에 추가한 속성2
-    android:orientation="horizontal">
+    tools:listitem="@layout/item_picture" />
 ```
 
 ### NavController
