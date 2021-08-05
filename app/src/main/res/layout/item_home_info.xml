@@ -70,6 +70,7 @@
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
+                android:layout_marginEnd="@dimen/margin_mid"
                 android:contentDescription="@string/modify"
                 android:src="@drawable/ic_baseline_arrow_forward_ios_24" />
         </LinearLayout>

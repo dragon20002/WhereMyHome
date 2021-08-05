@@ -4,18 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.minuminu.haruu.wheremyhome.R
+import com.minuminu.haruu.wheremyhome.databinding.FragmentHomeInfoListBinding
 import com.minuminu.haruu.wheremyhome.db.AppDatabase
-import com.minuminu.haruu.wheremyhome.viewmodel.HomeInfoItemRecyclerViewAdapter
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.minuminu.haruu.wheremyhome.viewmodel.HomeInfoListViewModel
 
 /**
  * A fragment representing a list of Items.
@@ -23,25 +22,18 @@ import kotlinx.coroutines.launch
 class HomeInfoListFragment : Fragment() {
 
     companion object {
-
-        const val ARG_COLUMN_COUNT = "column-count"
-
-        @JvmStatic
-        fun newInstance(columnCount: Int) =
-            HomeInfoListFragment().apply {
-                arguments = Bundle().apply {
-                    putInt(ARG_COLUMN_COUNT, columnCount)
-                }
-            }
+        fun newInstance(columnCount: Int) = HomeInfoListFragment()
     }
 
-    private var columnCount = 1
     private var list: RecyclerView? = null
+    private var viewModel: HomeInfoListViewModel? = null
+    private var binding: FragmentHomeInfoListBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            columnCount = it.getInt(ARG_COLUMN_COUNT)
+
+        viewModel = ViewModelProvider(this).get(HomeInfoListViewModel::class.java).apply {
+            init(AppDatabase.getDatabase((requireContext())))
         }
     }
 
@@ -49,31 +41,36 @@ class HomeInfoListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_home_info_list, container, false)
+        binding = DataBindingUtil.inflate(
+            inflater,
+            R.layout.fragment_home_info_list, container, false
+        )
+        binding?.viewModel = viewModel
+        val view = binding?.root
 
-        list = view.findViewById<RecyclerView>(R.id.list).apply {
-            layoutManager = when {
-                columnCount <= 1 -> LinearLayoutManager(context)
-                else -> GridLayoutManager(context, columnCount)
-            }
-            this@apply.adapter = adapter
+        list = view?.findViewById<RecyclerView>(R.id.list)?.apply {
+            this.layoutManager = LinearLayoutManager(context)
+            // this@apply.adapter = adapter
         }
 
-        view.findViewById<FloatingActionButton>(R.id.fab).setOnClickListener {
-            findNavController().navigate(R.id.action_HomeInfoListFragment_to_HomeInfoDetailsFragment)
+        view?.findViewById<FloatingActionButton>(R.id.fab)?.setOnClickListener {
+            findNavController().navigate(
+                R.id.action_HomeInfoListFragment_to_HomeInfoDetailsFragment,
+                Bundle().apply {
+                    putLong("homeInfoId", -1L)
+                })
         }
 
-        CoroutineScope(Dispatchers.IO).launch {
-            val homeInfos = AppDatabase.getDatabase(requireContext()).homeInfoDao().getAll()
-            val adapter = HomeInfoItemRecyclerViewAdapter(
-                this@HomeInfoListFragment,
-                ArrayList(homeInfos)
-            )
-            launch(Dispatchers.Main) {
-                list?.adapter = adapter
-            }
+        viewModel?.run {
+            homeInfoListLiveData.observe(viewLifecycleOwner, {
+                homeInfoList.clear()
+                homeInfoList.addAll(it)
+            })
+
+            loadHomeInfoList()
         }
 
         return view
     }
+
 }

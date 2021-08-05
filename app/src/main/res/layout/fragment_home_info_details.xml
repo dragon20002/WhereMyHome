@@ -102,6 +102,7 @@
                     android:ems="255"
                     android:hint="@string/name"
                     android:inputType="@{viewModel.isEditing ? InputType.TYPE_CLASS_TEXT : InputType.TYPE_NULL}"
+                    android:enabled="@{viewModel.isEditing()}"
                     android:maxLength="255"
                     android:text="@={viewModel.name}" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -131,6 +132,7 @@
                         android:ems="255"
                         android:hint="@string/address"
                         android:inputType="@{viewModel.isEditing ? InputType.TYPE_CLASS_TEXT : InputType.TYPE_NULL}"
+                        android:enabled="@{viewModel.isEditing()}"
                         android:maxLength="255"
                         android:text="@={viewModel.address}" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -170,6 +172,7 @@
                         android:ems="8"
                         android:hint="@string/deposit"
                         android:inputType="@{viewModel.isEditing ? InputType.TYPE_CLASS_NUMBER : InputType.TYPE_NULL}"
+                        android:enabled="@{viewModel.isEditing()}"
                         android:maxLength="8"
                         android:text="@={viewModel.deposit}" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -191,6 +194,7 @@
                         android:ems="8"
                         android:hint="@string/rental"
                         android:inputType="@{viewModel.isEditing ? InputType.TYPE_CLASS_NUMBER : InputType.TYPE_NULL}"
+                        android:enabled="@{viewModel.isEditing()}"
                         android:maxLength="8"
                         android:text="@={viewModel.rental}" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -212,6 +216,7 @@
                         android:ems="8"
                         android:hint="@string/expense"
                         android:inputType="@{viewModel.isEditing ? InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL : InputType.TYPE_NULL}"
+                        android:enabled="@{viewModel.isEditing()}"
                         android:maxLength="8"
                         android:text="@={viewModel.expense}" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -248,6 +253,7 @@
                         android:focusable="true"
                         android:hint="@string/start_date"
                         android:inputType="@{InputType.TYPE_NULL}"
+                        android:enabled="@{viewModel.isEditing()}"
                         android:maxLength="20"
                         android:text="@={viewModel.startDate}"
                         tools:ignore="KeyboardInaccessibleWidget" />
@@ -277,6 +283,7 @@
                         android:focusable="true"
                         android:hint="@string/end_date"
                         android:inputType="@{InputType.TYPE_NULL}"
+                        android:enabled="@{viewModel.isEditing()}"
                         android:maxLength="20"
                         android:text="@={viewModel.endDate}"
                         tools:ignore="KeyboardInaccessibleWidget" />

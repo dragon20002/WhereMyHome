@@ -11,14 +11,13 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.minuminu.haruu.wheremyhome.R
 import com.minuminu.haruu.wheremyhome.db.data.HomeInfo
-import com.minuminu.haruu.wheremyhome.db.data.HomeInfoWithQandas
 
 /**
  * [RecyclerView.Adapter] that can display a [HomeInfo].
  */
 class HomeInfoItemRecyclerViewAdapter(
     val fragment: Fragment,
-    var values: ArrayList<HomeInfoWithQandas>
+    var values: List<HomeInfo>
 ) : RecyclerView.Adapter<HomeInfoItemRecyclerViewAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -28,14 +27,16 @@ class HomeInfoItemRecyclerViewAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = values[position].homeInfo
+        val item = values[position]
         holder.idView.text = (position + 1).toString()
         holder.nameView.text = item.name
         holder.descView.text = "${item.deposit}만 / ${item.rental}만 / ${item.expense}만 / ${item.score}점"
         holder.btnEdit.setOnClickListener {
             fragment.findNavController()
                 .navigate(R.id.action_HomeInfoListFragment_to_HomeInfoDetailsFragment, Bundle().apply {
-                    putString("itemId", item.id?.toString())
+                    item.id?.let { homeInfoId ->
+                        putLong("homeInfoId", homeInfoId)
+                    }
                 })
         }
     }

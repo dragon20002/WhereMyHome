@@ -6,8 +6,8 @@ import androidx.databinding.ObservableField
 import androidx.databinding.ObservableList
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.minuminu.haruu.wheremyhome.db.data.*
 import com.minuminu.haruu.wheremyhome.db.AppDatabase
+import com.minuminu.haruu.wheremyhome.db.data.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -19,7 +19,9 @@ class HomeInfoDetailsViewModel : ViewModel() {
     var currentImageName = ""
 
     // db - viewModel
-    val itemLiveData = MutableLiveData<HomeInfoWithQandas>()
+    val homeInfoLiveData = MutableLiveData<HomeInfo>()
+    val pictureListLiveData = MutableLiveData<List<Picture>>()
+    val qandaListLiveData = MutableLiveData<List<QandaViewData>>()
 
     // viewModel - view
     val isEditing = ObservableField(false)
@@ -37,12 +39,36 @@ class HomeInfoDetailsViewModel : ViewModel() {
         this.db = db
     }
 
-    fun setItemId(itemId: String) {
+    fun loadHomeInfo(homeInfoId: Long) {
         CoroutineScope(Dispatchers.IO).launch {
-            db?.homeInfoDao()?.loadAllByIds(arrayOf(itemId))?.takeIf {
-                it.isNotEmpty()
-            }?.get(0)?.let { homeInfo ->
-                itemLiveData.postValue(homeInfo)
+            db?.homeInfoDao()?.getOneById(homeInfoId)?.let { homeInfo ->
+                homeInfoLiveData.postValue(homeInfo)
+            }
+        }
+    }
+
+    fun loadPictureList(homeInfoId: Long) {
+        CoroutineScope(Dispatchers.IO).launch {
+            db?.pictureDao()?.getAllByHomeInfoId(homeInfoId)?.let { pictureList ->
+                pictureListLiveData.postValue(pictureList)
+            }
+        }
+    }
+
+    fun loadQandaList(homeInfoId: Long) {
+        CoroutineScope(Dispatchers.IO).launch {
+            db?.qandaDao()?.getAllByHomeInfoId(homeInfoId)?.let { qandaList ->
+                qandaListLiveData.postValue(qandaList.map {
+                    QandaViewData(
+                        it.id,
+                        it.group,
+                        it.num.toString(),
+                        it.question,
+                        it.type,
+                        it.answer,
+                        it.remark
+                    )
+                })
             }
         }
     }
@@ -66,7 +92,7 @@ class HomeInfoDetailsViewModel : ViewModel() {
 
         val homeInfoWithQandas = HomeInfoWithQandas(
             homeInfo = HomeInfo(
-                itemLiveData.value?.homeInfo?.id,
+                homeInfoLiveData.value?.id,
                 name.get(),
                 address.get(),
                 deposit.get()?.toIntOrNull() ?: 0,
@@ -87,7 +113,7 @@ class HomeInfoDetailsViewModel : ViewModel() {
                             it.type,
                             it.strAnswer,
                             it.remark,
-                            itemLiveData.value?.homeInfo?.id
+                            homeInfoLiveData.value?.id
                         )
                     )
                 }

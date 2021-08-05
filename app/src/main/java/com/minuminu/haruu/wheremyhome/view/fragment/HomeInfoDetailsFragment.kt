@@ -18,13 +18,14 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.minuminu.haruu.wheremyhome.R
 import com.minuminu.haruu.wheremyhome.databinding.FragmentHomeInfoDetailsBinding
 import com.minuminu.haruu.wheremyhome.db.AppDatabase
 import com.minuminu.haruu.wheremyhome.db.data.DataUtil
+import com.minuminu.haruu.wheremyhome.db.data.HomeInfo
 import com.minuminu.haruu.wheremyhome.db.data.Picture
-import com.minuminu.haruu.wheremyhome.db.data.QandaViewData
 import com.minuminu.haruu.wheremyhome.utils.Utils
 import com.minuminu.haruu.wheremyhome.view.activity.MapsActivity
 import com.minuminu.haruu.wheremyhome.viewmodel.HomeInfoDetailsViewModel
@@ -84,13 +85,15 @@ class HomeInfoDetailsFragment : Fragment() {
             viewModel?.isEditing?.set(true)
         }
         view?.findViewById<Button>(R.id.btn_cancel)?.setOnClickListener {
-            val itemId = arguments?.getString("itemId")
-            Log.d(javaClass.name, "itemId $itemId")
+            val homeInfoId = arguments?.getLong("homeInfoId")
+            Log.d(javaClass.name, "itemId $homeInfoId")
 
-            if (itemId === null) {
+            if (homeInfoId == null) {
+                Snackbar.make(view, "존재하지 않는 집 정보입니다.", Snackbar.LENGTH_SHORT).show()
+            } else if (homeInfoId == -1L) {
                 findNavController().popBackStack()
             } else {
-                viewModel?.setItemId(itemId)
+                viewModel?.loadHomeInfo(homeInfoId)
                 viewModel?.isEditing?.set(false)
             }
         }
@@ -146,52 +149,61 @@ class HomeInfoDetailsFragment : Fragment() {
         }
 
         viewModel?.run {
-            itemLiveData.observe(viewLifecycleOwner, {
+            homeInfoLiveData.observe(viewLifecycleOwner, { homeInfo ->
                 // Log.d(javaClass.name, "homeInfoWithQandas - observe $it")
 
-                name.set(it.homeInfo.name)
-                address.set(it.homeInfo.address)
-                deposit.set(it.homeInfo.deposit.toString())
-                rental.set(it.homeInfo.rental.toString())
-                expense.set(it.homeInfo.expense.toString())
-                startDate.set(it.homeInfo.startDate)
-                endDate.set(it.homeInfo.endDate)
-                for (i in it.pictures.indices) {
-                    if (i < pictureList.size) {
-                        pictureList[i] = it.pictures[i]
-                    } else {
-                        pictureList.add(it.pictures[i])
-                    }
-                }
+                name.set(homeInfo.name)
+                address.set(homeInfo.address)
+                deposit.set(homeInfo.deposit.toString())
+                rental.set(homeInfo.rental.toString())
+                expense.set(homeInfo.expense.toString())
+                startDate.set(homeInfo.startDate)
+                endDate.set(homeInfo.endDate)
 
-                qandaList.addAll(it.qandas.map { qanda ->
-                    QandaViewData(
-                        qanda.id,
-                        qanda.group,
-                        qanda.num.toString(),
-                        qanda.question,
-                        qanda.type,
-                        qanda.answer,
-                        qanda.remark
-                    )
-                })
+                homeInfo.id?.let { homeInfoId ->
+                    loadPictureList(homeInfoId)
+                    loadQandaList(homeInfoId)
+                }
+            })
+
+            pictureListLiveData.observe(viewLifecycleOwner, { pictureList ->
+                this.pictureList.clear()
+                this.pictureList.addAll(pictureList)
+            })
+
+            qandaListLiveData.observe(viewLifecycleOwner, { qandaList ->
+                this.qandaList.clear()
+                this.qandaList.addAll(qandaList)
             })
         }
 
-        val itemId = arguments?.getString("itemId")
-        Log.d(javaClass.name, "itemId $itemId")
+        val homeInfoId = arguments?.getLong("homeInfoId")
+        Log.d(javaClass.name, "homeInfoId $homeInfoId")
 
-        if (itemId === null) {
-            Log.d(javaClass.name, "add mode")
+        when {
+            homeInfoId == null -> {
+                view?.let { _view ->
+                    Snackbar.make(_view, "존재하지 않는 집 정보입니다.", Snackbar.LENGTH_SHORT).show()
+                }
+            }
+            homeInfoId == -1L -> {
+                Log.d(javaClass.name, "add mode")
 
-            viewModel?.isEditing?.set(true)
-            viewModel?.itemLiveData?.postValue(DataUtil.createDummyItem())
-            viewModel?.pictureList?.addAll(ArrayList())
-            viewModel?.qandaList?.addAll(DataUtil.createQandaTemplate())
-        } else {
-            Log.d(javaClass.name, "modify mode")
+                // Create temporary data
+                viewModel?.isEditing?.set(true)
+                viewModel?.homeInfoLiveData?.postValue(HomeInfo(null, "", ""))
+                viewModel?.pictureListLiveData?.postValue(ArrayList())
 
-            viewModel?.setItemId(itemId)
+                // TODO: Setting에서 불러온 질문 목록을 추가할 것
+                viewModel?.qandaListLiveData?.postValue(DataUtil.createQandaTemplate())
+            }
+            else -> {
+                Log.d(javaClass.name, "modify mode")
+
+                (homeInfoId as Long?)?.let { _itemId ->
+                    viewModel?.loadHomeInfo(_itemId)
+                }
+            }
         }
 
         return view

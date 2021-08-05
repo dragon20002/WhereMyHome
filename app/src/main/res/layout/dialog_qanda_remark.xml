@@ -40,6 +40,7 @@
                 android:ems="255"
                 android:hint="@string/remark"
                 android:inputType="@{isEditing ? InputType.TYPE_CLASS_TEXT : InputType.TYPE_NULL}"
+                android:enabled="@{isEditing}"
                 android:maxLength="255"
                 android:text="@{remark}" />
         </com.google.android.material.textfield.TextInputLayout>

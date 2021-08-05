@@ -1,13 +1,14 @@
 package com.minuminu.haruu.wheremyhome.db.dao
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Update
+import androidx.room.*
 import com.minuminu.haruu.wheremyhome.db.data.Qanda
 
 @Dao
 interface QandaDao {
+    @Transaction
+    @Query("SELECT * FROM Qanda WHERE home_info_id = :homeInfoId")
+    fun getAllByHomeInfoId(homeInfoId: Long): List<Qanda>
+
     @Insert
     fun insertAll(vararg qandas: Qanda): List<Long>
 
