@@ -31,11 +31,12 @@ data class HomeInfo(
         parcel.readFloat(),
         parcel.readString(),
         parcel.readString(),
-        parcel.readInt()
+        parcel.readInt(),
+        parcel.readString()
     )
 
     override fun toString(): String {
-        return "HomeInfo(id='$id', name='$name', address='$address', deposit=$deposit, rental=$rental, expense=$expense, startDate='$startDate', endDate='$endDate', score=$score')"
+        return "HomeInfo(id='$id', name='$name', address='$address', deposit=$deposit, rental=$rental, expense=$expense, startDate='$startDate', endDate='$endDate', score=$score, thumbnail='$thumbnail'')"
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -48,6 +49,7 @@ data class HomeInfo(
         parcel.writeString(startDate)
         parcel.writeString(endDate)
         parcel.writeInt(score)
+        parcel.writeString(thumbnail)
     }
 
     override fun describeContents(): Int {

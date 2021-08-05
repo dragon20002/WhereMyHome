@@ -2,7 +2,6 @@ package com.minuminu.haruu.wheremyhome.view.homeinfodetails
 
 import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
-import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -10,22 +9,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.ImageButton
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
+import androidx.core.util.Pair
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import com.minuminu.haruu.wheremyhome.R
 import com.minuminu.haruu.wheremyhome.databinding.FragmentHomeInfoDetailsBinding
 import com.minuminu.haruu.wheremyhome.db.AppDatabase
 import com.minuminu.haruu.wheremyhome.db.data.DataUtil
 import com.minuminu.haruu.wheremyhome.db.data.HomeInfo
-import com.minuminu.haruu.wheremyhome.db.data.Picture
+import com.minuminu.haruu.wheremyhome.db.data.PictureViewData
 import com.minuminu.haruu.wheremyhome.utils.AppUtils
 import com.minuminu.haruu.wheremyhome.view.maps.MapsActivity
 import kotlinx.coroutines.launch
@@ -39,6 +41,18 @@ class HomeInfoDetailsFragment : Fragment() {
         fun newInstance() = HomeInfoDetailsFragment()
     }
 
+    // Open Intent(Take Picture)
+    private val requestTakePhoto =
+        registerForActivityResult(ActivityResultContracts.TakePicture()) { isSuccess ->
+            if (isSuccess) {
+                viewModel?.currentImageName?.let { imageName ->
+                    val picture = PictureViewData(null, imageName)
+                    viewModel?.pictureList?.add(picture)
+                }
+            }
+        }
+
+    // Open `MapsActivity`
     private val requestGoogleMap =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
@@ -46,15 +60,6 @@ class HomeInfoDetailsFragment : Fragment() {
                     ?.also { address ->
                         viewModel?.address?.set(address)
                     }
-            }
-        }
-    private val requestTakePhoto =
-        registerForActivityResult(ActivityResultContracts.TakePicture()) { isSuccess ->
-            if (isSuccess) {
-                viewModel?.currentImageName?.let { imageName ->
-                    val picture = Picture(null, imageName)
-                    viewModel?.pictureList?.add(picture)
-                }
             }
         }
 
@@ -107,47 +112,51 @@ class HomeInfoDetailsFragment : Fragment() {
                 findNavController().popBackStack()
             }
         }
-        view?.findViewById<ImageButton>(R.id.btn_camera)
-            ?.setOnClickListener {
-                dispatchTakePictureIntent()
+        view?.findViewById<Button>(R.id.btn_camera)?.setOnClickListener {
+            dispatchTakePictureIntent()
+        }
+        view?.findViewById<RecyclerView>(R.id.rv_pictures)?.apply {
+            this.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            this.adapter = viewModel?.let { PictureItemRecyclerViewAdapter(context, it) }
+        }
+        view?.findViewById<TextInputLayout>(R.id.ly_address)
+            ?.setEndIconOnClickListener {
+                // 지도
+                requestGoogleMap.launch(Intent(requireContext(), MapsActivity::class.java).apply {
+                    putExtra("address", viewModel?.address?.get())
+                })
             }
-        view?.findViewById<ImageButton>(R.id.btn_location)?.setOnClickListener {
-            // 지도
-            requestGoogleMap.launch(Intent(requireContext(), MapsActivity::class.java).apply {
-                putExtra("address", viewModel?.address?.get())
-            })
-        }
-        view?.findViewById<TextInputEditText>(R.id.et_start_date)?.setOnClickListener { v ->
-            viewModel?.isEditing?.get()?.takeIf { !it }?.also { return@setOnClickListener }
-
-            val today = Calendar.getInstance()
-            DatePickerDialog(
-                requireContext(), (DatePickerDialog.OnDateSetListener { _, y, m, d ->
-                    val date = Calendar.getInstance().apply { set(y, m, d) }.let {
-                        "${it[Calendar.YEAR]}년 ${it[Calendar.MONTH] + 1}월 ${it[Calendar.DAY_OF_MONTH]}일"
+        val dateRangePicker = MaterialDatePicker.Builder.dateRangePicker()
+            .setTitleText("계약기간 선택")
+            .setSelection(
+                Pair(
+                    MaterialDatePicker.thisMonthInUtcMilliseconds(),
+                    MaterialDatePicker.todayInUtcMilliseconds()
+                )
+            )
+            .build().apply {
+                addOnPositiveButtonClickListener { range ->
+                    fun getDateStr(timeInMillis: Long): String {
+                        return Calendar.getInstance().apply {
+                            this.timeInMillis = timeInMillis
+                        }.let { cal ->
+                            "${cal[Calendar.YEAR]}년 ${cal[Calendar.MONTH] + 1}월 ${cal[Calendar.DAY_OF_MONTH]}일"
+                        }
                     }
-                    (v as TextInputEditText).setText(date)
-                }),
-                today[Calendar.YEAR],
-                today[Calendar.MONTH],
-                today[Calendar.DAY_OF_MONTH]
-            ).show()
-        }
-        view?.findViewById<TextInputEditText>(R.id.et_end_date)?.setOnClickListener { v ->
-            viewModel?.isEditing?.get()?.takeIf { !it }?.also { return@setOnClickListener }
 
-            val today = Calendar.getInstance()
-            DatePickerDialog(
-                requireContext(), (DatePickerDialog.OnDateSetListener { _, y, m, d ->
-                    val date = Calendar.getInstance().apply { set(y, m, d) }.let {
-                        "${it[Calendar.YEAR]}년 ${it[Calendar.MONTH] + 1}월 ${it[Calendar.DAY_OF_MONTH]}일"
-                    }
-                    (v as TextInputEditText).setText(date)
-                }),
-                today[Calendar.YEAR],
-                today[Calendar.MONTH],
-                today[Calendar.DAY_OF_MONTH]
-            ).show()
+                    view?.findViewById<Button>(R.id.btn_start_date)?.text = getDateStr(range.first)
+                    view?.findViewById<Button>(R.id.btn_end_date)?.text = getDateStr(range.second)
+                }
+            }
+        view?.findViewById<Button>(R.id.btn_start_date)?.setOnClickListener { _ ->
+            dateRangePicker.show(parentFragmentManager, null)
+        }
+        view?.findViewById<Button>(R.id.btn_end_date)?.setOnClickListener { _ ->
+            dateRangePicker.show(parentFragmentManager, null)
+        }
+        view?.findViewById<RecyclerView>(R.id.rv_qandas)?.apply {
+            this.layoutManager = LinearLayoutManager(context)
+            this.adapter = viewModel?.let { QandaItemRecyclerViewAdapter(it) }
         }
 
         viewModel?.run {
@@ -161,6 +170,7 @@ class HomeInfoDetailsFragment : Fragment() {
                 expense.set(homeInfo.expense.toString())
                 startDate.set(homeInfo.startDate)
                 endDate.set(homeInfo.endDate)
+                thumbnail.set(homeInfo.thumbnail)
 
                 homeInfo.id?.let { homeInfoId ->
                     loadPictureList(homeInfoId)
@@ -168,14 +178,14 @@ class HomeInfoDetailsFragment : Fragment() {
                 }
             })
 
-            pictureListLiveData.observe(viewLifecycleOwner, { pictureList ->
-                this.pictureList.clear()
-                this.pictureList.addAll(pictureList)
+            pictureListLiveData.observe(viewLifecycleOwner, { _pictureList ->
+                pictureList.clear()
+                pictureList.addAll(_pictureList)
             })
 
-            qandaListLiveData.observe(viewLifecycleOwner, { qandaList ->
-                this.qandaList.clear()
-                this.qandaList.addAll(qandaList)
+            qandaListLiveData.observe(viewLifecycleOwner, { _qandaList ->
+                qandaList.clear()
+                qandaList.addAll(_qandaList)
             })
         }
 

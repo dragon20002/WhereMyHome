@@ -21,7 +21,6 @@
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             app:layoutManager="LinearLayoutManager"
-            tools:context=".ItemFragment"
             tools:listitem="@layout/item_home_info"
             app:homeInfos="@{viewModel.homeInfoList}" />
 

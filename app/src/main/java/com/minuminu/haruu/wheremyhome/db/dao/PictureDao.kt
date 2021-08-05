@@ -10,11 +10,11 @@ interface PictureDao {
     fun getAllByHomeInfoId(homeInfoId: Long): List<Picture>
 
     @Insert
-    fun insertAll(vararg qandas: Picture): List<Long>
+    fun insertAll(vararg pictures: Picture): List<Long>
 
     @Update
-    fun updateAll(vararg qandas: Picture): Int
+    fun updateAll(vararg pictures: Picture): Int
 
     @Delete
-    fun delete(qanda: Picture)
+    fun delete(pictures: Picture)
 }

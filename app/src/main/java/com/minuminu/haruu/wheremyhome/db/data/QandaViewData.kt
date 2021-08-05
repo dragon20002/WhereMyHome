@@ -16,4 +16,8 @@ data class QandaViewData(
         set(b) {
             strAnswer = b.toString()
         }
+
+    override fun toString(): String {
+        return "QandaViewData(id=$id, group='$group', num='$num', question='$question', type='$type', strAnswer='$strAnswer', remark='$remark', blnAnswer=$blnAnswer)"
+    }
 }

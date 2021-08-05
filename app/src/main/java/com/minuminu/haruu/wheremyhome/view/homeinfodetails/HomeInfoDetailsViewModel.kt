@@ -20,7 +20,7 @@ class HomeInfoDetailsViewModel : ViewModel() {
 
     // db - viewModel
     val homeInfoLiveData = MutableLiveData<HomeInfo>()
-    val pictureListLiveData = MutableLiveData<List<Picture>>()
+    val pictureListLiveData = MutableLiveData<List<PictureViewData>>()
     val qandaListLiveData = MutableLiveData<List<QandaViewData>>()
 
     // viewModel - view
@@ -32,7 +32,8 @@ class HomeInfoDetailsViewModel : ViewModel() {
     val expense = ObservableField<String>()
     val startDate = ObservableField<String>()
     val endDate = ObservableField<String>()
-    val pictureList: ObservableList<Picture> = ObservableArrayList()
+    val thumbnail = ObservableField<String>()
+    val pictureList: ObservableList<PictureViewData> = ObservableArrayList()
     val qandaList: ObservableList<QandaViewData> = ObservableArrayList()
 
     fun init(db: AppDatabase) {
@@ -50,7 +51,14 @@ class HomeInfoDetailsViewModel : ViewModel() {
     fun loadPictureList(homeInfoId: Long) {
         CoroutineScope(Dispatchers.IO).launch {
             db?.pictureDao()?.getAllByHomeInfoId(homeInfoId)?.let { pictureList ->
-                pictureListLiveData.postValue(pictureList)
+                pictureListLiveData.postValue(pictureList.map {
+                    PictureViewData(
+                        it.id,
+                        it.name,
+                        it.homeInfoId,
+                        false
+                    )
+                })
             }
         }
     }
@@ -66,7 +74,7 @@ class HomeInfoDetailsViewModel : ViewModel() {
                         it.question,
                         it.type,
                         it.answer,
-                        it.remark
+                        it.remark,
                     )
                 })
             }
@@ -90,8 +98,6 @@ class HomeInfoDetailsViewModel : ViewModel() {
             sum
         }
 
-        val thumbnail: String? = pictureList.firstOrNull()?.name
-
         val homeInfoWithQandas = HomeInfoWithQandas(
             homeInfo = HomeInfo(
                 homeInfoLiveData.value?.id,
@@ -103,25 +109,17 @@ class HomeInfoDetailsViewModel : ViewModel() {
                 startDate.get(),
                 endDate.get(),
                 score,
-                thumbnail,
+                thumbnail.get(),
             ),
-            qandas = ArrayList<Qanda>().apply {
-                qandaList.toList().forEach {
-                    add(
-                        Qanda(
-                            it.id,
-                            it.group,
-                            it.num.toIntOrNull() ?: 0,
-                            it.question,
-                            it.type,
-                            it.strAnswer,
-                            it.remark,
-                            homeInfoLiveData.value?.id
-                        )
-                    )
-                }
+            qandas = qandaList.map {
+                Qanda(
+                    it.id, it.group, it.num.toIntOrNull() ?: 0,
+                    it.question, it.type, it.strAnswer, it.remark, null
+                )
             },
-            pictures = pictureList.toList(),
+            pictures = pictureList.filter { !it.deleted }.map {
+                Picture(it.id, it.name, it.homeInfoId)
+            }
         )
 
         return withContext(Dispatchers.IO) {
@@ -160,11 +158,22 @@ class HomeInfoDetailsViewModel : ViewModel() {
                             if (picture.homeInfoId == null) {
                                 picture.homeInfoId = homeInfo.id
                                 val pictureIds = db?.pictureDao()?.insertAll(picture)
-                                Log.d(javaClass.name, "inserted picture ${pictureIds?.get(0)}")
+                                Log.d(
+                                    javaClass.name,
+                                    "inserted picture ${pictureIds?.get(0)}"
+                                )
                             } else {
                                 val pictureCnt = db?.pictureDao()?.updateAll(picture)
                                 Log.d(javaClass.name, "updated picture $pictureCnt")
                             }
+                        }
+
+                        pictureList.filter { it.deleted }.forEach {
+                            db?.pictureDao()?.delete(
+                                Picture(
+                                    it.id, it.name, it.homeInfoId
+                                )
+                            )
                         }
                     }
                 }

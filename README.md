@@ -2,7 +2,7 @@
 
 집 보러 다닐 때 메모하는 앱
 
-- `MVVM` 집 상세화면([`HomeInfoDetailsFragment.kt`](app/src/main/java/com/minuminu/haruu/wheremyhome/view/fragment/HomeInfoDetailsFragment.kt))에만 MVVM 적용하여 개발해봤다. 적용 과정은 [3.1.](#viewmodel) 참고. 나머지 뷰는 기본적인 구조로 개발
+- `MVVM` 집 상세화면([`HomeInfoDetailsFragment.kt`](app/src/main/java/com/minuminu/haruu/wheremyhome/view/homeinfodetails/HomeInfoDetailsFragment.kt))에만 MVVM 적용하여 개발해봤다. 적용 과정은 [3.1.](#viewmodel) 참고. 나머지 뷰는 기본적인 구조로 개발
 
 - `Android Room` Android DB API. [공식가이드](https://developer.android.com/training/data-storage/room) 참고
 
@@ -34,9 +34,9 @@
 
 - 추가(➕) 버튼을 눌러 새로운 집 정보 추가
 
-  [`MainActivity.kt`](app/src/main/java/com/minuminu/haruu/wheremyhome/view/activity/MainActivity.kt) |
-  [`HomeInfoListFragment.kt`](app/src/main/java/com/minuminu/haruu/wheremyhome/view/fragment/HomeInfoListFragment.kt) |
-  [`HomeInfoItemRecyclerViewAdapter.kt`](app/src/main/java/com/minuminu/haruu/wheremyhome/view/viewmodel/HomeInfoItemRecyclerViewAdapter.kt)
+  [`MainActivity.kt`](app/src/main/java/com/minuminu/haruu/wheremyhome/view/main/MainActivity.kt) |
+  [`HomeInfoListFragment.kt`](app/src/main/java/com/minuminu/haruu/wheremyhome/view/homeinfolist/HomeInfoListFragment.kt) |
+  [`HomeInfoItemRecyclerViewAdapter.kt`](app/src/main/java/com/minuminu/haruu/wheremyhome/view/homeinfolist/HomeInfoItemRecyclerViewAdapter.kt)
 
   ![목록](readme_img/1-home-list.png)
 
@@ -50,9 +50,9 @@
 
 - 지도(🗺) 버튼을 눌러 현재 위치 가져오기
 
-  [`HomeInfoDetailsFragment.kt`](app/src/main/java/com/minuminu/haruu/wheremyhome/view/fragment/HomeInfoDetailsFragment.kt) |
-  [`HomeInfoDetailsViewModel.kt`](app/src/main/java/com/minuminu/haruu/wheremyhome/view/viewmodel/HomeInfoDetailsViewModel.kt) |
-  [`HomeInfoDetailsBindingAdapter.kt`](app/src/main/java/com/minuminu/haruu/wheremyhome/view/viewmodel/HomeInfoDetailsBindingAdapter.kt)
+  [`HomeInfoDetailsFragment.kt`](app/src/main/java/com/minuminu/haruu/wheremyhome/view/homeinfodetails/HomeInfoDetailsFragment.kt) |
+  [`HomeInfoDetailsViewModel.kt`](app/src/main/java/com/minuminu/haruu/wheremyhome/view/homeinfodetails/HomeInfoDetailsViewModel.kt) |
+  [`HomeInfoDetailsBindingAdapter.kt`](app/src/main/java/com/minuminu/haruu/wheremyhome/view/homeinfodetails/HomeInfoDetailsBindingAdapter.kt)
 
   ![상세](readme_img/2-1-home-details.png) ![상세-2](readme_img/2-2-home-details.png)
 
@@ -60,7 +60,7 @@
 
 - 사진 전체화면
 
-  [`PictureFullScreenFragment.kt`](app/src/main/java/com/minuminu/haruu/wheremyhome/view/fragment/PictureFullScreenFragment.kt)
+  [`PictureFullScreenActivity.kt`](app/src/main/java/com/minuminu/haruu/wheremyhome/view/picturefullscreen/PictureFullScreenActivity.kt)
 
   ![전체화면](readme_img/3-full-screen-img.jpg)
 
@@ -70,7 +70,7 @@
 
 - 비고(···) 버튼을 눌러 비고 항목 작성하는 팝업 노출
 
-  [`QandaRemarkDialog.kt`](app/src/main/java/com/minuminu/haruu/wheremyhome/view/dialog/QandaRemarkDialog.kt)
+  [`QandaRemarkDialog.kt`](app/src/main/java/com/minuminu/haruu/wheremyhome/view/homeinfodetails/components/QandaRemarkDialog.kt)
 
   ![QandA](readme_img/4-1-home-qanda.png) ![remark](readme_img/4-2-home-remark.png)
 
@@ -78,7 +78,7 @@
 
 - 현재 위치를 찾음
 
-  [`MapsFragment.kt`](app/src/main/java/com/minuminu/haruu/wheremyhome/view/fragment/MapsFragment.kt)
+  [`MapsActivity.kt`](app/src/main/java/com/minuminu/haruu/wheremyhome/view/maps/MapsActivity.kt)
 
   ![map](readme_img/5-home-location-map.png)
 
@@ -154,7 +154,7 @@ class ItemViewModel : ViewModel() {
 
   // db에 item 저장/수정
   // ※ suspend : kotlin coroutine 지시어
-  suspend fun saveItem(): Item { ... }
+  // suspend fun saveItem(): Item { ... }
 }
 ```
 
@@ -162,7 +162,7 @@ class ItemViewModel : ViewModel() {
 
 ```kotlin
 class ItemFragment : Fragment() {
-  ...
+  // ...
   private var viewModel: ItemViewModel? = null
   private var binding: ItemFragmentBinding? = null
 
@@ -178,7 +178,7 @@ class ItemFragment : Fragment() {
   override fun onCreateView(
     inflater: LayoutInflater, container: ViewGroup?,
     savedInstanceState: Bundle?
-  ): View? {
+  ): View {
     /**
      * binding 생성
      *
@@ -189,7 +189,7 @@ class ItemFragment : Fragment() {
     val view = binding?.root
 
     // 이벤트 등록 등의 작업 수행
-    ...view?.findViewById(...).setOnClickListener {...}...
+    // ...view?.findViewById(...).setOnClickListener {...}...
 
     viewModel?.run {
       // db -> liveData
@@ -256,7 +256,7 @@ class ItemFragment : Fragment() {
     // 리스트 항목 추가사항을 뷰에 적용 하려면...
     // [listAdapter 사용 시] <ListView android:adapter=@{pictureListAdapter} ...>
     // [BindingAdapter 사용 시] @BindingAdapter 함수를 정의하여 직접 바인딩
-    viewModel?.pictureList?.add(...)
+    // viewModel?.pictureList?.add(...)
   }
 }
 ```
@@ -323,15 +323,15 @@ object HomeInfoDetailsBindingAdapter {
 
 - `layout`
 
-```xml
+```text
 ...
 // ObservableField<String> 바인딩
 <com.google.android.material.textfield.TextInputEditText
     android:id="@+id/et_name"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    // android:text="@{viewModel.name}" // 단방향 바인딩
-    android:text="@={viewModel.name}"   // 양방향 바인딩 (표현식 사용 시 양방향 바인딩만 사용불가)
+    android:text="@{viewModel.name}" // 단방향 바인딩
+    android:text="@={viewModel.name}" // 양방향 바인딩 (표현식 사용 시 양방향 바인딩만 사용불가)
     android:ems="255"
     android:hint="@string/name"
     android:inputType="text"
@@ -387,13 +387,15 @@ object HomeInfoDetailsBindingAdapter {
     android:name="com.minuminu.haruu.wheremyhome.MapsFragment"
     android:label="지도"
     tools:layout="@layout/fragment_maps" />
+
+</navigation>
 ```
 
 - `이동`
 
 ```kotlin
 import androidx.navigation.fragment.findNavController
-...
+//...
 findNavController().navigate(
   R.id.action_ItemFragment_to_MapsFragment, // @navigation action id
   Bundle().apply {
@@ -432,3 +434,5 @@ findNavController().previousBackStackEntry?.savedStateHandle?.set(
 > 앱 아이콘 제작자 <a href="https://www.flaticon.com/kr/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/kr/" title="Flaticon"> www.flaticon.com</a>
 
 > +/- 아이콘 제작자 <a href="https://www.flaticon.com/authors/dmitri13" title="dmitri13">dmitri13</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>
+
+> won 아이콘 제작자 <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>

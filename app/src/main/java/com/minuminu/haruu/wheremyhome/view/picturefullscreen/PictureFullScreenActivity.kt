@@ -15,7 +15,7 @@ import com.minuminu.haruu.wheremyhome.utils.AppUtils
 
 @Suppress("DEPRECATION")
 @SuppressLint("ClickableViewAccessibility")
-class PictureFullscreenActivity : AppCompatActivity() {
+class PictureFullScreenActivity : AppCompatActivity() {
     private lateinit var hideHandler: Handler
 
     @Suppress("InlinedApi")
@@ -79,7 +79,7 @@ class PictureFullscreenActivity : AppCompatActivity() {
 
         intent.extras?.getString("pictureName")?.also {
             fullscreenContent?.apply {
-                val imageFile = AppUtils.loadImageFile(this@PictureFullscreenActivity, it).let {
+                val imageFile = AppUtils.loadImageFile(this@PictureFullScreenActivity, it).let {
                     val metrics = resources.displayMetrics
                     val width = metrics.widthPixels.toFloat()
                     val height = metrics.heightPixels.toFloat()

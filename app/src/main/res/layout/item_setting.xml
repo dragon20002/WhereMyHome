@@ -50,28 +50,6 @@
                 android:text="***** ***** ***** *****-*****"
                 android:textAppearance="?attr/textAppearanceListItem" />
 
-            <TextView
-                android:id="@+id/item_desc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_mid"
-                android:maxLines="1"
-                android:text="보증금(원) / 월세(원) / 관리비(원) / 점수(점)"
-                android:textAppearance="?attr/textAppearanceListItemSmall" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center">
-
-            <ImageButton
-                android:id="@+id/btn_edit"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:contentDescription="@string/modify"
-                android:src="@drawable/ic_baseline_arrow_forward_ios_24" />
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

@@ -53,7 +53,7 @@
             android:theme="@style/Theme.WhereMyHome.NoActionBar" />
 
         <activity
-            android:name=".view.picturefullscreen.PictureFullscreenActivity"
+            android:name=".view.picturefullscreen.PictureFullScreenActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.WhereMyHome.NoActionBar" />

@@ -21,10 +21,10 @@ import com.minuminu.haruu.wheremyhome.db.AppDatabase
 class HomeInfoListFragment : Fragment() {
 
     companion object {
-        fun newInstance(columnCount: Int) = HomeInfoListFragment()
+        fun newInstance() = HomeInfoListFragment()
     }
 
-    private var list: RecyclerView? = null
+    // private var list: RecyclerView? = null
     private var viewModel: HomeInfoListViewModel? = null
     private var binding: FragmentHomeInfoListBinding? = null
 
@@ -47,9 +47,9 @@ class HomeInfoListFragment : Fragment() {
         binding?.viewModel = viewModel
         val view = binding?.root
 
-        list = view?.findViewById<RecyclerView>(R.id.list)?.apply {
+        view?.findViewById<RecyclerView>(R.id.list)?.apply {
             this.layoutManager = LinearLayoutManager(context)
-            // this@apply.adapter = adapter
+            this.adapter = HomeInfoItemRecyclerViewAdapter(this@HomeInfoListFragment)
         }
 
         view?.findViewById<FloatingActionButton>(R.id.fab)?.setOnClickListener {
@@ -61,9 +61,9 @@ class HomeInfoListFragment : Fragment() {
         }
 
         viewModel?.run {
-            homeInfoListLiveData.observe(viewLifecycleOwner, {
+            homeInfoListLiveData.observe(viewLifecycleOwner, { _homeInfoList ->
                 homeInfoList.clear()
-                homeInfoList.addAll(it)
+                homeInfoList.addAll(_homeInfoList)
             })
 
             loadHomeInfoList()

@@ -37,8 +37,9 @@
                     android:text="@string/go_to_list"
                     android:textColor="@color/primary_dark"
                     app:icon="@drawable/ic_arrow_back_24"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    app:iconTint="@color/primary_dark"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <Button
                     android:id="@+id/btn_edit"
@@ -49,8 +50,9 @@
                     android:textColor="@color/primary_dark"
                     android:visibility='@{viewModel.isEditing ? View.GONE : View.VISIBLE}'
                     app:icon="@drawable/ic_edit_24"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    app:iconTint="@color/primary_dark"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <Button
                     android:id="@+id/btn_cancel"
@@ -61,8 +63,9 @@
                     android:textColor="@color/primary_dark"
                     android:visibility='@{viewModel.isEditing ? View.VISIBLE : View.GONE}'
                     app:icon="@drawable/ic_clear_24"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/btn_done" />
+                    app:iconTint="@color/primary_dark"
+                    app:layout_constraintEnd_toStartOf="@id/btn_done"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <Button
                     android:id="@+id/btn_done"
@@ -73,34 +76,51 @@
                     android:textColor="@color/primary_dark"
                     android:visibility='@{viewModel.isEditing ? View.VISIBLE : View.GONE}'
                     app:icon="@drawable/ic_done_24"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    app:iconTint="@color/primary_dark"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <!-- pictures -->
-            <HorizontalScrollView
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin_mid">
+                android:layout_margin="@dimen/margin_mid"
+                app:strokeColor="@color/gray_400"
+                app:strokeWidth="1dp">
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    app:layout="@{@layout/item_picture}"
-                    app:pictures="@{viewModel.pictureList}">
+                    android:layout_margin="@dimen/margin_mid">
 
-                    <ImageButton
-                        android:id="@+id/btn_camera"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                        android:layout_width="50dp"
-                        android:layout_height="100dp"
-                        android:layout_margin="@dimen/margin_small"
-                        android:clickable="@{viewModel.isEditing}"
-                        android:contentDescription="@string/add_picture"
-                        android:src="@android:drawable/ic_menu_camera" />
-                </LinearLayout>
-            </HorizontalScrollView>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <Button
+                            android:id="@+id/btn_camera"
+                            style="@style/Widget.App.Button.TextButton.IconOnly"
+                            android:layout_width="50dp"
+                            android:layout_height="100dp"
+                            android:layout_margin="@dimen/margin_small"
+                            android:clickable="@{viewModel.isEditing}"
+                            android:contentDescription="@string/add_picture"
+                            android:enabled="@{viewModel.isEditing}"
+                            app:icon="@drawable/ic_photo_camera_24" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rv_pictures"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            app:layoutManager="LinearLayoutManager"
+                            app:pictures="@{viewModel.pictureList}"
+                            tools:listitem="@layout/item_picture" />
+                    </LinearLayout>
+                </HorizontalScrollView>
+
+            </com.google.android.material.card.MaterialCardView>
 
             <!-- name -->
             <com.google.android.material.textfield.TextInputLayout
@@ -109,204 +129,161 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_mid"
+                android:enabled="@{viewModel.isEditing}"
                 app:counterEnabled="true"
                 app:counterMaxLength="255"
                 app:errorEnabled="true"
-                app:hintEnabled="true">
+                app:hintEnabled="true"
+                app:startIconContentDescription="@string/name"
+                app:startIconDrawable="@drawable/ic_home_24">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="255"
+                    android:enabled="@{viewModel.isEditing}"
                     android:hint="@string/name"
                     android:inputType="@{viewModel.isEditing ? InputType.TYPE_CLASS_TEXT : InputType.TYPE_NULL}"
-                    android:enabled="@{viewModel.isEditing()}"
                     android:maxLength="255"
                     android:text="@={viewModel.name}" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- address -->
-            <LinearLayout
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/ly_address"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_margin="@dimen/margin_mid"
+                android:enabled="@{viewModel.isEditing}"
+                app:counterEnabled="true"
+                app:counterMaxLength="255"
+                app:endIconContentDescription="@string/see_map"
+                app:endIconDrawable="@drawable/ic_location_searching_24"
+                app:endIconMode="custom"
+                app:errorEnabled="true"
+                app:hintEnabled="true"
+                app:startIconContentDescription="@string/address"
+                app:startIconDrawable="@drawable/ic_location_on_24">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/ly_address"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                    android:layout_width="0dp"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_address"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/margin_mid"
-                    android:layout_weight="1"
-                    app:counterEnabled="true"
-                    app:counterMaxLength="255"
-                    app:errorEnabled="true"
-                    app:hintEnabled="true">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/et_address"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ems="255"
-                        android:hint="@string/address"
-                        android:inputType="@{viewModel.isEditing ? InputType.TYPE_CLASS_TEXT : InputType.TYPE_NULL}"
-                        android:enabled="@{viewModel.isEditing()}"
-                        android:maxLength="255"
-                        android:text="@={viewModel.address}" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <ImageButton
-                    android:id="@+id/btn_location"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:clickable="@{viewModel.isEditing}"
-                    android:contentDescription="@string/see_map"
-                    android:src="@android:drawable/ic_dialog_map" />
-            </LinearLayout>
+                    android:ems="255"
+                    android:enabled="@{viewModel.isEditing}"
+                    android:hint="@string/address"
+                    android:inputType="@{viewModel.isEditing ? InputType.TYPE_CLASS_TEXT : InputType.TYPE_NULL}"
+                    android:maxLength="255"
+                    android:text="@={viewModel.address}" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <!-- 보증금 / 월세 -->
-            <LinearLayout
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/ly_deposit"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:baselineAligned="false"
-                android:orientation="horizontal">
+                android:layout_margin="@dimen/margin_mid"
+                android:enabled="@{viewModel.isEditing}"
+                app:errorEnabled="false"
+                app:hintEnabled="true"
+                app:startIconDrawable="@drawable/ic_won">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/ly_deposit"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_deposit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/margin_mid"
-                    android:layout_weight="1"
-                    app:errorEnabled="true"
-                    app:hintEnabled="true">
+                    android:ems="8"
+                    android:enabled="@{viewModel.isEditing}"
+                    android:hint="@string/deposit"
+                    android:inputType="@{viewModel.isEditing ? InputType.TYPE_CLASS_NUMBER : InputType.TYPE_NULL}"
+                    android:maxLength="8"
+                    android:text="@={viewModel.deposit}" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/et_deposit"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ems="8"
-                        android:hint="@string/deposit"
-                        android:inputType="@{viewModel.isEditing ? InputType.TYPE_CLASS_NUMBER : InputType.TYPE_NULL}"
-                        android:enabled="@{viewModel.isEditing()}"
-                        android:maxLength="8"
-                        android:text="@={viewModel.deposit}" />
-                </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/ly_rental"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_mid"
+                android:enabled="@{viewModel.isEditing}"
+                app:errorEnabled="false"
+                app:hintEnabled="true"
+                app:startIconDrawable="@drawable/ic_won">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/ly_rental"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_rental"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/margin_mid"
-                    android:layout_weight="1"
-                    app:errorEnabled="true"
-                    app:hintEnabled="true">
+                    android:ems="8"
+                    android:enabled="@{viewModel.isEditing}"
+                    android:hint="@string/rental"
+                    android:inputType="@{viewModel.isEditing ? InputType.TYPE_CLASS_NUMBER : InputType.TYPE_NULL}"
+                    android:maxLength="8"
+                    android:text="@={viewModel.rental}" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/et_rental"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ems="8"
-                        android:hint="@string/rental"
-                        android:inputType="@{viewModel.isEditing ? InputType.TYPE_CLASS_NUMBER : InputType.TYPE_NULL}"
-                        android:enabled="@{viewModel.isEditing()}"
-                        android:maxLength="8"
-                        android:text="@={viewModel.rental}" />
-                </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/ly_expense"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_mid"
+                android:enabled="@{viewModel.isEditing}"
+                app:errorEnabled="false"
+                app:hintEnabled="true"
+                app:startIconDrawable="@drawable/ic_won">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/ly_expense"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_expense"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/margin_mid"
-                    android:layout_weight="1"
-                    app:errorEnabled="true"
-                    app:hintEnabled="true">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/et_expense"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ems="8"
-                        android:hint="@string/expense"
-                        android:inputType="@{viewModel.isEditing ? InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL : InputType.TYPE_NULL}"
-                        android:enabled="@{viewModel.isEditing()}"
-                        android:maxLength="8"
-                        android:text="@={viewModel.expense}" />
-                </com.google.android.material.textfield.TextInputLayout>
-            </LinearLayout>
+                    android:ems="8"
+                    android:enabled="@{viewModel.isEditing}"
+                    android:hint="@string/expense"
+                    android:inputType="@{viewModel.isEditing ? InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL : InputType.TYPE_NULL}"
+                    android:maxLength="8"
+                    android:text="@={viewModel.expense}" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <!-- 계약가능 기간 -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_wide"
                 android:baselineAligned="false"
                 android:orientation="horizontal">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/ly_start_date"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                <Button
+                    android:id="@+id/btn_start_date"
+                    style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/margin_mid"
                     android:layout_weight="1"
-                    app:errorEnabled="true"
-                    app:hintEnabled="true">
+                    android:enabled="@{viewModel.isEditing}"
+                    android:hint="@string/start_date"
+                    android:padding="@dimen/padding_wide"
+                    android:text="@={viewModel.startDate}"
+                    android:textSize="@dimen/font_mid"
+                    app:icon="@drawable/ic_calendar_today_24" />
 
-                    <!-- *** Click-only ***
-                         clickable: true
-                         cursorVisible: false
-                         focusable: false -->
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/et_start_date"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:clickable="@{viewModel.isEditing}"
-                        android:cursorVisible="false"
-                        android:ems="20"
-                        android:focusable="true"
-                        android:hint="@string/start_date"
-                        android:inputType="@{InputType.TYPE_NULL}"
-                        android:enabled="@{viewModel.isEditing()}"
-                        android:maxLength="20"
-                        android:text="@={viewModel.startDate}"
-                        tools:ignore="KeyboardInaccessibleWidget" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/ly_end_date"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                <Button
+                    android:id="@+id/btn_end_date"
+                    style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/margin_mid"
                     android:layout_weight="1"
-                    app:errorEnabled="true"
-                    app:hintEnabled="true">
-
-                    <!-- *** Click-only ***
-                         clickable: true
-                         cursorVisible: false
-                         focusable: false -->
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/et_end_date"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:clickable="@{viewModel.isEditing}"
-                        android:cursorVisible="false"
-                        android:ems="20"
-                        android:focusable="true"
-                        android:hint="@string/end_date"
-                        android:inputType="@{InputType.TYPE_NULL}"
-                        android:enabled="@{viewModel.isEditing()}"
-                        android:maxLength="20"
-                        android:text="@={viewModel.endDate}"
-                        tools:ignore="KeyboardInaccessibleWidget" />
-                </com.google.android.material.textfield.TextInputLayout>
+                    android:enabled="@{viewModel.isEditing}"
+                    android:hint="@string/end_date"
+                    android:padding="@dimen/padding_wide"
+                    android:text="@={viewModel.endDate}"
+                    android:textSize="@dimen/font_mid"
+                    app:icon="@drawable/ic_calendar_today_24" />
             </LinearLayout>
 
             <!-- Q&A Form -->
@@ -366,15 +343,16 @@
 
             </LinearLayout>
 
-            <LinearLayout
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_qandas"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginBottom="8dp"
-                android:orientation="vertical"
-                app:layout="@{@layout/item_qanda}"
-                app:viewModel="@{viewModel}" />
+                app:layoutManager="LinearLayoutManager"
+                app:qandas="@{viewModel.qandaList}"
+                tools:listitem="@layout/item_qanda" />
         </LinearLayout>
     </ScrollView>
 </layout>
