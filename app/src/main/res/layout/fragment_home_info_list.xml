@@ -6,13 +6,13 @@
     <data>
         <variable
             name="viewModel"
-            type="com.minuminu.haruu.wheremyhome.viewmodel.HomeInfoListViewModel" />
+            type="com.minuminu.haruu.wheremyhome.view.homeinfolist.HomeInfoListViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".view.fragment.HomeInfoListFragment">
+        tools:context=".view.homeinfolist.HomeInfoListFragment">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/list"

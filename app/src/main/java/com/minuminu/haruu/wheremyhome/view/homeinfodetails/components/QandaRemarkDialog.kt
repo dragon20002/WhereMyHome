@@ -1,4 +1,4 @@
-package com.minuminu.haruu.wheremyhome.view.dialog
+package com.minuminu.haruu.wheremyhome.view.homeinfodetails.components
 
 import android.app.AlertDialog
 import android.app.Dialog
@@ -10,7 +10,7 @@ import androidx.fragment.app.DialogFragment
 import com.google.android.material.textfield.TextInputEditText
 import com.minuminu.haruu.wheremyhome.R
 import com.minuminu.haruu.wheremyhome.databinding.DialogQandaRemarkBinding
-import com.minuminu.haruu.wheremyhome.viewmodel.HomeInfoDetailsViewModel
+import com.minuminu.haruu.wheremyhome.view.homeinfodetails.HomeInfoDetailsViewModel
 
 class QandaRemarkDialog : DialogFragment() {
     var caller: View? = null

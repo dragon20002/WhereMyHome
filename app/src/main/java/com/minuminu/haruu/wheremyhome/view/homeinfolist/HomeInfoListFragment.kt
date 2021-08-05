@@ -1,4 +1,4 @@
-package com.minuminu.haruu.wheremyhome.view.fragment
+package com.minuminu.haruu.wheremyhome.view.homeinfolist
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,7 +14,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.minuminu.haruu.wheremyhome.R
 import com.minuminu.haruu.wheremyhome.databinding.FragmentHomeInfoListBinding
 import com.minuminu.haruu.wheremyhome.db.AppDatabase
-import com.minuminu.haruu.wheremyhome.viewmodel.HomeInfoListViewModel
 
 /**
  * A fragment representing a list of Items.

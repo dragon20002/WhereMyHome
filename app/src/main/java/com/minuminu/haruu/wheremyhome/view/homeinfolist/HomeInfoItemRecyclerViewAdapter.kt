@@ -1,4 +1,4 @@
-package com.minuminu.haruu.wheremyhome.viewmodel
+package com.minuminu.haruu.wheremyhome.view.homeinfolist
 
 import android.os.Bundle
 import android.util.Log
@@ -13,7 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.minuminu.haruu.wheremyhome.R
 import com.minuminu.haruu.wheremyhome.db.data.HomeInfo
-import com.minuminu.haruu.wheremyhome.utils.Utils
+import com.minuminu.haruu.wheremyhome.utils.AppUtils
 
 /**
  * [RecyclerView.Adapter] that can display a [HomeInfo].
@@ -32,14 +32,14 @@ class HomeInfoItemRecyclerViewAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = values[position]
         item.thumbnail?.let { thumbnail ->
-            var imageFile = Utils.loadSnapshotFile(holder.thumbnailView.context, thumbnail)
+            var imageFile = AppUtils.loadSnapshotFile(holder.thumbnailView.context, thumbnail)
             if (imageFile == null) {
                 Log.d(HomeInfoItemRecyclerViewAdapter::class.simpleName, "loadSanpshotFile is failed")
 
-                imageFile = Utils.loadImageFile(holder.thumbnailView.context, thumbnail).let {
-                    Utils.resizeBitmap(it, holder.thumbnailView.width.toFloat(), holder.thumbnailView.height.toFloat())
+                imageFile = AppUtils.loadImageFile(holder.thumbnailView.context, thumbnail).let {
+                    AppUtils.resizeBitmap(it, holder.thumbnailView.width.toFloat(), holder.thumbnailView.height.toFloat())
                 }
-                Utils.createSnapshotFile(holder.thumbnailView.context, thumbnail, imageFile)
+                AppUtils.createSnapshotFile(holder.thumbnailView.context, thumbnail, imageFile)
             }
             holder.thumbnailView.setImageBitmap(imageFile)
         }

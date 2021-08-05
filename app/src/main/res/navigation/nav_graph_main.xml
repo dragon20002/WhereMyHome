@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/HomeInfoListFragment"
-        android:name="com.minuminu.haruu.wheremyhome.view.fragment.HomeInfoListFragment"
+        android:name="com.minuminu.haruu.wheremyhome.view.homeinfolist.HomeInfoListFragment"
         android:label="@string/item_fragment_label"
         tools:layout="@layout/fragment_home_info_list">
 
@@ -17,7 +17,7 @@
     </fragment>
     <fragment
         android:id="@+id/HomeInfoDetailsFragment"
-        android:name="com.minuminu.haruu.wheremyhome.view.fragment.HomeInfoDetailsFragment"
+        android:name="com.minuminu.haruu.wheremyhome.view.homeinfodetails.HomeInfoDetailsFragment"
         android:label="@string/item_details_fragment_label"
         tools:layout="@layout/fragment_home_info_details">
 

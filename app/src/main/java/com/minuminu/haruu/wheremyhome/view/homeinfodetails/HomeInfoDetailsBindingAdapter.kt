@@ -1,4 +1,4 @@
-package com.minuminu.haruu.wheremyhome.viewmodel
+package com.minuminu.haruu.wheremyhome.view.homeinfodetails
 
 import android.content.Context
 import android.content.Intent
@@ -19,9 +19,9 @@ import com.minuminu.haruu.wheremyhome.databinding.ItemPictureBinding
 import com.minuminu.haruu.wheremyhome.databinding.ItemQandaBinding
 import com.minuminu.haruu.wheremyhome.db.data.Picture
 import com.minuminu.haruu.wheremyhome.db.data.QandaViewData
-import com.minuminu.haruu.wheremyhome.utils.Utils
-import com.minuminu.haruu.wheremyhome.view.activity.PictureFullscreenActivity
-import com.minuminu.haruu.wheremyhome.view.dialog.QandaRemarkDialog
+import com.minuminu.haruu.wheremyhome.utils.AppUtils
+import com.minuminu.haruu.wheremyhome.view.picturefullscreen.PictureFullscreenActivity
+import com.minuminu.haruu.wheremyhome.view.homeinfodetails.components.QandaRemarkDialog
 
 object HomeInfoDetailsBindingAdapter {
 
@@ -73,14 +73,14 @@ object HomeInfoDetailsBindingAdapter {
     @BindingAdapter("pictureName")
     @JvmStatic
     fun setImageBitmap(iv: ImageView, pictureName: String) {
-        var imageFile = Utils.loadSnapshotFile(iv.context, pictureName)
+        var imageFile = AppUtils.loadSnapshotFile(iv.context, pictureName)
         if (imageFile == null) {
             Log.d(HomeInfoDetailsBindingAdapter::class.simpleName, "loadSnapshotFile is failed")
 
-            imageFile = Utils.loadImageFile(iv.context, pictureName).let {
-                Utils.resizeBitmap(it, iv.width.toFloat(), iv.height.toFloat())
+            imageFile = AppUtils.loadImageFile(iv.context, pictureName).let {
+                AppUtils.resizeBitmap(it, iv.width.toFloat(), iv.height.toFloat())
             }
-            Utils.createSnapshotFile(iv.context, pictureName, imageFile)
+            AppUtils.createSnapshotFile(iv.context, pictureName, imageFile)
         }
         iv.setImageBitmap(imageFile)
     }

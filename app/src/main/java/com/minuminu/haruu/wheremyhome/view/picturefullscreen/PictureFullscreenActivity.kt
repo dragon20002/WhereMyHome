@@ -1,4 +1,4 @@
-package com.minuminu.haruu.wheremyhome.view.activity
+package com.minuminu.haruu.wheremyhome.view.picturefullscreen
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -11,7 +11,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.minuminu.haruu.wheremyhome.R
-import com.minuminu.haruu.wheremyhome.utils.Utils
+import com.minuminu.haruu.wheremyhome.utils.AppUtils
 
 @Suppress("DEPRECATION")
 @SuppressLint("ClickableViewAccessibility")
@@ -79,11 +79,11 @@ class PictureFullscreenActivity : AppCompatActivity() {
 
         intent.extras?.getString("pictureName")?.also {
             fullscreenContent?.apply {
-                val imageFile = Utils.loadImageFile(this@PictureFullscreenActivity, it).let {
+                val imageFile = AppUtils.loadImageFile(this@PictureFullscreenActivity, it).let {
                     val metrics = resources.displayMetrics
                     val width = metrics.widthPixels.toFloat()
                     val height = metrics.heightPixels.toFloat()
-                    Utils.resizeBitmap(it, width, height)
+                    AppUtils.resizeBitmap(it, width, height)
                 }
                 setImageBitmap(imageFile)
             }

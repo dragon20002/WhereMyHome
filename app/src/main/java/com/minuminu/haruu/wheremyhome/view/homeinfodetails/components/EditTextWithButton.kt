@@ -1,4 +1,4 @@
-package com.minuminu.haruu.wheremyhome.view.component
+package com.minuminu.haruu.wheremyhome.view.homeinfodetails.components
 
 import android.annotation.SuppressLint
 import android.content.Context

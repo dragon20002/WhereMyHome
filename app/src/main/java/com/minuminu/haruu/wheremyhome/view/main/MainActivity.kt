@@ -1,4 +1,4 @@
-package com.minuminu.haruu.wheremyhome.view.activity
+package com.minuminu.haruu.wheremyhome.view.main
 
 import android.Manifest
 import android.app.AlertDialog
@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.minuminu.haruu.wheremyhome.R
 import com.minuminu.haruu.wheremyhome.db.AppDatabase
+import com.minuminu.haruu.wheremyhome.view.settings.SettingsActivity
 
 class MainActivity : AppCompatActivity() {
     companion object {

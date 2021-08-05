@@ -11,13 +11,13 @@
 
         <variable
             name="viewModel"
-            type="com.minuminu.haruu.wheremyhome.viewmodel.HomeInfoDetailsViewModel" />
+            type="com.minuminu.haruu.wheremyhome.view.homeinfodetails.HomeInfoDetailsViewModel" />
     </data>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".view.fragment.HomeInfoDetailsFragment">
+        tools:context=".view.homeinfodetails.HomeInfoDetailsFragment">
 
         <LinearLayout
             android:layout_width="match_parent"

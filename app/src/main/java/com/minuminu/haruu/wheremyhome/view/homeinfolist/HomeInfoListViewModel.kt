@@ -1,4 +1,4 @@
-package com.minuminu.haruu.wheremyhome.viewmodel
+package com.minuminu.haruu.wheremyhome.view.homeinfolist
 
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableList

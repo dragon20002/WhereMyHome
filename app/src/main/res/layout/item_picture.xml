@@ -4,7 +4,7 @@
 
     <data>
 
-        <import type="com.minuminu.haruu.wheremyhome.viewmodel.HomeInfoDetailsViewModel" />
+        <import type="com.minuminu.haruu.wheremyhome.view.homeinfodetails.HomeInfoDetailsViewModel" />
 
         <variable
             name="picture"

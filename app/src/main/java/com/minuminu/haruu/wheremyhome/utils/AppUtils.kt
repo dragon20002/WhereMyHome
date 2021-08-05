@@ -15,7 +15,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.min
 
-object Utils {
+object AppUtils {
     @Throws(IOException::class)
     fun createImageFile(context: Context): File {
         // Create an image file name

@@ -1,4 +1,4 @@
-package com.minuminu.haruu.wheremyhome.view.activity
+package com.minuminu.haruu.wheremyhome.view.settings
 
 import android.os.Bundle
 import android.os.PersistableBundle

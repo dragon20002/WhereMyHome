@@ -1,4 +1,4 @@
-package com.minuminu.haruu.wheremyhome.view.fragment
+package com.minuminu.haruu.wheremyhome.view.homeinfodetails
 
 import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
@@ -26,9 +26,8 @@ import com.minuminu.haruu.wheremyhome.db.AppDatabase
 import com.minuminu.haruu.wheremyhome.db.data.DataUtil
 import com.minuminu.haruu.wheremyhome.db.data.HomeInfo
 import com.minuminu.haruu.wheremyhome.db.data.Picture
-import com.minuminu.haruu.wheremyhome.utils.Utils
-import com.minuminu.haruu.wheremyhome.view.activity.MapsActivity
-import com.minuminu.haruu.wheremyhome.viewmodel.HomeInfoDetailsViewModel
+import com.minuminu.haruu.wheremyhome.utils.AppUtils
+import com.minuminu.haruu.wheremyhome.view.maps.MapsActivity
 import kotlinx.coroutines.launch
 import java.io.IOException
 import java.util.*
@@ -216,7 +215,7 @@ class HomeInfoDetailsFragment : Fragment() {
     private fun dispatchTakePictureIntent() {
         // Create file
         val imageUri = try {
-            Utils.createImageFile(requireContext())
+            AppUtils.createImageFile(requireContext())
         } catch (ex: IOException) {
             Log.e(javaClass.name, "Fail to create image file")
             null

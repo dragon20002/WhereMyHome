@@ -1,4 +1,4 @@
-package com.minuminu.haruu.wheremyhome.view.fragment
+package com.minuminu.haruu.wheremyhome.view.settings
 
 import android.os.Bundle
 import android.view.LayoutInflater

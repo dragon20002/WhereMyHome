@@ -13,7 +13,7 @@
 
         <variable
             name="viewModel"
-            type="com.minuminu.haruu.wheremyhome.viewmodel.HomeInfoDetailsViewModel" />
+            type="com.minuminu.haruu.wheremyhome.view.homeinfodetails.HomeInfoDetailsViewModel" />
     </data>
 
     <LinearLayout
@@ -59,7 +59,7 @@
             android:gravity="center"
             android:orientation="horizontal">
 
-            <com.minuminu.haruu.wheremyhome.view.component.EditTextWithButton
+            <com.minuminu.haruu.wheremyhome.view.homeinfodetails.components.EditTextWithButton
                 android:id="@+id/et_answer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

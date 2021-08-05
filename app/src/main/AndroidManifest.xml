@@ -35,7 +35,7 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".view.activity.MainActivity"
+            android:name=".view.main.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.WhereMyHome.NoActionBar">
@@ -47,19 +47,19 @@
         </activity>
 
         <activity
-            android:name=".view.activity.MapsActivity"
+            android:name=".view.maps.MapsActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.WhereMyHome.NoActionBar" />
 
         <activity
-            android:name=".view.activity.PictureFullscreenActivity"
+            android:name=".view.picturefullscreen.PictureFullscreenActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.WhereMyHome.NoActionBar" />
 
         <activity
-            android:name=".view.activity.SettingsActivity"
+            android:name=".view.settings.SettingsActivity"
             android:label="@string/action_settings"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.WhereMyHome.NoActionBar" />
