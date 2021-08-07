@@ -14,7 +14,7 @@
             type="com.minuminu.haruu.wheremyhome.view.homeinfodetails.HomeInfoDetailsViewModel" />
     </data>
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".view.homeinfodetails.HomeInfoDetailsFragment">
@@ -354,5 +354,5 @@
                 app:qandas="@{viewModel.qandaList}"
                 tools:listitem="@layout/item_qanda" />
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 </layout>

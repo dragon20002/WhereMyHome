@@ -25,10 +25,10 @@
             <ImageView
                 android:id="@+id/item_thumbnail"
                 android:layout_width="80dp"
-                android:layout_height="100dp"
+                android:layout_height="match_parent"
                 android:background="@color/primary"
                 android:contentDescription="@string/picture"
-                android:scaleType="fitCenter" />
+                android:scaleType="centerCrop" />
         </LinearLayout>
 
         <LinearLayout
