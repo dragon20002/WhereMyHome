@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">내집어디?</string>
+    <string name="app_name">울집 어디?</string>
     <string name="action_settings">설정</string>
 
     <!-- Strings used for fragments for navigation -->
@@ -32,4 +32,5 @@
     <string name="fullscreen">전체화면</string>
     <string name="map">지도</string>
     <string name="go_to_list">목록으로</string>
+    <string name="thumbnail">썸네일</string>
 </resources>

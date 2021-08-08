@@ -25,6 +25,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
 
+        supportActionBar?.apply {
+            setDisplayShowTitleEnabled(false)
+        }
+
         // Check db
         AppDatabase.getDatabase(this)
 

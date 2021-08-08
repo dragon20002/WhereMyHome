@@ -89,37 +89,34 @@
                 app:strokeColor="@color/gray_400"
                 app:strokeWidth="1dp">
 
-                <HorizontalScrollView
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/margin_mid">
+                    android:layout_height="128dp"
+                    android:orientation="horizontal">
 
-                    <LinearLayout
+                    <Button
+                        android:id="@+id/btn_camera"
+                        style="@style/Widget.App.Button.TextButton.IconOnly"
+                        android:layout_width="50dp"
+                        android:layout_height="match_parent"
+                        android:layout_margin="@dimen/margin_small"
+                        android:backgroundTint="@color/primary_dark"
+                        android:clickable="@{viewModel.isEditing}"
+                        android:contentDescription="@string/add_picture"
+                        android:enabled="@{viewModel.isEditing}"
+                        android:visibility='@{viewModel.isEditing ? View.VISIBLE : View.GONE}'
+                        app:icon="@drawable/ic_add_a_photo_24"
+                        app:iconTint="@color/text_primary_dark" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_pictures"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
-                        <Button
-                            android:id="@+id/btn_camera"
-                            style="@style/Widget.App.Button.TextButton.IconOnly"
-                            android:layout_width="50dp"
-                            android:layout_height="100dp"
-                            android:layout_margin="@dimen/margin_small"
-                            android:clickable="@{viewModel.isEditing}"
-                            android:contentDescription="@string/add_picture"
-                            android:enabled="@{viewModel.isEditing}"
-                            app:icon="@drawable/ic_photo_camera_24" />
-
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/rv_pictures"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            app:layoutManager="LinearLayoutManager"
-                            app:pictures="@{viewModel.pictureList}"
-                            tools:listitem="@layout/item_picture" />
-                    </LinearLayout>
-                </HorizontalScrollView>
-
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        app:layoutManager="LinearLayoutManager"
+                        app:pictures="@{viewModel.pictureList}"
+                        tools:listitem="@layout/item_picture" />
+                </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
             <!-- name -->

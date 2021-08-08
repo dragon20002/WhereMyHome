@@ -17,11 +17,22 @@
     <style name="Theme.WhereMyHome.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
+    <!-- my style you know! ah! -->
+
+    <style name="Theme.WhereMyHome.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:windowTranslucentStatus">true</item>
     </style>
 
-    <style name="Theme.WhereMyHome.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="Theme.WhereMyHome.ToolBarOverlay" parent="ThemeOverlay.AppCompat.Dark" />
 
-    <style name="Theme.WhereMyHome.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="Theme.WhereMyHome.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
+        <item name="titleEnabled">false</item>
+        <item name="backgroundColor">@color/white</item>
+        <item name="iconTint">@color/primary_dark</item>
+        <item name="background">@color/white</item>
+    </style>
 
     <style name="ThemeOverlay.WhereMyHome.FullscreenContainer" parent="">
         <item name="fullscreenBackgroundColor">@color/black</item>

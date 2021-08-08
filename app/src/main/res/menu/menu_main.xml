@@ -4,6 +4,8 @@
     tools:context="com.minuminu.haruu.wheremyhome.view.main.MainActivity">
     <item
         android:id="@+id/action_settings"
+        android:contentDescription="@string/action_settings"
+        android:icon="@drawable/ic_settings_suggest_24"
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="never" />

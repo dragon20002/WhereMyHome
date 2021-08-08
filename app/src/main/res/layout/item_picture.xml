@@ -30,9 +30,9 @@
             <ImageView
                 android:id="@+id/iv_picture"
                 android:layout_width="80dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:contentDescription="@string/picture"
-                android:scaleType="fitCenter"
+                android:scaleType="centerCrop"
                 app:deleted="@{picture.deleted}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

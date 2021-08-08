@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    app:cardBackgroundColor="@color/white"
+    app:cardBackgroundColor="@color/text_primary_dark"
     app:cardCornerRadius="8dp"
     app:cardElevation="4dp"
     app:cardUseCompatPadding="true">
@@ -16,20 +16,25 @@
         android:baselineAligned="false"
         android:orientation="horizontal">
 
-        <LinearLayout
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:background="@color/primary_light"
+                android:contentDescription="@string/thumbnail"
+                android:scaleType="center"
+                android:src="@drawable/ic_home_24" />
 
             <ImageView
                 android:id="@+id/item_thumbnail"
                 android:layout_width="80dp"
                 android:layout_height="match_parent"
-                android:background="@color/primary"
-                android:contentDescription="@string/picture"
+                android:contentDescription="@string/thumbnail"
                 android:scaleType="centerCrop" />
-        </LinearLayout>
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
         <LinearLayout
             android:layout_width="0dp"
@@ -46,7 +51,8 @@
                 android:layout_margin="@dimen/margin_mid"
                 android:maxLines="2"
                 android:text="***** ***** ***** *****-*****"
-                android:textAppearance="?attr/textAppearanceListItem" />
+                android:textAppearance="?attr/textAppearanceListItem"
+                android:textColor="@color/primary_dark" />
 
             <com.google.android.material.chip.ChipGroup
                 android:layout_width="match_parent"
@@ -58,10 +64,10 @@
                     android:layout_height="wrap_content"
                     android:clickable="false"
                     android:text="10,000"
-                    android:textColor="@color/primary_dark"
+                    android:textColor="@color/text_primary"
                     app:chipBackgroundColor="@color/primary"
                     app:chipIcon="@drawable/ic_won"
-                    app:chipIconTint="@color/primary_dark" />
+                    app:chipIconTint="@color/text_primary" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/item_rental"
@@ -69,10 +75,10 @@
                     android:layout_height="wrap_content"
                     android:clickable="false"
                     android:text="10,000"
-                    android:textColor="@color/primary_dark"
+                    android:textColor="@color/text_primary"
                     app:chipBackgroundColor="@color/primary"
                     app:chipIcon="@drawable/ic_won"
-                    app:chipIconTint="@color/primary_dark" />
+                    app:chipIconTint="@color/text_primary" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/item_expense"
@@ -80,10 +86,10 @@
                     android:layout_height="wrap_content"
                     android:clickable="false"
                     android:text="10,000"
-                    android:textColor="@color/primary_dark"
+                    android:textColor="@color/text_primary"
                     app:chipBackgroundColor="@color/primary"
                     app:chipIcon="@drawable/ic_won"
-                    app:chipIconTint="@color/primary_dark" />
+                    app:chipIconTint="@color/text_primary" />
             </com.google.android.material.chip.ChipGroup>
         </LinearLayout>
 
@@ -97,7 +103,9 @@
                 android:layout_width="30dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textColor="@color/primary_dark" />
+                android:textColor="@color/primary_dark"
+                android:textSize="@dimen/font_mid"
+                android:textStyle="bold|italic" />
         </LinearLayout>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
