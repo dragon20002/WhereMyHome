@@ -11,5 +11,14 @@
         android:label="@string/action_settings"
         tools:layout="@layout/fragment_settings">
 
+        <action
+            android:id="@+id/action_SettingsFragment_to_QnaListFragment"
+            app:destination="@id/QnaListFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/QnaListFragment"
+        android:name="com.minuminu.haruu.wheremyhome.view.settings.QnaListFragment"
+        android:label="@string/setting_qna"
+        tools:layout="@layout/fragment_qna_list" />
 </navigation>

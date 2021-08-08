@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/padding_wide"
+    tools:context=".view.settings.SettingsFragment">
+
+    <Button
+        android:id="@+id/btn_setting_qna"
+        style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_mid"
+        android:gravity="start"
+        android:text="@string/setting_qna"
+        android:textSize="@dimen/font_mid"
+        app:icon="@drawable/ic_checklist_rtl_24" />
+
+    <Button
+        android:id="@+id/btn_setting_others"
+        style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_mid"
+        android:gravity="start"
+        android:text="..."
+        android:textSize="@dimen/font_mid"
+        app:icon="@drawable/ic_settings_suggest_24" />
+</LinearLayout>

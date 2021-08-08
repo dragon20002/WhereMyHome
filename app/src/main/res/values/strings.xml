@@ -33,4 +33,7 @@
     <string name="map">지도</string>
     <string name="go_to_list">목록으로</string>
     <string name="thumbnail">썸네일</string>
+    <string name="setting_qna"><![CDATA[Q&A 설정]]></string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
