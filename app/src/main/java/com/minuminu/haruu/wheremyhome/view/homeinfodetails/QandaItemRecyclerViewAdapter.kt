@@ -11,7 +11,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.minuminu.haruu.wheremyhome.R
-import com.minuminu.haruu.wheremyhome.databinding.ItemQandaBinding
+import com.minuminu.haruu.wheremyhome.databinding.ItemQandaViewBinding
 import com.minuminu.haruu.wheremyhome.db.data.QandaViewData
 import com.minuminu.haruu.wheremyhome.view.homeinfodetails.components.QandaRemarkDialog
 
@@ -21,7 +21,7 @@ class QandaItemRecyclerViewAdapter(val viewModel: HomeInfoDetailsViewModel) :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
         DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),
-            R.layout.item_qanda,
+            R.layout.item_qanda_view,
             parent,
             false
         )
@@ -67,7 +67,7 @@ class QandaItemRecyclerViewAdapter(val viewModel: HomeInfoDetailsViewModel) :
         }
     }
 
-    inner class ViewHolder(val binding: ItemQandaBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(val binding: ItemQandaViewBinding) : RecyclerView.ViewHolder(binding.root) {
         val cbxAnswer = binding.root.findViewById<CheckBox>(R.id.cbx_answer)
         val btnRemark = binding.root.findViewById<Button>(R.id.btn_remark)
     }

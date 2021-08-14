@@ -9,10 +9,6 @@ interface HomeInfoDao {
     @Query("SELECT * FROM HomeInfo")
     fun getAll(): List<HomeInfo>
 
-//    @Transaction
-//    @Query("SELECT * FROM HomeInfo WHERE id IN (:ids)")
-//    fun loadAllByIds(ids: Array<String>): List<HomeInfoWithQandas>
-
     @Transaction
     @Query("SELECT * FROM HomeInfo WHERE id = :id")
     fun getOneById(id: Long): HomeInfo

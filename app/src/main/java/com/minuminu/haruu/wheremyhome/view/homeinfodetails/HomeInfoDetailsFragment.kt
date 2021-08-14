@@ -2,6 +2,7 @@ package com.minuminu.haruu.wheremyhome.view.homeinfodetails
 
 import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -25,7 +26,6 @@ import com.google.android.material.textfield.TextInputLayout
 import com.minuminu.haruu.wheremyhome.R
 import com.minuminu.haruu.wheremyhome.databinding.FragmentHomeInfoDetailsBinding
 import com.minuminu.haruu.wheremyhome.db.AppDatabase
-import com.minuminu.haruu.wheremyhome.db.data.DataUtil
 import com.minuminu.haruu.wheremyhome.db.data.HomeInfo
 import com.minuminu.haruu.wheremyhome.db.data.PictureViewData
 import com.minuminu.haruu.wheremyhome.utils.AppUtils
@@ -174,7 +174,7 @@ class HomeInfoDetailsFragment : Fragment() {
 
                 homeInfo.id?.let { homeInfoId ->
                     loadPictureList(homeInfoId)
-                    loadQandaList(homeInfoId)
+                    loadAnswerList(homeInfoId)
                 }
             })
 
@@ -206,8 +206,10 @@ class HomeInfoDetailsFragment : Fragment() {
                 viewModel?.homeInfoLiveData?.postValue(HomeInfo(null, "", ""))
                 viewModel?.pictureListLiveData?.postValue(ArrayList())
 
-                // TODO: Setting에서 불러온 질문 목록을 추가할 것
-                viewModel?.qandaListLiveData?.postValue(DataUtil.createQandaTemplate())
+                activity?.getPreferences(Context.MODE_PRIVATE)?.getLong("questionGroupId", 1L)
+                    ?.let { questionGroupId ->
+                        viewModel?.loadQuestionList(questionGroupId)
+                    }
             }
             else -> {
                 Log.d(javaClass.name, "modify mode")

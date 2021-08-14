@@ -63,21 +63,59 @@ class HomeInfoDetailsViewModel : ViewModel() {
         }
     }
 
-    fun loadQandaList(homeInfoId: Long) {
+    fun loadQuestionList(questionGroupId: Long) {
         CoroutineScope(Dispatchers.IO).launch {
-            db?.qandaDao()?.getAllByHomeInfoId(homeInfoId)?.let { qandaList ->
-                qandaListLiveData.postValue(qandaList.map {
+            val questionList = db?.questionDao()?.getAllByQuestionInfoId(questionGroupId)
+
+            qandaListLiveData.postValue(
+                questionList?.map { question ->
                     QandaViewData(
-                        it.id,
-                        it.group,
-                        it.num.toString(),
-                        it.question,
-                        it.type,
-                        it.answer,
-                        it.remark,
+                        question.id,
+                        null,
+                        question.category,
+                        question.num.toString(),
+                        question.content,
+                        question.type,
+                        "",
+                        ""
                     )
+                }
+            )
+        }
+    }
+
+    fun loadAnswerList(homeInfoId: Long) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val answerList = db?.answerDao()?.getAllByHomeInfoId(homeInfoId)
+
+            qandaListLiveData.postValue(
+                answerList?.filter { answer -> answer.questionId != null }?.map { answer ->
+                    val question = db?.questionDao()?.getOneById(answer.questionId!!)
+
+                    if (question != null) {
+                        QandaViewData(
+                            question.id,
+                            answer.id,
+                            question.category,
+                            question.num.toString(),
+                            question.content,
+                            question.type,
+                            answer.content,
+                            answer.remark,
+                        )
+                    } else {
+                        QandaViewData(
+                            null,
+                            answer.id,
+                            "",
+                            "",
+                            "",
+                            "",
+                            answer.content,
+                            answer.remark
+                        )
+                    }
                 })
-            }
         }
     }
 
@@ -98,7 +136,7 @@ class HomeInfoDetailsViewModel : ViewModel() {
             sum
         }
 
-        val homeInfoWithQandas = HomeInfoWithQandas(
+        val homeInfoWithQandas = HomeInfoWithAnswers(
             homeInfo = HomeInfo(
                 homeInfoLiveData.value?.id,
                 name.get(),
@@ -111,10 +149,9 @@ class HomeInfoDetailsViewModel : ViewModel() {
                 score,
                 thumbnail.get(),
             ),
-            qandas = qandaList.map {
-                Qanda(
-                    it.id, it.group, it.num.toIntOrNull() ?: 0,
-                    it.question, it.type, it.strAnswer, it.remark, null
+            answers = qandaList.map {
+                Answer(
+                    it.answerId, it.strAnswer, it.remark, it.questionId, null
                 )
             },
             pictures = pictureList.filter { !it.deleted }.map {
@@ -130,10 +167,10 @@ class HomeInfoDetailsViewModel : ViewModel() {
                     Log.d(javaClass.name, "inserted homeInfo ${ids?.get(0)}")
 
                     ids?.get(0)?.let { id ->
-                        for (qanda in qandas) {
+                        for (qanda in answers) {
                             qanda.homeInfoId = id
-                            val qandaIds = db?.qandaDao()?.insertAll(qanda)
-                            Log.d(javaClass.name, "inserted qanda ${qandaIds?.get(0)}")
+                            val answerIds = db?.answerDao()?.insertAll(qanda)
+                            Log.d(javaClass.name, "inserted answer ${answerIds?.get(0)}")
                         }
 
                         for (picture in pictures) {
@@ -148,10 +185,10 @@ class HomeInfoDetailsViewModel : ViewModel() {
                     Log.d(javaClass.name, "updated homeInfo $cnt")
 
                     if (cnt != null) {
-                        for (qanda in qandas) {
-                            qanda.homeInfoId = homeInfo.id
-                            val qandaCnt = db?.qandaDao()?.updateAll(qanda)
-                            Log.d(javaClass.name, "updated qanda $qandaCnt")
+                        for (answer in answers) {
+                            answer.homeInfoId = homeInfo.id
+                            val answerCnt = db?.answerDao()?.updateAll(answer)
+                            Log.d(javaClass.name, "updated answer $answerCnt")
                         }
 
                         for (picture in pictures) {

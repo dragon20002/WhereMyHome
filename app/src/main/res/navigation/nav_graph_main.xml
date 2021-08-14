@@ -22,13 +22,7 @@
         tools:layout="@layout/fragment_home_info_details">
 
         <argument
-            android:name="itemId"
-            app:argType="string" />
-
-        <argument
-            android:name="item"
-            android:defaultValue="@null"
-            app:argType="com.minuminu.haruu.wheremyhome.db.data.HomeInfo"
-            app:nullable="true" />
+            android:name="homeInfoId"
+            app:argType="long" />
     </fragment>
 </navigation>

@@ -12,13 +12,25 @@
         tools:layout="@layout/fragment_settings">
 
         <action
-            android:id="@+id/action_SettingsFragment_to_QnaListFragment"
-            app:destination="@id/QnaListFragment" />
+            android:id="@+id/action_SettingsFragment_to_QnaGroupListFragment"
+            app:destination="@id/QnaGroupListFragment" />
     </fragment>
 
     <fragment
-        android:id="@+id/QnaListFragment"
-        android:name="com.minuminu.haruu.wheremyhome.view.settings.QnaListFragment"
+        android:id="@+id/QnaGroupListFragment"
+        android:name="com.minuminu.haruu.wheremyhome.view.settings.QuestionGroupListFragment"
         android:label="@string/setting_qna"
-        tools:layout="@layout/fragment_qna_list" />
+        tools:layout="@layout/fragment_question_group_list">
+
+        <action
+            android:id="@+id/action_QnaGroupListFragment_to_QnaGroupDetailsFragment"
+            app:destination="@id/QnaGroupDetailsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/QnaGroupDetailsFragment"
+        android:name="com.minuminu.haruu.wheremyhome.view.settings.QuestionGroupDetailsFragment"
+        android:label="@string/setting_qna"
+        tools:layout="@layout/fragment_question_group_list" />
+
 </navigation>

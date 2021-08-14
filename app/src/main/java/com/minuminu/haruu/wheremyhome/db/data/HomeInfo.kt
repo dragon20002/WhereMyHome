@@ -1,7 +1,5 @@
 package com.minuminu.haruu.wheremyhome.db.data
 
-import android.os.Parcel
-import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -21,48 +19,8 @@ data class HomeInfo(
     var endDate: String? = "", // 계약가능일(종료)
     var score: Int = 0, // 점수
     var thumbnail: String? = "", // 썸네일 (사진목록 중 첫번째 사진)
-) : Parcelable {
-    constructor(parcel: Parcel) : this(
-        parcel.readValue(Long::class.java.classLoader) as? Long,
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readInt(),
-        parcel.readInt(),
-        parcel.readFloat(),
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readInt(),
-        parcel.readString()
-    )
-
+) {
     override fun toString(): String {
-        return "HomeInfo(id='$id', name='$name', address='$address', deposit=$deposit, rental=$rental, expense=$expense, startDate='$startDate', endDate='$endDate', score=$score, thumbnail='$thumbnail'')"
-    }
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeValue(id)
-        parcel.writeString(name)
-        parcel.writeString(address)
-        parcel.writeInt(deposit)
-        parcel.writeInt(rental)
-        parcel.writeFloat(expense)
-        parcel.writeString(startDate)
-        parcel.writeString(endDate)
-        parcel.writeInt(score)
-        parcel.writeString(thumbnail)
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object CREATOR : Parcelable.Creator<HomeInfo> {
-        override fun createFromParcel(parcel: Parcel): HomeInfo {
-            return HomeInfo(parcel)
-        }
-
-        override fun newArray(size: Int): Array<HomeInfo?> {
-            return arrayOfNulls(size)
-        }
+        return "HomeInfo(id=$id, name=$name, address=$address, deposit=$deposit, rental=$rental, expense=$expense, startDate=$startDate, endDate=$endDate, score=$score, thumbnail=$thumbnail)"
     }
 }

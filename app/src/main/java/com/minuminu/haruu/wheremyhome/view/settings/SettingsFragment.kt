@@ -24,7 +24,7 @@ class SettingsFragment : Fragment() {
 
         view.findViewById<Button>(R.id.btn_setting_qna)?.setOnClickListener { _ ->
             findNavController().navigate(
-                R.id.action_SettingsFragment_to_QnaListFragment
+                R.id.action_SettingsFragment_to_QnaGroupListFragment
             )
         }
 

@@ -349,7 +349,7 @@
                 android:layout_marginBottom="8dp"
                 app:layoutManager="LinearLayoutManager"
                 app:qandas="@{viewModel.qandaList}"
-                tools:listitem="@layout/item_qanda" />
+                tools:listitem="@layout/item_qanda_view" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </layout>

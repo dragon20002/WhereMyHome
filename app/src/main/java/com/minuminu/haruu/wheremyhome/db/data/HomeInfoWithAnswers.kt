@@ -3,14 +3,14 @@ package com.minuminu.haruu.wheremyhome.db.data
 import androidx.room.Embedded
 import androidx.room.Relation
 
-data class HomeInfoWithQandas(
+data class HomeInfoWithAnswers(
     @Embedded
     val homeInfo: HomeInfo,
     @Relation(
         parentColumn = "id",
         entityColumn = "home_info_id",
     )
-    val qandas: List<Qanda>,
+    val answers: List<Answer>,
     @Relation(
         parentColumn = "id",
         entityColumn = "home_info_id",
