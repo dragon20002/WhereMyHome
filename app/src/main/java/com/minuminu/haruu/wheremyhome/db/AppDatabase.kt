@@ -11,8 +11,8 @@ import com.minuminu.haruu.wheremyhome.db.dao.*
 import com.minuminu.haruu.wheremyhome.db.data.*
 
 @Database(
-    entities = [HomeInfo::class, Picture::class, QuestionGroup::class, Question::class, Answer::class],
-    version = 3
+    entities = [HomeInfo::class, Picture::class, EvalFormGroup::class, EvalForm::class, EvalInfo::class],
+    version = 4
 )
 abstract class AppDatabase : RoomDatabase() {
     companion object {
@@ -82,10 +82,41 @@ abstract class AppDatabase : RoomDatabase() {
                     database.endTransaction()
                 }
             }
+            val MIGRATION_3_4 = object : Migration(3, 4) {
+                override fun migrate(database: SupportSQLiteDatabase) {
+                    database.beginTransaction()
+                    try {
+                        // 테이블명 변경 QuestionGroup → EvalFormGroup
+                        database.execSQL("ALTER TABLE QuestionGroup RENAME TO EvalFormGroup")
 
-            Room.databaseBuilder(context, AppDatabase::class.java, "myhome.db")
+                        // EvalForm 생성 및 Question 데이터 마이그레이션
+                        database.execSQL("CREATE TABLE IF NOT EXISTS EvalForm (id INTEGER PRIMARY KEY AUTOINCREMENT, category TEXT NOT NULL, num INTEGER NOT NULL, content TEXT NOT NULL, method TEXT NOT NULL, eval_form_group_id INTEGER)")
+                        database.execSQL("INSERT INTO EvalForm (id, category, num, content, method, eval_form_group_id) SELECT id, category, num, content, type AS method, question_group_id AS eval_form_group_id FROM Question")
+
+                        // EvalInfo 생성 및 Question & Answer 데이터 마이그레이션
+                        database.execSQL("CREATE TABLE IF NOT EXISTS EvalInfo (id INTEGER PRIMARY KEY AUTOINCREMENT, category TEXT NOT NULL, num INTEGER NOT NULL, content TEXT NOT NULL, method TEXT NOT NULL, result TEXT NOT NULL, remark TEXT NOT NULL, home_info_id INTEGER)")
+                        database.execSQL("INSERT INTO EvalInfo (id, category, num, content, method, result, remark, home_info_id) SELECT a.id, q.category, q.num, q.content AS content, q.type AS method, a.content AS result, a.remark, a.home_info_id FROM Question q, Answer a WHERE q.id = a.question_id")
+
+                        // 미사용 테이블 삭제
+                        database.execSQL("DROP TABLE Question")
+                        database.execSQL("DROP TABLE Answer")
+
+                        database.setTransactionSuccessful()
+                    } catch (e: Throwable) {
+                        e.printStackTrace()
+                    }
+
+                    database.endTransaction()
+                }
+            }
+
+            Room.databaseBuilder(
+                context, AppDatabase::
+                class.java, "myhome.db"
+            )
                 .addMigrations(MIGRATION_1_2)
                 .addMigrations(MIGRATION_2_3)
+                .addMigrations(MIGRATION_3_4)
                 .build()
         }
 
@@ -97,7 +128,7 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun homeInfoDao(): HomeInfoDao
     abstract fun pictureDao(): PictureDao
-    abstract fun questionGroupDao(): QuestionGroupDao
-    abstract fun questionDao(): QuestionDao
-    abstract fun answerDao(): AnswerDao
+    abstract fun evalFormGroupDao(): EvalFormGroupDao
+    abstract fun evalFormDao(): EvalFormDao
+    abstract fun evalInfoDao(): EvalInfoDao
 }

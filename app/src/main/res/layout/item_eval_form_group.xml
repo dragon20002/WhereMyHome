@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="evalFormGroup"
+            type="com.minuminu.haruu.wheremyhome.db.data.EvalFormGroup" />
+
+        <variable
+            name="viewModel"
+            type="com.minuminu.haruu.wheremyhome.view.evalformgrouplist.EvalFormGroupListViewModel" />
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/text_primary_dark"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="4dp"
+        app:cardUseCompatPadding="true">
+
+        <LinearLayout
+            android:id="@+id/eval_form_group_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/padding_wide">
+
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/chk_set_default_eval_form_group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:enabled="@{viewModel.checked != evalFormGroup.id}"
+                android:checked="@{viewModel.checked == evalFormGroup.id}" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_mid"
+                    android:text="@{evalFormGroup.name}"
+                    android:textAppearance="?attr/textAppearanceListItem"
+                    android:textColor="@color/primary_dark" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_mid"
+                    android:maxLines="2"
+                    android:text="@{evalFormGroup.description}"
+                    android:textAppearance="?attr/textAppearanceListItem"
+                    android:textColor="@color/primary_dark" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+</layout>

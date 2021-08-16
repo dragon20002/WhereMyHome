@@ -22,9 +22,9 @@ class SettingsFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_settings, container, false)
 
-        view.findViewById<Button>(R.id.btn_setting_qna)?.setOnClickListener { _ ->
+        view.findViewById<Button>(R.id.btn_setting_manage_eval_form_group)?.setOnClickListener { _ ->
             findNavController().navigate(
-                R.id.action_SettingsFragment_to_QnaGroupListFragment
+                R.id.action_SettingsFragment_to_EvalFormGroupListFragment
             )
         }
 

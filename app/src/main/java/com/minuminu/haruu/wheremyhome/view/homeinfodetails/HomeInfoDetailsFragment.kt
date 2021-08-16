@@ -93,7 +93,7 @@ class HomeInfoDetailsFragment : Fragment() {
         }
         view?.findViewById<Button>(R.id.btn_cancel)?.setOnClickListener {
             val homeInfoId = arguments?.getLong("homeInfoId")
-            Log.d(javaClass.name, "itemId $homeInfoId")
+            Log.d(javaClass.name, "homeInfoId $homeInfoId")
 
             if (homeInfoId == null) {
                 Snackbar.make(view, "존재하지 않는 집 정보입니다.", Snackbar.LENGTH_SHORT).show()
@@ -117,7 +117,7 @@ class HomeInfoDetailsFragment : Fragment() {
         }
         view?.findViewById<RecyclerView>(R.id.rv_pictures)?.apply {
             this.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            this.adapter = viewModel?.let { PictureItemRecyclerViewAdapter(context, it) }
+            this.adapter = viewModel?.let { PictureRecyclerViewAdapter(context, it) }
         }
         view?.findViewById<TextInputLayout>(R.id.ly_address)
             ?.setEndIconOnClickListener {
@@ -154,14 +154,14 @@ class HomeInfoDetailsFragment : Fragment() {
         view?.findViewById<Button>(R.id.btn_end_date)?.setOnClickListener { _ ->
             dateRangePicker.show(parentFragmentManager, null)
         }
-        view?.findViewById<RecyclerView>(R.id.rv_qandas)?.apply {
+        view?.findViewById<RecyclerView>(R.id.eval_info_list)?.apply {
             this.layoutManager = LinearLayoutManager(context)
-            this.adapter = viewModel?.let { QandaItemRecyclerViewAdapter(it) }
+            this.adapter = viewModel?.let { EvalInfoRecyclerViewAdapter(it) }
         }
 
         viewModel?.run {
             homeInfoLiveData.observe(viewLifecycleOwner, { homeInfo ->
-                // Log.d(javaClass.name, "homeInfoWithQandas - observe $it")
+                // Log.d(javaClass.name, "homeInfoViewData - observe $it")
 
                 name.set(homeInfo.name)
                 address.set(homeInfo.address)
@@ -174,7 +174,7 @@ class HomeInfoDetailsFragment : Fragment() {
 
                 homeInfo.id?.let { homeInfoId ->
                     loadPictureList(homeInfoId)
-                    loadAnswerList(homeInfoId)
+                    loadEvalInfoList(homeInfoId)
                 }
             })
 
@@ -183,9 +183,9 @@ class HomeInfoDetailsFragment : Fragment() {
                 pictureList.addAll(_pictureList)
             })
 
-            qandaListLiveData.observe(viewLifecycleOwner, { _qandaList ->
-                qandaList.clear()
-                qandaList.addAll(_qandaList)
+            evalInfoListLiveData.observe(viewLifecycleOwner, { _evalInfoList ->
+                evalInfoList.clear()
+                evalInfoList.addAll(_evalInfoList)
             })
         }
 
@@ -206,9 +206,9 @@ class HomeInfoDetailsFragment : Fragment() {
                 viewModel?.homeInfoLiveData?.postValue(HomeInfo(null, "", ""))
                 viewModel?.pictureListLiveData?.postValue(ArrayList())
 
-                activity?.getPreferences(Context.MODE_PRIVATE)?.getLong("questionGroupId", 1L)
-                    ?.let { questionGroupId ->
-                        viewModel?.loadQuestionList(questionGroupId)
+                activity?.getSharedPreferences("evalFormGroup", Context.MODE_PRIVATE)
+                    ?.getLong("checkedId", 1L)?.let { checkedId ->
+                        viewModel?.loadEvalFormList(checkedId)
                     }
             }
             else -> {

@@ -5,13 +5,15 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-class Answer(
+data class EvalInfo(
     @PrimaryKey(autoGenerate = true)
     val id: Long?,
-    val content: String = "", // 답변내용,
+    var category: String = "", // 구분
+    var num: Int = 0, // 번호
+    var content: String = "", // 평가항목,
+    val method: String = "", // 평가방식 ('Count', 'YesOrNo')
+    val result: String = "", // 평가결과,
     val remark: String = "", // 비고
-    @ColumnInfo(name = "question_id")
-    var questionId: Long? = null, // join
     @ColumnInfo(name = "home_info_id")
     var homeInfoId: Long? = null, // join
 )

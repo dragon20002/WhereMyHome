@@ -15,11 +15,11 @@ import com.minuminu.haruu.wheremyhome.databinding.ItemPictureBinding
 import com.minuminu.haruu.wheremyhome.db.data.PictureViewData
 import com.minuminu.haruu.wheremyhome.view.picturefullscreen.PictureFullScreenActivity
 
-class PictureItemRecyclerViewAdapter(
+class PictureRecyclerViewAdapter(
     val context: Context,
     val viewModel: HomeInfoDetailsViewModel
 ) :
-    ListAdapter<PictureViewData, PictureItemRecyclerViewAdapter.ViewHolder>(PictureDiffUtilCallback()) {
+    ListAdapter<PictureViewData, PictureRecyclerViewAdapter.ViewHolder>(PictureDiffUtilCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
         DataBindingUtil.inflate(
@@ -54,20 +54,17 @@ class PictureItemRecyclerViewAdapter(
                         if (viewModel.thumbnail.get()!! == item.name) {
                             viewModel.thumbnail.set("")
                         }
-                        val pictureList = ArrayList<PictureViewData>().apply {
-                            addAll(viewModel.pictureList.map { _picture ->
-                                PictureViewData(
-                                    _picture.id,
-                                    _picture.name,
-                                    _picture.homeInfoId,
-                                    _picture.id == item.id
-                                )
-                            })
-                        }
-                        viewModel.pictureList.clear()
-                        viewModel.pictureList.addAll(pictureList)
+                        item.deleted = true
+                        binding.picture = item
                     }
                     .show()
+            }
+            btnRestore.setOnClickListener { _ ->
+                if (viewModel.thumbnail.get()!! == item.name) {
+                    viewModel.thumbnail.set("")
+                }
+                item.deleted = false
+                binding.picture = item
             }
             btnStarBorder.setOnClickListener {
                 viewModel.thumbnail.set(item.name)
@@ -83,6 +80,7 @@ class PictureItemRecyclerViewAdapter(
 
         val pictureView: ImageView = binding.root.findViewById(R.id.iv_picture)
         val btnRemove: Button = binding.root.findViewById(R.id.btn_remove)
+        val btnRestore: Button = binding.root.findViewById(R.id.btn_restore)
         val btnStarBorder: Button = binding.root.findViewById(R.id.btn_star_border)
         val btnStar: Button = binding.root.findViewById(R.id.btn_star)
     }

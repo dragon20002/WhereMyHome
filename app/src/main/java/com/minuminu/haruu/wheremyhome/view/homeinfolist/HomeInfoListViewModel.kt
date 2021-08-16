@@ -25,9 +25,7 @@ class HomeInfoListViewModel : ViewModel() {
 
     fun loadHomeInfoList() {
         CoroutineScope(Dispatchers.IO).launch {
-            db?.homeInfoDao()?.getAll()?.takeIf {
-                it.isNotEmpty()
-            }?.let { homeInfoList ->
+            db?.homeInfoDao()?.getAll()?.let { homeInfoList ->
                 homeInfoListLiveData.postValue(homeInfoList)
             }
         }

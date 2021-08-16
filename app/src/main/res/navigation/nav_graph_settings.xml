@@ -12,25 +12,30 @@
         tools:layout="@layout/fragment_settings">
 
         <action
-            android:id="@+id/action_SettingsFragment_to_QnaGroupListFragment"
-            app:destination="@id/QnaGroupListFragment" />
+            android:id="@+id/action_SettingsFragment_to_EvalFormGroupListFragment"
+            app:destination="@id/EvalFormGroupListFragment" />
     </fragment>
 
     <fragment
-        android:id="@+id/QnaGroupListFragment"
-        android:name="com.minuminu.haruu.wheremyhome.view.settings.QuestionGroupListFragment"
-        android:label="@string/setting_qna"
-        tools:layout="@layout/fragment_question_group_list">
+        android:id="@+id/EvalFormGroupListFragment"
+        android:name="com.minuminu.haruu.wheremyhome.view.evalformgrouplist.EvalFormGroupListFragment"
+        android:label="@string/setting_manage_eval_form_group"
+        tools:layout="@layout/fragment_eval_form_group_list">
 
         <action
-            android:id="@+id/action_QnaGroupListFragment_to_QnaGroupDetailsFragment"
-            app:destination="@id/QnaGroupDetailsFragment" />
+            android:id="@+id/action_EvalFormGroupListFragment_to_EvalFormGroupDetailsFragment"
+            app:destination="@id/EvalFormGroupDetailsFragment" />
     </fragment>
 
     <fragment
-        android:id="@+id/QnaGroupDetailsFragment"
-        android:name="com.minuminu.haruu.wheremyhome.view.settings.QuestionGroupDetailsFragment"
-        android:label="@string/setting_qna"
-        tools:layout="@layout/fragment_question_group_list" />
+        android:id="@+id/EvalFormGroupDetailsFragment"
+        android:name="com.minuminu.haruu.wheremyhome.view.evalformgroupdetails.EvalFormGroupDetailsFragment"
+        android:label="@string/setting_manage_eval_form_group"
+        tools:layout="@layout/fragment_eval_form_group_details">
+
+        <argument
+            android:name="evalFormGroupId"
+            app:argType="long" />
+    </fragment>
 
 </navigation>

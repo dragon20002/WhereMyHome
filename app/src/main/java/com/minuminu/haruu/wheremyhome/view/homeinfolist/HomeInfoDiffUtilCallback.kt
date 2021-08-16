@@ -6,6 +6,7 @@ import com.minuminu.haruu.wheremyhome.db.data.HomeInfo
 class HomeInfoDiffUtilCallback : DiffUtil.ItemCallback<HomeInfo>() {
     override fun areItemsTheSame(oldItem: HomeInfo, newItem: HomeInfo) = oldItem.id == newItem.id
 
-    override fun areContentsTheSame(oldItem: HomeInfo, newItem: HomeInfo) = oldItem == newItem
+    override fun areContentsTheSame(oldItem: HomeInfo, newItem: HomeInfo) =
+        oldItem.toString() == newItem.toString()
 
 }

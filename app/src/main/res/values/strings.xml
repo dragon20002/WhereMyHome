@@ -20,10 +20,10 @@
     <string name="expense">관리비(만원)</string>
     <string name="start_date">계약가능일(시작)</string>
     <string name="end_date">계약가능일(종료)</string>
-    <string name="group">구분</string>
+    <string name="category">분류</string>
     <string name="number">No</string>
-    <string name="question">항목</string>
-    <string name="answer">입력</string>
+    <string name="eval_content">평가내용</string>
+    <string name="eval_result">평가결과</string>
     <string name="remark">비고</string>
     <string name="picture">사진</string>
     <string name="modify">수정</string>
@@ -33,5 +33,9 @@
     <string name="map">지도</string>
     <string name="go_to_list">목록으로</string>
     <string name="thumbnail">썸네일</string>
-    <string name="setting_qna"><![CDATA[Q&A 설정]]></string>
+    <string name="setting_manage_eval_form_group">평가 템플릿 관리</string>
+    <string name="eval_method">평가방식</string>
+    <string name="description">설명</string>
+    <string name="eval_form_list">평가항목</string>
+    <string name="eval_form_group_name">템플릿명</string>
 </resources>

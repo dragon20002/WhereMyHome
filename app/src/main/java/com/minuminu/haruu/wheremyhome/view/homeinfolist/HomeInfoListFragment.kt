@@ -15,16 +15,12 @@ import com.minuminu.haruu.wheremyhome.R
 import com.minuminu.haruu.wheremyhome.databinding.FragmentHomeInfoListBinding
 import com.minuminu.haruu.wheremyhome.db.AppDatabase
 
-/**
- * A fragment representing a list of Items.
- */
 class HomeInfoListFragment : Fragment() {
 
     companion object {
         fun newInstance() = HomeInfoListFragment()
     }
 
-    // private var list: RecyclerView? = null
     private var viewModel: HomeInfoListViewModel? = null
     private var binding: FragmentHomeInfoListBinding? = null
 
@@ -32,7 +28,7 @@ class HomeInfoListFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         viewModel = ViewModelProvider(this).get(HomeInfoListViewModel::class.java).apply {
-            init(AppDatabase.getDatabase((requireContext())))
+            init(AppDatabase.getDatabase(requireContext()))
         }
     }
 
@@ -47,12 +43,12 @@ class HomeInfoListFragment : Fragment() {
         binding?.viewModel = viewModel
         val view = binding?.root
 
-        view?.findViewById<RecyclerView>(R.id.list)?.apply {
+        view?.findViewById<RecyclerView>(R.id.home_info_list)?.apply {
             this.layoutManager = LinearLayoutManager(context)
             this.adapter = HomeInfoItemRecyclerViewAdapter(this@HomeInfoListFragment)
         }
 
-        view?.findViewById<FloatingActionButton>(R.id.fab)?.setOnClickListener {
+        view?.findViewById<FloatingActionButton>(R.id.home_info_fab)?.setOnClickListener {
             findNavController().navigate(
                 R.id.action_HomeInfoListFragment_to_HomeInfoDetailsFragment,
                 Bundle().apply {

@@ -9,24 +9,23 @@
     tools:context=".view.settings.SettingsFragment">
 
     <Button
-        android:id="@+id/btn_setting_qna"
+        android:id="@+id/btn_setting_manage_eval_form_group"
         style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_mid"
         android:gravity="start"
-        android:text="@string/setting_qna"
+        android:text="@string/setting_manage_eval_form_group"
         android:textSize="@dimen/font_mid"
         app:icon="@drawable/ic_checklist_rtl_24" />
 
-    <Button
-        android:id="@+id/btn_setting_others"
-        style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_mid"
-        android:gravity="start"
-        android:text="..."
-        android:textSize="@dimen/font_mid"
-        app:icon="@drawable/ic_settings_suggest_24" />
+<!--    <Button-->
+<!--        android:id="@+id/btn_setting_others"-->
+<!--        style="@style/Widget.MaterialComponents.Button.TextButton.Icon"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_margin="@dimen/margin_mid"-->
+<!--        android:gravity="start"-->
+<!--        android:textSize="@dimen/font_mid"-->
+<!--        app:icon="@drawable/ic_settings_suggest_24" />-->
 </LinearLayout>

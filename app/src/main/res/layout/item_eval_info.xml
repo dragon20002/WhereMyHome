@@ -7,9 +7,11 @@
 
         <import type="android.view.View" />
 
+        <import type="com.minuminu.haruu.wheremyhome.db.data.EvalInfoMethodType" />
+
         <variable
-            name="qanda"
-            type="com.minuminu.haruu.wheremyhome.db.data.QandaViewData" />
+            name="evalInfo"
+            type="com.minuminu.haruu.wheremyhome.db.data.EvalInfoViewData" />
 
         <variable
             name="viewModel"
@@ -22,33 +24,33 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/qanda_group"
-            android:layout_width="36dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_margin="@dimen/margin_small"
-            android:gravity="center"
-            android:text="@={qanda.category}"
-            android:textAppearance="?attr/textAppearanceListItemSmall" />
-
-        <TextView
-            android:id="@+id/qanda_num"
+            android:id="@+id/eval_info_num"
             android:layout_width="24dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_margin="@dimen/margin_small"
             android:gravity="center"
-            android:text="@={qanda.num}"
+            android:text="@={evalInfo.num}"
             android:textAppearance="?attr/textAppearanceListItemSmall" />
 
         <TextView
-            android:id="@+id/qanda_question"
+            android:id="@+id/eval_info_category"
+            android:layout_width="36dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="@dimen/margin_small"
+            android:gravity="center"
+            android:text="@={evalInfo.category}"
+            android:textAppearance="?attr/textAppearanceListItemSmall" />
+
+        <TextView
+            android:id="@+id/eval_info_content"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_margin="@dimen/margin_small"
             android:layout_weight="1"
-            android:text="@={qanda.question}"
+            android:text="@={evalInfo.content}"
             android:textAppearance="?attr/textAppearanceListItemSmall" />
 
         <LinearLayout
@@ -60,7 +62,7 @@
             android:orientation="horizontal">
 
             <com.minuminu.haruu.wheremyhome.view.homeinfodetails.components.EditTextWithButton
-                android:id="@+id/et_answer"
+                android:id="@+id/et_result"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="4"
@@ -68,19 +70,19 @@
                 android:inputType="number|numberSigned"
                 android:maxEms="4"
                 android:maxLength="4"
-                android:text="@={qanda.strAnswer}"
+                android:text="@={evalInfo.result}"
                 android:textAlignment="center"
-                android:visibility='@{qanda.type.contentEquals("Int") ? View.VISIBLE : View.GONE}' />
+                android:visibility='@{evalInfo.method.contentEquals(EvalInfoMethodType.Int.name()) ? View.VISIBLE : View.GONE}' />
 
             <CheckBox
-                android:id="@+id/cbx_answer"
+                android:id="@+id/cbx_result"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:checked="@={qanda.blnAnswer}"
+                android:checked="@={evalInfo.blnResult}"
                 android:enabled="@{viewModel.isEditing}"
-                android:text='@{qanda.blnAnswer == true ? "예" : "아니오"}'
+                android:text='@{evalInfo.blnResult == true ? "예" : "아니오"}'
                 android:textAlignment="center"
-                android:visibility='@{qanda.type.contentEquals("Boolean") ? View.VISIBLE : View.GONE}' />
+                android:visibility='@{evalInfo.method.contentEquals(EvalInfoMethodType.Boolean.name()) ? View.VISIBLE : View.GONE}' />
         </LinearLayout>
 
         <Button
@@ -103,10 +105,9 @@
             android:textAppearance="?attr/textAppearanceListItemSmall" />
 
         <TextView
-            android:id="@+id/qanda_remark"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@={qanda.remark}"
+            android:text="@={evalInfo.remark}"
             android:visibility="gone" />
 
     </LinearLayout>

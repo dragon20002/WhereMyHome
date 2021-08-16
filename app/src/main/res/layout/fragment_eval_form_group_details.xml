@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.text.InputType" />
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.minuminu.haruu.wheremyhome.view.evalformgroupdetails.EvalFormGroupDetailsViewModel" />
+    </data>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".view.evalformgroupdetails.EvalFormGroupDetailsFragment">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- toolbar -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/btn_go_to_list"
+                    style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/go_to_list"
+                    android:textColor="@color/primary_dark"
+                    app:icon="@drawable/ic_arrow_back_24"
+                    app:iconTint="@color/primary_dark"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <Button
+                    android:id="@+id/btn_edit"
+                    style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/modify"
+                    android:textColor="@color/primary_dark"
+                    android:visibility='@{viewModel.isEditing ? View.GONE : View.VISIBLE}'
+                    app:icon="@drawable/ic_edit_24"
+                    app:iconTint="@color/primary_dark"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <Button
+                    android:id="@+id/btn_cancel"
+                    style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cancel"
+                    android:textColor="@color/primary_dark"
+                    android:visibility='@{viewModel.isEditing ? View.VISIBLE : View.GONE}'
+                    app:icon="@drawable/ic_clear_24"
+                    app:iconTint="@color/primary_dark"
+                    app:layout_constraintEnd_toStartOf="@id/btn_done"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <Button
+                    android:id="@+id/btn_done"
+                    style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/done"
+                    android:textColor="@color/primary_dark"
+                    android:visibility='@{viewModel.isEditing ? View.VISIBLE : View.GONE}'
+                    app:icon="@drawable/ic_done_24"
+                    app:iconTint="@color/primary_dark"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- name -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/ly_name"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_mid"
+                android:enabled="@{viewModel.isEditing}"
+                app:counterEnabled="true"
+                app:counterMaxLength="255"
+                app:errorEnabled="true"
+                app:hintEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="255"
+                    android:enabled="@{viewModel.isEditing}"
+                    android:hint="@string/eval_form_group_name"
+                    android:inputType="@{viewModel.isEditing ? InputType.TYPE_CLASS_TEXT : InputType.TYPE_NULL}"
+                    android:maxLength="255"
+                    android:text="@={viewModel.name}" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- description -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/ly_description"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_mid"
+                android:enabled="@{viewModel.isEditing}"
+                app:counterEnabled="true"
+                app:counterMaxLength="255"
+                app:errorEnabled="true"
+                app:hintEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="255"
+                    android:enabled="@{viewModel.isEditing}"
+                    android:hint="@string/description"
+                    android:inputType="@{viewModel.isEditing ? InputType.TYPE_CLASS_TEXT : InputType.TYPE_NULL}"
+                    android:maxLength="255"
+                    android:text="@={viewModel.description}" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                style="@style/TextAppearance.AppCompat.Large"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="@dimen/margin_mid"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:drawablePadding="@dimen/padding_mid"
+                android:text="@string/eval_form_list"
+                app:drawableStartCompat="@drawable/ic_checklist_rtl_24" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/eval_form_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                app:layoutManager="LinearLayoutManager"
+                app:evalForms="@{viewModel.evalFormList}"
+                tools:listitem="@layout/item_eval_form" />
+
+            <Button
+                android:id="@+id/btn_add"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_mid"
+                android:layout_marginTop="@dimen/margin_small"
+                android:layout_marginEnd="@dimen/margin_mid"
+                android:layout_marginBottom="@dimen/margin_small"
+                android:contentDescription="@string/add"
+                android:visibility='@{viewModel.isEditing ? View.VISIBLE : View.GONE}'
+                app:icon="@android:drawable/ic_input_add"
+                app:iconGravity="textStart"
+                app:iconTint="@color/accent_dark"
+                app:strokeColor="@color/accent_dark" />
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+</layout>

@@ -5,13 +5,13 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-class Question(
+data class EvalForm(
     @PrimaryKey(autoGenerate = true)
     val id: Long?,
     var category: String = "", // 구분
     var num: Int = 0, // 번호
-    var content: String = "", // 질문내용
-    val type: String = "", // 답변형식 ('Int', 'Boolean')
-    @ColumnInfo(name = "question_group_id")
-    var questionGroupId: Long? = null, // join
+    var content: String = "", // 평가내용
+    val method: String = "", // 평가방식 ('Count', 'YesOrNo')
+    @ColumnInfo(name = "eval_form_group_id")
+    var evalFormGroupId: Long? = null, // join
 )

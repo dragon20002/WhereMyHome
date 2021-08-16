@@ -11,17 +11,17 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.minuminu.haruu.wheremyhome.R
-import com.minuminu.haruu.wheremyhome.databinding.ItemQandaViewBinding
-import com.minuminu.haruu.wheremyhome.db.data.QandaViewData
-import com.minuminu.haruu.wheremyhome.view.homeinfodetails.components.QandaRemarkDialog
+import com.minuminu.haruu.wheremyhome.databinding.ItemEvalInfoBinding
+import com.minuminu.haruu.wheremyhome.db.data.EvalInfoViewData
+import com.minuminu.haruu.wheremyhome.view.homeinfodetails.components.EvalInfoRemarkDialog
 
-class QandaItemRecyclerViewAdapter(val viewModel: HomeInfoDetailsViewModel) :
-    ListAdapter<QandaViewData, QandaItemRecyclerViewAdapter.ViewHolder>(QandaDiffUtilCallback()) {
+class EvalInfoRecyclerViewAdapter(val viewModel: HomeInfoDetailsViewModel) :
+    ListAdapter<EvalInfoViewData, EvalInfoRecyclerViewAdapter.ViewHolder>(EvalInfoDiffUtilCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
         DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),
-            R.layout.item_qanda_view,
+            R.layout.item_eval_info,
             parent,
             false
         )
@@ -31,9 +31,9 @@ class QandaItemRecyclerViewAdapter(val viewModel: HomeInfoDetailsViewModel) :
         val item = getItem(position)
 
         with(holder) {
-            binding.qanda = item
+            binding.evalInfo = item
             binding.viewModel = viewModel
-            cbxAnswer.setOnClickListener { v ->
+            cbxResult.setOnClickListener { v ->
                 val cbx = v as CheckBox
                 cbx.text = when (cbx.isChecked) {
                     true -> "예"
@@ -41,9 +41,9 @@ class QandaItemRecyclerViewAdapter(val viewModel: HomeInfoDetailsViewModel) :
                 }
             }
             btnRemark.setOnClickListener { v ->
-                QandaRemarkDialog().also { dialog ->
+                EvalInfoRemarkDialog().also { dialog ->
                     dialog.caller = btnRemark
-                    dialog.listener = object : QandaRemarkDialog.RemarkDialogListener {
+                    dialog.listener = object : EvalInfoRemarkDialog.RemarkDialogListener {
                         override fun onDialogPositiveClick(
                             dialog: DialogFragment,
                             remark: String,
@@ -67,8 +67,9 @@ class QandaItemRecyclerViewAdapter(val viewModel: HomeInfoDetailsViewModel) :
         }
     }
 
-    inner class ViewHolder(val binding: ItemQandaViewBinding) : RecyclerView.ViewHolder(binding.root) {
-        val cbxAnswer = binding.root.findViewById<CheckBox>(R.id.cbx_answer)
+    inner class ViewHolder(val binding: ItemEvalInfoBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        val cbxResult = binding.root.findViewById<CheckBox>(R.id.cbx_result)
         val btnRemark = binding.root.findViewById<Button>(R.id.btn_remark)
     }
 

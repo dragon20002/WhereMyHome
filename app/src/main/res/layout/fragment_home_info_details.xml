@@ -292,11 +292,11 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/qanda_group"
+                    android:id="@+id/eval_info_category"
                     android:layout_width="36dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/margin_small"
-                    android:text="@string/group"
+                    android:text="@string/category"
                     android:textAlignment="center"
                     android:textAppearance="?attr/textAppearanceListItemSmall"
                     android:textStyle="bold" />
@@ -315,7 +315,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/margin_small"
                     android:layout_weight="1"
-                    android:text="@string/question"
+                    android:text="@string/eval_content"
                     android:textAlignment="center"
                     android:textAppearance="?attr/textAppearanceListItemSmall"
                     android:textStyle="bold" />
@@ -324,7 +324,7 @@
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/margin_small"
-                    android:text="@string/answer"
+                    android:text="@string/eval_result"
                     android:textAlignment="center"
                     android:textAppearance="?attr/textAppearanceListItemSmall"
                     android:textStyle="bold" />
@@ -341,15 +341,15 @@
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_qandas"
+                android:id="@+id/eval_info_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginBottom="8dp"
                 app:layoutManager="LinearLayoutManager"
-                app:qandas="@{viewModel.qandaList}"
-                tools:listitem="@layout/item_qanda_view" />
+                app:evalInfos="@{viewModel.evalInfoList}"
+                tools:listitem="@layout/item_eval_info" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </layout>

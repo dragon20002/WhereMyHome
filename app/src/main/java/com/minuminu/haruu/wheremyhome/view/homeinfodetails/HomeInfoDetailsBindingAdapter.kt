@@ -5,7 +5,7 @@ import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.minuminu.haruu.wheremyhome.db.data.PictureViewData
-import com.minuminu.haruu.wheremyhome.db.data.QandaViewData
+import com.minuminu.haruu.wheremyhome.db.data.EvalInfoViewData
 import com.minuminu.haruu.wheremyhome.utils.AppUtils
 
 object HomeInfoDetailsBindingAdapter {
@@ -16,7 +16,7 @@ object HomeInfoDetailsBindingAdapter {
         recyclerView: RecyclerView,
         pictures: List<PictureViewData>,
     ) {
-        val adapter = recyclerView.adapter as PictureItemRecyclerViewAdapter
+        val adapter = recyclerView.adapter as PictureRecyclerViewAdapter
         adapter.submitList(ArrayList<PictureViewData>().apply {
             addAll(pictures)
         })
@@ -41,12 +41,12 @@ object HomeInfoDetailsBindingAdapter {
         }
     }
 
-    @BindingAdapter("qandas")
+    @BindingAdapter("evalInfos")
     @JvmStatic
-    fun setQandaList(recyclerView: RecyclerView, qandas: List<QandaViewData>) {
-        val adapter = recyclerView.adapter as QandaItemRecyclerViewAdapter
-        adapter.submitList(ArrayList<QandaViewData>().apply {
-            addAll(qandas)
+    fun setEvalInfoList(recyclerView: RecyclerView, evalInfos: List<EvalInfoViewData>) {
+        val adapter = recyclerView.adapter as EvalInfoRecyclerViewAdapter
+        adapter.submitList(ArrayList<EvalInfoViewData>().apply {
+            addAll(evalInfos)
         })
     }
 

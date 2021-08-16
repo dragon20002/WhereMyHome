@@ -7,26 +7,26 @@
 
         <variable
             name="viewModel"
-            type="com.minuminu.haruu.wheremyhome.view.homeinfolist.HomeInfoListViewModel" />
+            type="com.minuminu.haruu.wheremyhome.view.evalformgrouplist.EvalFormGroupListViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".view.homeinfolist.HomeInfoListFragment">
+        tools:context=".view.evalformgrouplist.EvalFormGroupListFragment">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/home_info_list"
+            android:id="@+id/eval_form_group_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            app:homeInfos="@{viewModel.homeInfoList}"
+            android:layout_marginLeft="@dimen/margin_mid"
+            android:layout_marginRight="@dimen/margin_mid"
             app:layoutManager="LinearLayoutManager"
-            tools:listitem="@layout/item_home_info" />
+            app:evalFormGroups="@{viewModel.evalFormGroupList}"
+            tools:listitem="@layout/item_eval_form_group" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/home_info_fab"
+            android:id="@+id/eval_form_group_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"

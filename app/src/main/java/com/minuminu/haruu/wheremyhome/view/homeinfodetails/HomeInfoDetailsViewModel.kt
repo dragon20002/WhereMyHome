@@ -21,7 +21,7 @@ class HomeInfoDetailsViewModel : ViewModel() {
     // db - viewModel
     val homeInfoLiveData = MutableLiveData<HomeInfo>()
     val pictureListLiveData = MutableLiveData<List<PictureViewData>>()
-    val qandaListLiveData = MutableLiveData<List<QandaViewData>>()
+    val evalInfoListLiveData = MutableLiveData<List<EvalInfoViewData>>()
 
     // viewModel - view
     val isEditing = ObservableField(false)
@@ -34,7 +34,7 @@ class HomeInfoDetailsViewModel : ViewModel() {
     val endDate = ObservableField<String>()
     val thumbnail = ObservableField<String>()
     val pictureList: ObservableList<PictureViewData> = ObservableArrayList()
-    val qandaList: ObservableList<QandaViewData> = ObservableArrayList()
+    val evalInfoList: ObservableList<EvalInfoViewData> = ObservableArrayList()
 
     fun init(db: AppDatabase) {
         this.db = db
@@ -63,19 +63,18 @@ class HomeInfoDetailsViewModel : ViewModel() {
         }
     }
 
-    fun loadQuestionList(questionGroupId: Long) {
+    fun loadEvalFormList(evalFormGroupId: Long) {
         CoroutineScope(Dispatchers.IO).launch {
-            val questionList = db?.questionDao()?.getAllByQuestionInfoId(questionGroupId)
+            val evalFormList = db?.evalFormDao()?.getAllByEvalFormGroupId(evalFormGroupId)
 
-            qandaListLiveData.postValue(
-                questionList?.map { question ->
-                    QandaViewData(
-                        question.id,
+            evalInfoListLiveData.postValue(
+                evalFormList?.map { evalForm ->
+                    EvalInfoViewData(
                         null,
-                        question.category,
-                        question.num.toString(),
-                        question.content,
-                        question.type,
+                        evalForm.category,
+                        evalForm.num.toString(),
+                        evalForm.content,
+                        evalForm.method,
                         "",
                         ""
                     )
@@ -84,48 +83,32 @@ class HomeInfoDetailsViewModel : ViewModel() {
         }
     }
 
-    fun loadAnswerList(homeInfoId: Long) {
+    fun loadEvalInfoList(homeInfoId: Long) {
         CoroutineScope(Dispatchers.IO).launch {
-            val answerList = db?.answerDao()?.getAllByHomeInfoId(homeInfoId)
+            val evalInfoList = db?.evalInfoDao()?.getAllByHomeInfoId(homeInfoId)
 
-            qandaListLiveData.postValue(
-                answerList?.filter { answer -> answer.questionId != null }?.map { answer ->
-                    val question = db?.questionDao()?.getOneById(answer.questionId!!)
-
-                    if (question != null) {
-                        QandaViewData(
-                            question.id,
-                            answer.id,
-                            question.category,
-                            question.num.toString(),
-                            question.content,
-                            question.type,
-                            answer.content,
-                            answer.remark,
-                        )
-                    } else {
-                        QandaViewData(
-                            null,
-                            answer.id,
-                            "",
-                            "",
-                            "",
-                            "",
-                            answer.content,
-                            answer.remark
-                        )
-                    }
+            evalInfoListLiveData.postValue(
+                evalInfoList?.map { evalInfo ->
+                    EvalInfoViewData(
+                        evalInfo.id,
+                        evalInfo.category,
+                        evalInfo.num.toString(),
+                        evalInfo.content,
+                        evalInfo.method,
+                        evalInfo.result,
+                        evalInfo.remark,
+                    )
                 })
         }
     }
 
     suspend fun saveItem(): HomeInfo {
-        val score: Int = qandaList.let {
+        val score: Int = evalInfoList.let { _evalInfoList ->
             var sum = 0
-            it.forEach { qanda ->
-                val answer = when (qanda.type) {
-                    "Int" -> qanda.strAnswer.toIntOrNull() ?: 0
-                    "Boolean" -> when (qanda.blnAnswer) {
+            _evalInfoList.forEach { evalInfo ->
+                val answer = when (evalInfo.method) {
+                    "Int" -> evalInfo.result.toIntOrNull() ?: 0
+                    "Boolean" -> when (evalInfo.blnResult) {
                         true -> 1
                         else -> 0
                     }
@@ -136,7 +119,7 @@ class HomeInfoDetailsViewModel : ViewModel() {
             sum
         }
 
-        val homeInfoWithQandas = HomeInfoWithAnswers(
+        val homeInfoViewData = HomeInfoViewData(
             homeInfo = HomeInfo(
                 homeInfoLiveData.value?.id,
                 name.get(),
@@ -149,28 +132,35 @@ class HomeInfoDetailsViewModel : ViewModel() {
                 score,
                 thumbnail.get(),
             ),
-            answers = qandaList.map {
-                Answer(
-                    it.answerId, it.strAnswer, it.remark, it.questionId, null
+            evalInfos = evalInfoList.map { evalInfo ->
+                EvalInfo(
+                    evalInfo.evalInfoId,
+                    evalInfo.category,
+                    evalInfo.num.toInt(),
+                    evalInfo.content,
+                    evalInfo.method,
+                    evalInfo.result,
+                    evalInfo.remark,
+                    null
                 )
             },
-            pictures = pictureList.filter { !it.deleted }.map {
-                Picture(it.id, it.name, it.homeInfoId)
+            pictures = pictureList.filter { !it.deleted }.map { picture ->
+                Picture(picture.id, picture.name, picture.homeInfoId)
             }
         )
 
         return withContext(Dispatchers.IO) {
             // DB Insert
-            homeInfoWithQandas.apply {
+            homeInfoViewData.apply {
                 if (homeInfo.id == null) { // Add
                     val ids = db?.homeInfoDao()?.insertAll(homeInfo)
                     Log.d(javaClass.name, "inserted homeInfo ${ids?.get(0)}")
 
                     ids?.get(0)?.let { id ->
-                        for (qanda in answers) {
-                            qanda.homeInfoId = id
-                            val answerIds = db?.answerDao()?.insertAll(qanda)
-                            Log.d(javaClass.name, "inserted answer ${answerIds?.get(0)}")
+                        for (evalInfo in evalInfos) {
+                            evalInfo.homeInfoId = id
+                            val evalInfoIds = db?.evalInfoDao()?.insertAll(evalInfo)
+                            Log.d(javaClass.name, "inserted evalInfo ${evalInfoIds?.get(0)}")
                         }
 
                         for (picture in pictures) {
@@ -185,10 +175,10 @@ class HomeInfoDetailsViewModel : ViewModel() {
                     Log.d(javaClass.name, "updated homeInfo $cnt")
 
                     if (cnt != null) {
-                        for (answer in answers) {
-                            answer.homeInfoId = homeInfo.id
-                            val answerCnt = db?.answerDao()?.updateAll(answer)
-                            Log.d(javaClass.name, "updated answer $answerCnt")
+                        for (evalInfo in evalInfos) {
+                            evalInfo.homeInfoId = homeInfo.id
+                            val evalInfoCnt = db?.evalInfoDao()?.updateAll(evalInfo)
+                            Log.d(javaClass.name, "updated evalInfo $evalInfoCnt")
                         }
 
                         for (picture in pictures) {
@@ -205,10 +195,11 @@ class HomeInfoDetailsViewModel : ViewModel() {
                             }
                         }
 
-                        pictureList.filter { it.deleted }.forEach {
+                        pictureList.filter { it.deleted }.forEach { picture ->
                             db?.pictureDao()?.delete(
+                                // TODO `picture`를 바로 넣어도 되지 않나??
                                 Picture(
-                                    it.id, it.name, it.homeInfoId
+                                    picture.id, picture.name, picture.homeInfoId
                                 )
                             )
                         }

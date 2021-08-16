@@ -14,8 +14,8 @@
 &nbsp;&nbsp;[1.1.](#1-집-목록-화면) 집 목록 화면<br>
 &nbsp;&nbsp;[1.2.](#2-집-상세-화면) 집 상세 화면<br>
 &nbsp;&nbsp;[1.3.](#3-사진-전체화면) 사진 전체화면<br>
-&nbsp;&nbsp;[1.4.](#4-qa-작성) Q&A 작성<br>
-&nbsp;&nbsp;[1.5.](#6-현재-위치-지도) 현재 위치 지도<br>
+&nbsp;&nbsp;[1.4.](#4-평가결과-작성) 평가결과 작성<br>
+&nbsp;&nbsp;[1.5.](#5-현재-위치-지도) 현재 위치 지도<br>
 [2.](#개선할-점) 개선할 점<br>
 [3.](#스터디) 스터디<br>
 &nbsp;&nbsp;[3.1.](#viewmodel) ViewModel<br>
@@ -64,13 +64,13 @@
 
   ![전체화면](readme_img/3-full-screen-img.png)
 
-### 4. Q&A 작성
+### 4. 평가결과 작성
 
 - 입력은 +/-정수와 참/거짓
 
 - 비고(···) 버튼을 눌러 비고 항목 작성하는 팝업 노출
 
-  [`QandaRemarkDialog.kt`](app/src/main/java/com/minuminu/haruu/wheremyhome/view/homeinfodetails/components/QandaRemarkDialog.kt)
+  [`QandaRemarkDialog.kt`](app/src/main/java/com/minuminu/haruu/wheremyhome/view/homeinfodetails/components/EvalInfoRemarkDialog.kt)
 
   ![QandA](readme_img/4-1-home-qanda.png) ![remark](readme_img/4-2-home-remark.png)
 
@@ -84,11 +84,11 @@
 
 ## 개선할 점
 
-- Q&A는 블로그에서 찾은 내용으로 26가지 고정 질문임. 질문 추가/수정 화면 필요
+- [x] Q&A는 블로그에서 찾은 내용으로 26가지 고정 질문임. 질문 추가/수정 화면 필요
 
-- Q&A 점수가 항목별 가중치가 없어 의미없음
+- [ ] Q&A 점수가 항목별 가중치가 없어 의미없음
 
-- 사진 전체화면에서 '좌우 스와이프' 기능, '사진 저장' 기능 추가 필요
+- [ ] 사진 전체화면에서 '좌우 스와이프' 기능, '사진 저장' 기능 추가 필요
 
 - 그리고 가장 중요한 실사용 후기... 대충 만들어서 실제 사용해봤는데 방을 금방금방 보다보니 조목조목 체크하기 귀찮아져서 실제 쓸모는 없을 것 같다. 사진, 월세, 위치 저장 기능 정도만 사용.
 
@@ -286,6 +286,7 @@ object HomeInfoDetailsBindingAdapter {
           else -> 1f
       }
   }
+}
 ```
 
 - `layout`

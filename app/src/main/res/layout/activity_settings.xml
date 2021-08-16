@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:orientation="vertical"
     tools:context=".view.settings.SettingsActivity">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -13,17 +12,28 @@
         android:layout_height="?attr/actionBarSize"
         android:theme="@style/Theme.WhereMyHome.AppBarOverlay">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/settings_toolbar"
-            style="@style/Theme.WhereMyHome.ToolBarOverlay"
+        <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/text_primary_dark"
-            android:elevation="4dp"
-            app:navigationIcon="@drawable/ic_arrow_back_24"
-            app:navigationIconTint="@color/primary_dark"
-            app:title="@string/action_settings"
-            app:titleTextColor="@color/primary_dark" />
+            android:fitsSystemWindows="true">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/app_name"
+                android:fitsSystemWindows="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/on_wood_2157535_1280" />
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/settings_toolbar"
+                style="@style/Theme.WhereMyHome.ToolBarOverlay"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                app:menu="@menu/menu_settings"
+                app:popupTheme="@style/Theme.WhereMyHome.PopupOverlay" />
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout

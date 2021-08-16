@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="com.minuminu.haruu.wheremyhome.view.evalformgroupdetails.EvalFormGroupDetailsViewModel" />
+
+        <import type="android.view.View" />
+
+        <import type="com.minuminu.haruu.wheremyhome.db.data.EvalInfoMethodType" />
+
+        <variable
+            name="evalForm"
+            type="com.minuminu.haruu.wheremyhome.db.data.EvalFormViewData" />
+
+        <variable
+            name="viewModel"
+            type="com.minuminu.haruu.wheremyhome.view.evalformgroupdetails.EvalFormGroupDetailsViewModel" />
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="4dp"
+        app:cardUseCompatPadding="true">
+
+        <LinearLayout
+            android:id="@+id/eval_form_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="@dimen/padding_mid">
+
+            <androidx.coordinatorlayout.widget.CoordinatorLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/eval_form_num"
+                    android:layout_width="24dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="@dimen/margin_small"
+                    android:layout_marginTop="@dimen/margin_wide"
+                    android:layout_marginEnd="@dimen/margin_small"
+                    android:layout_marginBottom="@dimen/margin_wide"
+                    android:gravity="center"
+                    android:text="@{evalForm.num}"
+                    android:textAppearance="?attr/textAppearanceListItemSmall"
+                    android:textColor="@color/primary_light"
+                    android:textStyle="bold"
+                    android:visibility="@{!viewModel.isEditing ? View.VISIBLE : View.GONE}"
+                    app:deleted="@{evalForm.deleted}" />
+
+                <Button
+                    android:id="@+id/btn_remove"
+                    style="@style/Widget.App.Button.TextButton.IconOnly"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="@{viewModel.isEditing &amp;&amp; !evalForm.deleted ? View.VISIBLE : View.GONE}"
+                    app:icon="@drawable/ic_clear_24"
+                    app:iconSize="@dimen/icon_mid"
+                    app:iconTint="@color/red_800" />
+
+                <Button
+                    android:id="@+id/btn_restore"
+                    style="@style/Widget.App.Button.TextButton.IconOnly"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="@{viewModel.isEditing &amp;&amp; evalForm.deleted ? View.VISIBLE : View.GONE}"
+                    app:icon="@drawable/ic_undo_24"
+                    app:iconSize="@dimen/icon_mid"
+                    app:iconTint="@color/accent_dark" />
+            </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/eval_form_category"
+                    style="@style/TextAppearance.AppCompat.Caption"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_small"
+                    android:text="@{evalForm.category}"
+                    android:textAppearance="?attr/textAppearanceListItemSmall"
+                    android:textColor="@color/primary_dark"
+                    android:textStyle="italic|bold"
+                    app:deleted="@{evalForm.deleted}" />
+
+                <TextView
+                    android:id="@+id/eval_form_content"
+                    style="@style/TextAppearance.AppCompat.Body2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_small"
+                    android:text="@{evalForm.content}"
+                    android:textAppearance="?attr/textAppearanceListItemSmall"
+                    android:textStyle="bold"
+                    app:deleted="@{evalForm.deleted}" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:orientation="horizontal">
+
+                    <Button
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="40dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/margin_small"
+                        app:deleted='@{evalForm.deleted || !evalForm.method.contentEquals(EvalInfoMethodType.Int.name())}'
+                        app:icon="@drawable/ic_plus_one_24"
+                        app:iconSize="@dimen/icon_small"
+                        app:iconTint="@color/primary_dark" />
+
+                    <Button
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="40dp"
+                        android:layout_height="wrap_content"
+                        app:deleted='@{evalForm.deleted || !evalForm.method.contentEquals(EvalInfoMethodType.Boolean.name())}'
+                        app:icon="@drawable/ic_check_24"
+                        app:iconSize="@dimen/icon_small"
+                        app:iconTint="@color/primary_dark" />
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+</layout>

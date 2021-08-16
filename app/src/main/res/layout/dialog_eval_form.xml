@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="evalForm"
+            type="com.minuminu.haruu.wheremyhome.db.data.EvalFormViewData" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/padding_wide">
+
+        <!-- category -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/ly_category"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_wide"
+            app:counterEnabled="true"
+            app:counterMaxLength="255"
+            app:errorEnabled="true"
+            app:hintEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_category"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="255"
+                android:hint="@string/category"
+                android:maxLength="255"
+                android:text="@={evalForm.category}" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- content -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/ly_content"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_wide"
+            app:counterEnabled="true"
+            app:counterMaxLength="255"
+            app:errorEnabled="true"
+            app:hintEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="255"
+                android:hint="@string/eval_content"
+                android:maxLength="255"
+                android:text="@={evalForm.content}" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- type -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/ly_type"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_wide"
+            app:counterEnabled="true"
+            app:counterMaxLength="255"
+            app:errorEnabled="true"
+            app:hintEnabled="true">
+
+            <AutoCompleteTextView
+                android:id="@+id/at_type_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="255"
+                android:hint="@string/eval_method"
+                android:inputType="none"
+                android:maxLength="255" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_wide"
+            android:gravity="end">
+
+            <Button
+                android:id="@+id/btn_dialog_cancel"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cancel"
+                android:textColor="@color/primary_dark" />
+
+            <Button
+                android:id="@+id/btn_dialog_ok"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ok"
+                android:textColor="@color/primary_dark" />
+        </LinearLayout>
+
+    </LinearLayout>
+</layout>
