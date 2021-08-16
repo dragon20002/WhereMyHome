@@ -70,9 +70,9 @@
 
 - 비고(···) 버튼을 눌러 비고 항목 작성하는 팝업 노출
 
-  [`QandaRemarkDialog.kt`](app/src/main/java/com/minuminu/haruu/wheremyhome/view/homeinfodetails/components/EvalInfoRemarkDialog.kt)
+  [`EvalInfoRemarkDialog.kt`](app/src/main/java/com/minuminu/haruu/wheremyhome/view/homeinfodetails/components/EvalInfoRemarkDialog.kt)
 
-  ![QandA](readme_img/4-1-home-qanda.png) ![remark](readme_img/4-2-home-remark.png)
+  ![eval-info](readme_img/4-1-home-eval-info.png) ![remark](readme_img/4-2-home-remark.png)
 
 ### 5. 현재 위치 지도
 
@@ -406,3 +406,5 @@ findNavController().previousBackStackEntry?.savedStateHandle?.set(
 > +/- 아이콘 제작자 <a href="https://www.flaticon.com/authors/dmitri13" title="dmitri13">dmitri13</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>
 
 > won 아이콘 제작자 <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
+
+> on_wood_daisy 이미지 제작자 <a href="https://pixabay.com/ko/users/lillaby-3693608/" title="lillaby">lillaby</a> from <a href="https://pixabay.com/">Pixabay</a>
