@@ -17,7 +17,7 @@ data class HomeInfo(
     var startDate: String? = "", // 계약가능일(시작)
     @ColumnInfo(name = "end_date")
     var endDate: String? = "", // 계약가능일(종료)
-    var score: Int = 0, // 점수
+    var score: Float = 0f, // 점수
     var thumbnail: String? = "", // 썸네일 (사진목록 중 첫번째 사진)
 ) {
     override fun toString(): String {

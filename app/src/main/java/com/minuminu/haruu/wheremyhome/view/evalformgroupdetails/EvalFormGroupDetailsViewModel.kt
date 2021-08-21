@@ -51,6 +51,7 @@ class EvalFormGroupDetailsViewModel : ViewModel() {
                         it.num.toString(),
                         it.content,
                         it.method,
+                        it.weight.toString(),
                         it.evalFormGroupId
                     )
                 })
@@ -67,7 +68,13 @@ class EvalFormGroupDetailsViewModel : ViewModel() {
             ),
             evalForms = evalFormList.filter { !it.deleted }.mapIndexed { index, evalForm ->
                 EvalForm(
-                    evalForm.id, evalForm.category, index + 1, evalForm.content, evalForm.method, null
+                    evalForm.id,
+                    evalForm.category,
+                    index + 1,
+                    evalForm.content,
+                    evalForm.method,
+                    evalForm.weight.toFloat(),
+                    null
                 )
             },
         )

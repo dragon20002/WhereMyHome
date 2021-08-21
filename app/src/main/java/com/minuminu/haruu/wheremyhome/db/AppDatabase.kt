@@ -12,7 +12,7 @@ import com.minuminu.haruu.wheremyhome.db.data.*
 
 @Database(
     entities = [HomeInfo::class, Picture::class, EvalFormGroup::class, EvalForm::class, EvalInfo::class],
-    version = 4
+    version = 5
 )
 abstract class AppDatabase : RoomDatabase() {
     companion object {
@@ -109,6 +109,61 @@ abstract class AppDatabase : RoomDatabase() {
                     database.endTransaction()
                 }
             }
+            val MIGRATION_4_5 = object : Migration(4, 5) {
+                override fun migrate(database: SupportSQLiteDatabase) {
+                    // 평가폼 가중치 컬럼 추가
+                    database.beginTransaction()
+                    try {
+                        database.execSQL("ALTER TABLE EvalForm ADD COLUMN weight REAL NOT NULL DEFAULT 1.0")
+                        database.execSQL("UPDATE EvalForm SET weight = 1.0")
+
+                        database.execSQL("ALTER TABLE EvalInfo ADD COLUMN weight REAL NOT NULL DEFAULT 1.0")
+                        database.execSQL("UPDATE EvalInfo SET weight = 1.0")
+
+                        database.execSQL("CREATE TABLE IF NOT EXISTS HomeInfo1 (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, address TEXT, deposit INTEGER NOT NULL, rental INTEGER NOT NULL, expense REAL NOT NULL, start_date TEXT, end_date TEXT, score REAL NOT NULL, thumbnail TEXT)")
+                        database.execSQL("INSERT INTO HomeInfo1 (id, name, address, deposit, rental, expense, start_date, end_date, score, thumbnail) SELECT id, name, address, deposit, rental, expense, start_date, end_date, 0.0 AS score, thumbnail FROM HomeInfo")
+                        database.execSQL("DROP TABLE HomeInfo")
+                        database.execSQL("ALTER TABLE HomeInfo1 RENAME TO HomeInfo")
+
+                        database.setTransactionSuccessful()
+                    } catch (e: Throwable) {
+                        e.printStackTrace()
+                    }
+
+                    database.endTransaction()
+                }
+            }
+//            val MIGRATION_5_4 = object : Migration(5, 4) {
+//                override fun migrate(database: SupportSQLiteDatabase) {
+//                    database.beginTransaction()
+//                    try {
+//                        database.execSQL("CREATE TABLE IF NOT EXISTS EvalForm1 (id INTEGER PRIMARY KEY AUTOINCREMENT, category TEXT NOT NULL, num INTEGER NOT NULL, content TEXT NOT NULL, method TEXT NOT NULL, eval_form_group_id INTEGER)")
+//                        database.execSQL("INSERT INTO EvalForm1 (id, category, num, content, method, eval_form_group_id) SELECT id, category, num, content, method, eval_form_group_id FROM EvalForm")
+//                        database.execSQL("DROP TABLE EvalForm")
+//                        database.execSQL("ALTER TABLE EvalForm1 RENAME TO EvalForm")
+//
+//                        database.execSQL("CREATE TABLE IF NOT EXISTS EvalInfo1 (id INTEGER PRIMARY KEY AUTOINCREMENT, category TEXT NOT NULL, num INTEGER NOT NULL, content TEXT NOT NULL, method TEXT NOT NULL, result TEXT NOT NULL, remark TEXT NOT NULL, home_info_id INTEGER)")
+//                        database.execSQL("INSERT INTO EvalInfo1 (id, category, num, content, method, result, remark, home_info_id) SELECT id, category, num, content, method, result, remark, home_info_id FROM EvalInfo")
+//                        database.execSQL("DROP TABLE EvalInfo")
+//                        database.execSQL("ALTER TABLE EvalInfo1 RENAME TO EvalInfo")
+//
+//                        database.execSQL("CREATE TABLE IF NOT EXISTS HomeInfo1 (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, address TEXT, deposit INTEGER NOT NULL, rental INTEGER NOT NULL, expense REAL NOT NULL, start_date TEXT, end_date TEXT, score INTEGER NOT NULL, thumbnail TEXT)")
+//                        database.execSQL("INSERT INTO HomeInfo1 (id, name, address, deposit, rental, expense, start_date, end_date, score, thumbnail) " +
+//                                "SELECT a.id, a.name, a.address, a.deposit, a.rental, a.expense, a.start_date, a.end_date, SUM(b.result) AS score, a.thumbnail " +
+//                                "FROM HomeInfo a, EvalInfo b " +
+//                                "WHERE a.id = b.home_info_id " +
+//                                "GROUP BY a.id, a.name, a.address, a.deposit, a.rental, a.expense, a.start_date, a.end_date, a.thumbnail")
+//                        database.execSQL("DROP TABLE HomeInfo")
+//                        database.execSQL("ALTER TABLE HomeInfo1 RENAME TO HomeInfo")
+//
+//                        database.setTransactionSuccessful()
+//                    } catch (e: Throwable) {
+//                        e.printStackTrace()
+//                    }
+//
+//                    database.endTransaction()
+//                }
+//            }
 
             Room.databaseBuilder(
                 context, AppDatabase::
@@ -117,6 +172,7 @@ abstract class AppDatabase : RoomDatabase() {
                 .addMigrations(MIGRATION_1_2)
                 .addMigrations(MIGRATION_2_3)
                 .addMigrations(MIGRATION_3_4)
+                .addMigrations(MIGRATION_4_5)
                 .build()
         }
 

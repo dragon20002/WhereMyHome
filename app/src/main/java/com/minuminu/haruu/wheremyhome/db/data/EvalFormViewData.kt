@@ -6,6 +6,7 @@ data class EvalFormViewData(
     var num: String = "", // 번호
     var content: String = "", // 평가내용
     var method: String = "", // 평가방식 ('Int', 'Boolean')
+    var weight: String = "1.0", // 가중치
     var evalFormGroupId: Long? = null, // join
     var deleted: Boolean = false
 ) {
@@ -26,6 +27,7 @@ data class EvalFormViewData(
         }
 
     override fun toString(): String {
-        return "EvalFormViewData(id=$id, category='$category', num='$num', content='$content', method='$method', evalFormGroupId=$evalFormGroupId, deleted=$deleted, typeDescription='$typeDescription')"
+        return "EvalFormViewData(id=$id, category='$category', num='$num', content='$content', method='$method', weight='$weight', evalFormGroupId=$evalFormGroupId, deleted=$deleted, typeDescription='$typeDescription')"
     }
+
 }

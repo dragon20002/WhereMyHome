@@ -84,7 +84,7 @@ class EvalFormGroupDetailsFragment : Fragment() {
             viewModel?.evalFormList?.let { evalFormList ->
                 evalFormList.add(
                     EvalFormViewData(
-                        null, "", (evalFormList.size + 1).toString(), "", "", null
+                        null, "", (evalFormList.size + 1).toString(), "", "", "1.0", null
                     )
                 )
             }

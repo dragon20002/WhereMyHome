@@ -47,7 +47,7 @@ class EvalFormDialog : DialogFragment() {
             }
             val view = binding?.root
 
-            view?.findViewById<AutoCompleteTextView>(R.id.at_type_description)?.apply {
+            view?.findViewById<AutoCompleteTextView>(R.id.at_method_description)?.apply {
                 val adapter = ArrayAdapter(
                     context,
                     android.R.layout.simple_dropdown_item_1line,

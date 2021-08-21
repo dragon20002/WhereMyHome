@@ -35,6 +35,7 @@
     <string name="thumbnail">썸네일</string>
     <string name="setting_manage_eval_form_group">평가 템플릿 관리</string>
     <string name="eval_method">평가방식</string>
+    <string name="eval_weight">평가 가중치</string>
     <string name="description">설명</string>
     <string name="eval_form_list">평가항목</string>
     <string name="eval_form_group_name">템플릿명</string>

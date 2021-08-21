@@ -21,7 +21,7 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_wide"
+            android:layout_margin="@dimen/margin_mid"
             app:counterEnabled="true"
             app:counterMaxLength="255"
             app:errorEnabled="true"
@@ -43,7 +43,7 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_wide"
+            android:layout_margin="@dimen/margin_mid"
             app:counterEnabled="true"
             app:counterMaxLength="255"
             app:errorEnabled="true"
@@ -59,26 +59,47 @@
                 android:text="@={evalForm.content}" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- type -->
+        <!-- method -->
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/ly_type"
+            android:id="@+id/ly_method"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_wide"
+            android:layout_margin="@dimen/margin_mid"
             app:counterEnabled="true"
             app:counterMaxLength="255"
             app:errorEnabled="true"
             app:hintEnabled="true">
 
             <AutoCompleteTextView
-                android:id="@+id/at_type_description"
+                android:id="@+id/at_method_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="255"
                 android:hint="@string/eval_method"
                 android:inputType="none"
                 android:maxLength="255" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- weight -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/ly_weight"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_mid"
+            app:errorEnabled="false"
+            app:hintEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_weight"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="8"
+                android:hint="@string/eval_weight"
+                android:inputType="number|numberDecimal|numberSigned"
+                android:maxLength="8"
+                android:text="@={evalForm.weight}" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <LinearLayout

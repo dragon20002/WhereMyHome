@@ -75,6 +75,7 @@ class HomeInfoDetailsViewModel : ViewModel() {
                         evalForm.num.toString(),
                         evalForm.content,
                         evalForm.method,
+                        evalForm.weight.toString(),
                         "",
                         ""
                     )
@@ -95,6 +96,7 @@ class HomeInfoDetailsViewModel : ViewModel() {
                         evalInfo.num.toString(),
                         evalInfo.content,
                         evalInfo.method,
+                        evalInfo.weight.toString(),
                         evalInfo.result,
                         evalInfo.remark,
                     )
@@ -103,18 +105,18 @@ class HomeInfoDetailsViewModel : ViewModel() {
     }
 
     suspend fun saveItem(): HomeInfo {
-        val score: Int = evalInfoList.let { _evalInfoList ->
-            var sum = 0
+        val score: Float = evalInfoList.let { _evalInfoList ->
+            var sum = 0f
             _evalInfoList.forEach { evalInfo ->
                 val answer = when (evalInfo.method) {
-                    "Int" -> evalInfo.result.toIntOrNull() ?: 0
+                    "Int" -> evalInfo.result.toFloatOrNull() ?: 0f
                     "Boolean" -> when (evalInfo.blnResult) {
-                        true -> 1
-                        else -> 0
+                        true -> 1f
+                        else -> 0f
                     }
-                    else -> 0
+                    else -> 0f
                 }
-                sum += answer
+                sum += (answer.times(evalInfo.weight.toFloatOrNull() ?: 1f))
             }
             sum
         }
@@ -139,6 +141,7 @@ class HomeInfoDetailsViewModel : ViewModel() {
                     evalInfo.num.toInt(),
                     evalInfo.content,
                     evalInfo.method,
+                    evalInfo.weight.toFloatOrNull() ?: 1f,
                     evalInfo.result,
                     evalInfo.remark,
                     null

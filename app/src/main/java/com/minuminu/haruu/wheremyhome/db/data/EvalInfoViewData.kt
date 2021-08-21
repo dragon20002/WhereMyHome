@@ -6,6 +6,7 @@ data class EvalInfoViewData(
     var num: String = "", // 번호
     var content: String = "", // 항목명
     val method: String = "", // 답변형식
+    val weight: String = "1.0", // 가중치
     var result: String = "", // 답변
     var remark: String = "", // 비고
 ) {
@@ -18,7 +19,6 @@ data class EvalInfoViewData(
         }
 
     override fun toString(): String {
-        return "EvalInfoViewData(evalInfoId=$evalInfoId, category='$category', num='$num', content='$content', method='$method', result='$result', remark='$remark', blnResult=$blnResult)"
+        return "EvalInfoViewData(evalInfoId=$evalInfoId, category='$category', num='$num', content='$content', method='$method', weight='$weight', result='$result', remark='$remark', blnResult=$blnResult)"
     }
-
 }
