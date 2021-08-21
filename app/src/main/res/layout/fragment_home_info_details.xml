@@ -9,6 +9,8 @@
 
         <import type="android.view.View" />
 
+        <import type="com.minuminu.haruu.wheremyhome.db.data.HomeInfoDealType" />
+
         <variable
             name="viewModel"
             type="com.minuminu.haruu.wheremyhome.view.homeinfodetails.HomeInfoDetailsViewModel" />
@@ -176,6 +178,125 @@
                     android:text="@={viewModel.address}" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/ly_area"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_mid"
+                android:enabled="@{viewModel.isEditing}"
+                app:errorEnabled="false"
+                app:hintEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_area"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="8"
+                    android:enabled="@{viewModel.isEditing}"
+                    android:hint="@string/area"
+                    android:inputType="@{viewModel.isEditing ? InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL : InputType.TYPE_NULL}"
+                    android:maxLength="8"
+                    android:text="@={viewModel.area}" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/ly_floor"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_mid"
+                android:enabled="@{viewModel.isEditing}"
+                app:errorEnabled="false"
+                app:hintEnabled="true"
+                app:startIconDrawable="@drawable/ic_stairs_24">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_floor"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="8"
+                    android:enabled="@{viewModel.isEditing}"
+                    android:hint="@string/floor"
+                    android:inputType="@{viewModel.isEditing ? InputType.TYPE_CLASS_NUMBER : InputType.TYPE_NULL}"
+                    android:maxLength="8"
+                    android:text="@={viewModel.floor}" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- realtorTelNo -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/ly_realtor_tel_no"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_mid"
+                android:enabled="@{viewModel.isEditing}"
+                app:counterEnabled="true"
+                app:counterMaxLength="255"
+                app:errorEnabled="true"
+                app:hintEnabled="true"
+                app:startIconDrawable="@drawable/ic_smartphone_24">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_realtor_tel_no"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="255"
+                    android:enabled="@{viewModel.isEditing}"
+                    android:hint="@string/realtor_tel_no"
+                    android:inputType="@{viewModel.isEditing ? InputType.TYPE_CLASS_PHONE : InputType.TYPE_NULL}"
+                    android:maxLength="255"
+                    android:text="@={viewModel.realtorTelNo}" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- ownerTelNo -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/ly_owner_tel_no"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_mid"
+                android:enabled="@{viewModel.isEditing}"
+                app:counterEnabled="true"
+                app:counterMaxLength="255"
+                app:errorEnabled="true"
+                app:hintEnabled="true"
+                app:startIconDrawable="@drawable/ic_smartphone_24">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_owner_tel_no"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="255"
+                    android:enabled="@{viewModel.isEditing}"
+                    android:hint="@string/owner_tel_no"
+                    android:inputType="@{viewModel.isEditing ? InputType.TYPE_CLASS_PHONE : InputType.TYPE_NULL}"
+                    android:maxLength="255"
+                    android:text="@={viewModel.ownerTelNo}" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- dealType -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/ly_deal_type"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_mid"
+                android:enabled="@{viewModel.isEditing}"
+                app:errorEnabled="true"
+                app:hintEnabled="true">
+
+                <AutoCompleteTextView
+                    android:id="@+id/at_deal_type_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="255"
+                    android:enabled="@{viewModel.isEditing}"
+                    android:hint="@string/deal_type"
+                    android:inputType="none"
+                    android:maxLength="255" />
+            </com.google.android.material.textfield.TextInputLayout>
+
             <!-- 보증금 / 월세 -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/ly_deposit"
@@ -207,6 +328,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_mid"
                 android:enabled="@{viewModel.isEditing}"
+                android:visibility="@{viewModel.dealTypeDescription.contentEquals(HomeInfoDealType.Monthly.description) ? View.VISIBLE : View.GONE}"
                 app:errorEnabled="false"
                 app:hintEnabled="true"
                 app:startIconDrawable="@drawable/ic_won">
@@ -347,8 +469,8 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginBottom="8dp"
-                app:layoutManager="LinearLayoutManager"
                 app:evalInfos="@{viewModel.evalInfoList}"
+                app:layoutManager="LinearLayoutManager"
                 tools:listitem="@layout/item_eval_info" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

@@ -8,7 +8,7 @@
 
         <import type="android.view.View" />
 
-        <import type="com.minuminu.haruu.wheremyhome.db.data.EvalInfoMethodType" />
+        <import type="com.minuminu.haruu.wheremyhome.db.data.EvalInfoMethod" />
 
         <variable
             name="evalForm"
@@ -123,7 +123,7 @@
                         android:layout_width="40dp"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/margin_small"
-                        app:deleted='@{evalForm.deleted || !evalForm.method.contentEquals(EvalInfoMethodType.Int.name())}'
+                        app:deleted='@{evalForm.deleted || !evalForm.method.contentEquals(EvalInfoMethod.Int.name())}'
                         app:icon="@drawable/ic_plus_one_24"
                         app:iconSize="@dimen/icon_small"
                         app:iconTint="@color/primary_dark" />
@@ -132,7 +132,7 @@
                         style="@style/Widget.MaterialComponents.Button.TextButton"
                         android:layout_width="40dp"
                         android:layout_height="wrap_content"
-                        app:deleted='@{evalForm.deleted || !evalForm.method.contentEquals(EvalInfoMethodType.Boolean.name())}'
+                        app:deleted='@{evalForm.deleted || !evalForm.method.contentEquals(EvalInfoMethod.Boolean.name())}'
                         app:icon="@drawable/ic_check_24"
                         app:iconSize="@dimen/icon_small"
                         app:iconTint="@color/primary_dark" />

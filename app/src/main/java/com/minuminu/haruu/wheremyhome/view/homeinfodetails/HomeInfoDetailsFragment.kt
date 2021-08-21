@@ -9,6 +9,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.Button
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
@@ -27,6 +29,7 @@ import com.minuminu.haruu.wheremyhome.R
 import com.minuminu.haruu.wheremyhome.databinding.FragmentHomeInfoDetailsBinding
 import com.minuminu.haruu.wheremyhome.db.AppDatabase
 import com.minuminu.haruu.wheremyhome.db.data.HomeInfo
+import com.minuminu.haruu.wheremyhome.db.data.HomeInfoDealType
 import com.minuminu.haruu.wheremyhome.db.data.PictureViewData
 import com.minuminu.haruu.wheremyhome.utils.AppUtils
 import com.minuminu.haruu.wheremyhome.view.maps.MapsActivity
@@ -40,6 +43,8 @@ class HomeInfoDetailsFragment : Fragment() {
     companion object {
         fun newInstance() = HomeInfoDetailsFragment()
     }
+
+    private val dealTypeDescriptions = HomeInfoDealType.values().map { it.description }
 
     // Open Intent(Take Picture)
     private val requestTakePhoto =
@@ -126,6 +131,24 @@ class HomeInfoDetailsFragment : Fragment() {
                     putExtra("address", viewModel?.address?.get())
                 })
             }
+        view?.findViewById<AutoCompleteTextView>(R.id.at_deal_type_description)?.apply {
+            val adapter = ArrayAdapter(
+                context,
+                android.R.layout.simple_dropdown_item_1line,
+                dealTypeDescriptions
+            )
+            this.setAdapter(adapter)
+
+            viewModel?.let {
+                this.setText(
+                    it.dealTypeDescription.get() ?: HomeInfoDealType.Monthly.description,
+                    false
+                )
+            }
+            this.setOnItemClickListener { parent, view, position, id ->
+                viewModel?.dealTypeDescription?.set(dealTypeDescriptions[position])
+            }
+        }
         val dateRangePicker = MaterialDatePicker.Builder.dateRangePicker()
             .setTitleText("계약기간 선택")
             .setSelection(
@@ -144,8 +167,10 @@ class HomeInfoDetailsFragment : Fragment() {
                         }
                     }
 
-                    view?.findViewById<Button>(R.id.btn_start_date)?.text = getDateStr(range.first)
-                    view?.findViewById<Button>(R.id.btn_end_date)?.text = getDateStr(range.second)
+                    view?.findViewById<Button>(R.id.btn_start_date)?.text =
+                        getDateStr(range.first)
+                    view?.findViewById<Button>(R.id.btn_end_date)?.text =
+                        getDateStr(range.second)
                 }
             }
         view?.findViewById<Button>(R.id.btn_start_date)?.setOnClickListener { _ ->
@@ -171,6 +196,15 @@ class HomeInfoDetailsFragment : Fragment() {
                 startDate.set(homeInfo.startDate)
                 endDate.set(homeInfo.endDate)
                 thumbnail.set(homeInfo.thumbnail)
+                area.set(homeInfo.area.toString())
+                floor.set(homeInfo.floor.toString())
+                realtorTelNo.set(homeInfo.realtorTelNo)
+                ownerTelNo.set(homeInfo.ownerTelNo)
+                dealTypeDescription.set(homeInfo.dealType?.let { name ->
+                    HomeInfoDealType.values()
+                        .find { dealType -> dealType.name.contentEquals(name) }?.description
+                        ?: HomeInfoDealType.Monthly.description
+                })
 
                 homeInfo.id?.let { homeInfoId ->
                     loadPictureList(homeInfoId)

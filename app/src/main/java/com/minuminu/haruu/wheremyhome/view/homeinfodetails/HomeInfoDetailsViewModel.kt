@@ -33,6 +33,11 @@ class HomeInfoDetailsViewModel : ViewModel() {
     val startDate = ObservableField<String>()
     val endDate = ObservableField<String>()
     val thumbnail = ObservableField<String>()
+    val area = ObservableField<String>()
+    val floor = ObservableField<String>()
+    val realtorTelNo = ObservableField<String>()
+    val ownerTelNo = ObservableField<String>()
+    val dealTypeDescription = ObservableField<String>()
     val pictureList: ObservableList<PictureViewData> = ObservableArrayList()
     val evalInfoList: ObservableList<EvalInfoViewData> = ObservableArrayList()
 
@@ -133,6 +138,14 @@ class HomeInfoDetailsViewModel : ViewModel() {
                 endDate.get(),
                 score,
                 thumbnail.get(),
+                area.get()?.toFloatOrNull() ?: 0f,
+                floor.get()?.toIntOrNull() ?: 0,
+                realtorTelNo.get(),
+                ownerTelNo.get(),
+                dealTypeDescription.get()?.let { desc ->
+                    HomeInfoDealType.values()
+                        .find { dealType -> dealType.description.contentEquals(desc) }
+                }?.name ?: HomeInfoDealType.Monthly.name
             ),
             evalInfos = evalInfoList.map { evalInfo ->
                 EvalInfo(

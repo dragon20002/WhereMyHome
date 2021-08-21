@@ -10,24 +10,24 @@ data class EvalFormViewData(
     var evalFormGroupId: Long? = null, // join
     var deleted: Boolean = false
 ) {
-    var typeDescription: String
+    var methodDescription: String
         get() {
             return when (method) {
-                EvalInfoMethodType.Boolean.name -> EvalInfoMethodType.Boolean.description
-                EvalInfoMethodType.Int.name -> EvalInfoMethodType.Int.description
+                EvalInfoMethod.Boolean.name -> EvalInfoMethod.Boolean.description
+                EvalInfoMethod.Int.name -> EvalInfoMethod.Int.description
                 else -> ""
             }
         }
-        set(td) {
-            method = when (td) {
-                EvalInfoMethodType.Boolean.description -> EvalInfoMethodType.Boolean.name
-                EvalInfoMethodType.Int.description -> EvalInfoMethodType.Int.name
+        set(md) {
+            method = when (md) {
+                EvalInfoMethod.Boolean.description -> EvalInfoMethod.Boolean.name
+                EvalInfoMethod.Int.description -> EvalInfoMethod.Int.name
                 else -> ""
             }
         }
 
     override fun toString(): String {
-        return "EvalFormViewData(id=$id, category='$category', num='$num', content='$content', method='$method', weight='$weight', evalFormGroupId=$evalFormGroupId, deleted=$deleted, typeDescription='$typeDescription')"
+        return "EvalFormViewData(id=$id, category='$category', num='$num', content='$content', method='$method', weight='$weight', evalFormGroupId=$evalFormGroupId, deleted=$deleted, typeDescription='$methodDescription')"
     }
 
 }

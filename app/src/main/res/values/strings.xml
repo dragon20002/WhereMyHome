@@ -39,4 +39,9 @@
     <string name="description">설명</string>
     <string name="eval_form_list">평가항목</string>
     <string name="eval_form_group_name">템플릿명</string>
+    <string name="deal_type">전/월세</string>
+    <string name="floor">층수</string>
+    <string name="realtor_tel_no">중개인 전화번호</string>
+    <string name="owner_tel_no">집주인 전화번호</string>
+    <string name="area">넓이</string>
 </resources>

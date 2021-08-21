@@ -12,14 +12,14 @@ import androidx.fragment.app.DialogFragment
 import com.minuminu.haruu.wheremyhome.R
 import com.minuminu.haruu.wheremyhome.databinding.DialogEvalFormBinding
 import com.minuminu.haruu.wheremyhome.db.data.EvalFormViewData
-import com.minuminu.haruu.wheremyhome.db.data.EvalInfoMethodType
+import com.minuminu.haruu.wheremyhome.db.data.EvalInfoMethod
 
 class EvalFormDialog : DialogFragment() {
     var caller: View? = null
     var listener: EvalFormDialogListener? = null
     var evalForm: EvalFormViewData? = null
 
-    private val typeDescriptions = EvalInfoMethodType.values().map { it.description }
+    private val typeDescriptions = EvalInfoMethod.values().map { it.description }
 
     interface EvalFormDialogListener {
         fun onDialogPositiveClick(
@@ -56,11 +56,11 @@ class EvalFormDialog : DialogFragment() {
                 this.setAdapter(adapter)
 
                 evalForm?.let {
-                    this.setText(it.typeDescription, false) // filter=false DropDown Menu 모든 항목 표시
+                    this.setText(it.methodDescription, false) // filter=false DropDown Menu 모든 항목 표시
                 }
                 this.setOnItemClickListener { parent, view, position, id ->
                     evalForm?.let {
-                        it.typeDescription = typeDescriptions[position]
+                        it.methodDescription = typeDescriptions[position]
                     }
                 }
             }

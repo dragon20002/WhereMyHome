@@ -7,7 +7,7 @@
 
         <import type="android.view.View" />
 
-        <import type="com.minuminu.haruu.wheremyhome.db.data.EvalInfoMethodType" />
+        <import type="com.minuminu.haruu.wheremyhome.db.data.EvalInfoMethod" />
 
         <variable
             name="evalInfo"
@@ -72,7 +72,7 @@
                 android:maxLength="4"
                 android:text="@={evalInfo.result}"
                 android:textAlignment="center"
-                android:visibility='@{evalInfo.method.contentEquals(EvalInfoMethodType.Int.name()) ? View.VISIBLE : View.GONE}' />
+                android:visibility='@{evalInfo.method.contentEquals(EvalInfoMethod.Int.name()) ? View.VISIBLE : View.GONE}' />
 
             <CheckBox
                 android:id="@+id/cbx_result"
@@ -82,7 +82,7 @@
                 android:enabled="@{viewModel.isEditing}"
                 android:text='@{evalInfo.blnResult == true ? "예" : "아니오"}'
                 android:textAlignment="center"
-                android:visibility='@{evalInfo.method.contentEquals(EvalInfoMethodType.Boolean.name()) ? View.VISIBLE : View.GONE}' />
+                android:visibility='@{evalInfo.method.contentEquals(EvalInfoMethod.Boolean.name()) ? View.VISIBLE : View.GONE}' />
         </LinearLayout>
 
         <Button
