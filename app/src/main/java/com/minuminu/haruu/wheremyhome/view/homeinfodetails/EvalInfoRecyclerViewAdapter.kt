@@ -69,8 +69,8 @@ class EvalInfoRecyclerViewAdapter(val viewModel: HomeInfoDetailsViewModel) :
 
     inner class ViewHolder(val binding: ItemEvalInfoBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        val cbxResult = binding.root.findViewById<CheckBox>(R.id.cbx_result)
-        val btnRemark = binding.root.findViewById<Button>(R.id.btn_remark)
+        val cbxResult: CheckBox = binding.root.findViewById(R.id.cbx_result)
+        val btnRemark: Button = binding.root.findViewById(R.id.btn_remark)
     }
 
 }

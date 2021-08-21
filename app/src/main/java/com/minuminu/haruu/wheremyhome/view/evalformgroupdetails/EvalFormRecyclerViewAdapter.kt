@@ -74,7 +74,7 @@ class EvalFormRecyclerViewAdapter(val viewModel: EvalFormGroupDetailsViewModel) 
                     }
                     .show()
             }
-            btnRestore.setOnClickListener { _ ->
+            btnRestore.setOnClickListener {
                 item.deleted = false
                 binding.evalForm = item
             }

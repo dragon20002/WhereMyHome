@@ -100,13 +100,17 @@ class HomeInfoDetailsFragment : Fragment() {
             val homeInfoId = arguments?.getLong("homeInfoId")
             Log.d(javaClass.name, "homeInfoId $homeInfoId")
 
-            if (homeInfoId == null) {
-                Snackbar.make(view, "존재하지 않는 집 정보입니다.", Snackbar.LENGTH_SHORT).show()
-            } else if (homeInfoId == -1L) {
-                findNavController().popBackStack()
-            } else {
-                viewModel?.loadHomeInfo(homeInfoId)
-                viewModel?.isEditing?.set(false)
+            when (homeInfoId) {
+                null -> {
+                    Snackbar.make(view, "존재하지 않는 집 정보입니다.", Snackbar.LENGTH_SHORT).show()
+                }
+                -1L -> {
+                    findNavController().popBackStack()
+                }
+                else -> {
+                    viewModel?.loadHomeInfo(homeInfoId)
+                    viewModel?.isEditing?.set(false)
+                }
             }
         }
         view?.findViewById<Button>(R.id.btn_done)?.setOnClickListener {
@@ -226,13 +230,13 @@ class HomeInfoDetailsFragment : Fragment() {
         val homeInfoId = arguments?.getLong("homeInfoId")
         Log.d(javaClass.name, "homeInfoId $homeInfoId")
 
-        when {
-            homeInfoId == null -> {
+        when (homeInfoId) {
+            null -> {
                 view?.let { _view ->
                     Snackbar.make(_view, "존재하지 않는 집 정보입니다.", Snackbar.LENGTH_SHORT).show()
                 }
             }
-            homeInfoId == -1L -> {
+            -1L -> {
                 Log.d(javaClass.name, "add mode")
 
                 // Create temporary data

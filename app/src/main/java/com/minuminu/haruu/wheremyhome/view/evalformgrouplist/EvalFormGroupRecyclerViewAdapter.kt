@@ -38,7 +38,7 @@ class EvalFormGroupRecyclerViewAdapter(
         with(holder) {
             binding.evalFormGroup = item
             binding.viewModel = viewModel
-            layout.setOnClickListener { _ ->
+            layout.setOnClickListener {
                 fragment.findNavController().navigate(
                     R.id.action_EvalFormGroupListFragment_to_EvalFormGroupDetailsFragment,
                     Bundle().apply {

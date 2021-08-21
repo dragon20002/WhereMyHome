@@ -59,7 +59,7 @@ class PictureRecyclerViewAdapter(
                     }
                     .show()
             }
-            btnRestore.setOnClickListener { _ ->
+            btnRestore.setOnClickListener {
                 if (viewModel.thumbnail.get()!! == item.name) {
                     viewModel.thumbnail.set("")
                 }

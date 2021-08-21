@@ -31,7 +31,7 @@ class HomeInfoItemRecyclerViewAdapter(
 
         with(holder) {
             binding.homeInfo = item
-            layout.setOnClickListener { _ ->
+            layout.setOnClickListener {
                 fragment.findNavController()
                     .navigate(
                         R.id.action_HomeInfoListFragment_to_HomeInfoDetailsFragment,

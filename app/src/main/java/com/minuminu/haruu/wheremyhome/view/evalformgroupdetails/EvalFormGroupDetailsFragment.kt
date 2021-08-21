@@ -59,13 +59,17 @@ class EvalFormGroupDetailsFragment : Fragment() {
             val evalFormGroupId = arguments?.getLong("evalFormGroupId")
             Log.d(javaClass.name, "evalFormGroupId $evalFormGroupId")
 
-            if (evalFormGroupId == null) {
-                Snackbar.make(view, "존재하지 않는 평가 템플릿입니다.", Snackbar.LENGTH_SHORT).show()
-            } else if (evalFormGroupId == -1L) {
-                findNavController().popBackStack()
-            } else {
-                viewModel?.loadEvalFormGroup(evalFormGroupId)
-                viewModel?.isEditing?.set(false)
+            when (evalFormGroupId) {
+                null -> {
+                    Snackbar.make(view, "존재하지 않는 평가 템플릿입니다.", Snackbar.LENGTH_SHORT).show()
+                }
+                -1L -> {
+                    findNavController().popBackStack()
+                }
+                else -> {
+                    viewModel?.loadEvalFormGroup(evalFormGroupId)
+                    viewModel?.isEditing?.set(false)
+                }
             }
         }
         view?.findViewById<Button>(R.id.btn_done)?.setOnClickListener {
@@ -109,13 +113,13 @@ class EvalFormGroupDetailsFragment : Fragment() {
         val evalFormGroupId = arguments?.getLong("evalFormGroupId")
         Log.d(javaClass.name, "evalFormGroupId $evalFormGroupId")
 
-        when {
-            evalFormGroupId == null -> {
+        when (evalFormGroupId) {
+            null -> {
                 view?.let { _view ->
                     Snackbar.make(_view, "존재하지 않는 평가 템플릿입니다.", Snackbar.LENGTH_SHORT).show()
                 }
             }
-            evalFormGroupId == -1L -> {
+            -1L -> {
                 Log.d(javaClass.name, "add mode")
 
                 // Create temporary data
