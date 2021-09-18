@@ -8,6 +8,8 @@
 
         <import type="android.view.View" />
 
+        <import type="com.minuminu.haruu.wheremyhome.db.data.PictureSize" />
+
         <variable
             name="picture"
             type="com.minuminu.haruu.wheremyhome.db.data.PictureViewData" />
@@ -34,6 +36,7 @@
                 android:contentDescription="@string/picture"
                 android:scaleType="centerCrop"
                 app:deleted="@{picture.deleted}"
+                app:size="@{PictureSize.Small}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

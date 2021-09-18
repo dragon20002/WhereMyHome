@@ -89,6 +89,7 @@
 |  기능  | [x] | Q&A는 블로그에서 찾은 내용으로 26가지 고정 질문임. 질문 추가/수정 화면 필요                                                                                                             |
 |  기능  | [x] | Q&A 항목별 가중치 추가하여 점수합산                                                                                                                                                     |
 |  기능  | [x] | 집 정보에 컬럼 추가 (평수, 층, 부동산/집주인 전화번호, 전세/월세 구분)                                                                                                                  |
+|  기능  | [x] | 사진 줌인/아웃, 스크롤 제스처 기능 추가                                                                                                                                                 |
 |  기능  | [ ] | 사진 전체화면에서 '좌우 스와이프' 기능, '사진 내보내기?' 기능 추가 필요                                                                                                                 |
 |  기능  | [ ] | 리스트 항목 드래그로 재정렬 기능                                                                                                                                                        |
 | 디자인 | [ ] | 하단 탭 구성 (메인 / 체크리스트)                                                                                                                                                        |
@@ -404,6 +405,27 @@ findNavController().previousBackStackEntry?.savedStateHandle?.set(
   currentMarker?.title
 )
 ```
+
+### 줌인된 이미지 스크롤하기
+
+이미지뷰의 pivot값을 활용하여 줌인된 이미지를 스크롤 할 수 있다.
+
+스크롤 범위 설정 시, 우선 pivot은 scale, rorate의 기준점이므로 0px ~ 이미지뷰크기의 범위를 가진다.
+
+초기 pivot은 `Center(imageViewportWidth / 2, imageViewportHeight / 2)`로 이미지뷰의 정중앙
+
+`Center`에서 상하좌우로 움직일 수 있는 최대 거리 `maxDist`를 계산한다.
+
+`maxDist` = `(확대된 이미지의 높이 - 화면높이) ÷ 2`
+
+`maxDist`는 줌인된 좌표상에서 계산되었으므로 줌인비율 `imageScaleFactor`로 한번 나눠준 다음 피벗값에 적용한다.
+
+```
+minPivot = disp / 2 - maxDist / 줌인비율
+maxPivot = disp / 2 + maxDist / 줌인비율
+```
+
+![참고이미지](readme_img/image_gesture.png)
 
 ## License
 

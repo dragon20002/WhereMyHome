@@ -2,25 +2,42 @@ package com.minuminu.haruu.wheremyhome.view.picturefullscreen
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
+import android.util.Log
+import android.view.GestureDetector
+import android.view.MotionEvent
+import android.view.ScaleGestureDetector
 import android.view.View
-import android.view.WindowManager
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.minuminu.haruu.wheremyhome.R
 import com.minuminu.haruu.wheremyhome.utils.AppUtils
+import kotlin.math.max
+import kotlin.math.min
 
 @Suppress("DEPRECATION")
 @SuppressLint("ClickableViewAccessibility")
 class PictureFullScreenActivity : AppCompatActivity() {
-    private lateinit var hideHandler: Handler
+    companion object {
+        private const val MIN_SCALE_FACTOR: Float = 1.0f
+        private const val MAX_SCALE_FACTOR: Float = 10.0f
+    }
 
-    @Suppress("InlinedApi")
-    private val hidePart2Runnable = Runnable {
-        // Delayed removal of status and navigation bar
+    private var imageViewportWidth: Float = 0f
+    private var imageViewportHeight: Float = 0f
+    private var imagePivot: Pair<Float, Float>? = null
+    private var imageScaleFactor: Float = 1.0f
+
+    private var fullscreenDummyContent: TextView? = null
+    private var fullscreenContent: ImageView? = null
+
+    private var gestureDetector: GestureDetector? = null
+    private var scaleGestureDetector: ScaleGestureDetector? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_picture_fullscreen)
+
         window?.decorView?.systemUiVisibility =
             (View.SYSTEM_UI_FLAG_LOW_PROFILE
                     or View.SYSTEM_UI_FLAG_FULLSCREEN
@@ -29,149 +46,154 @@ class PictureFullScreenActivity : AppCompatActivity() {
                     or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                     or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION)
         supportActionBar?.hide()
-    }
-    private val showPart2Runnable = Runnable {
-        // Delayed display of UI elements
-        fullscreenContentControls?.visibility = View.VISIBLE
-    }
-    private var showActionBar: Boolean = false
-    private val hideRunnable = Runnable { hide() }
 
-    /**
-     * Touch listener to use for in-layout UI controls to delay hiding the
-     * system UI. This is to prevent the jarring behavior of controls going away
-     * while interacting with activity UI.
-     */
-    private val delayHideTouchListener = View.OnTouchListener { _, _ ->
-        if (AUTO_HIDE) {
-            delayedHide(AUTO_HIDE_DELAY_MILLIS)
-        }
-        false
-    }
-
-    private var btnCancel: Button? = null
-    private var fullscreenDummyContent: TextView? = null
-    private var fullscreenContent: ImageView? = null
-    private var fullscreenContentControls: View? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_picture_fullscreen)
-
-        hideHandler = Handler(Looper.getMainLooper())
-
-        showActionBar = true
-
-        btnCancel = findViewById(R.id.btn_cancel)
         fullscreenDummyContent = findViewById(R.id.fullscreen_dummy_content)
         fullscreenContent = findViewById(R.id.fullscreen_content)
-        fullscreenContentControls = findViewById(R.id.fullscreen_content_controls)
-        // Set up the user interaction to manually show or hide the system UI.
-        fullscreenDummyContent?.setOnClickListener { toggle() }
-
-        // Upon interacting with UI controls, delay any scheduled hide()
-        // operations to prevent the jarring behavior of controls going away
-        // while interacting with the UI.
-        btnCancel?.setOnTouchListener(delayHideTouchListener)
-        btnCancel?.setOnClickListener {
-            finish()
-        }
-
         intent.extras?.getString("pictureName")?.also {
-            fullscreenContent?.apply {
-                val imageFile = AppUtils.loadImageFile(this@PictureFullScreenActivity, it).let {
-                    val metrics = resources.displayMetrics
-                    val width = metrics.widthPixels.toFloat()
-                    val height = metrics.heightPixels.toFloat()
-                    AppUtils.resizeBitmap(it, width, height)
-                }
-                setImageBitmap(imageFile)
+            fullscreenContent?.let { imageView ->
+                val imageFile = AppUtils.loadImageFile(this@PictureFullScreenActivity, it)
+
+                val metrics = imageView.resources.displayMetrics
+                val factorX = metrics.widthPixels * 1f / imageFile.width
+                val factorY = metrics.heightPixels * 1f / imageFile.height
+                // 증가율이 더 작은 쪽으로 셋팅
+                val factor = min(factorX, factorY)
+                imageViewportWidth = imageFile.width * factor
+                imageViewportHeight = imageFile.height * factor
+
+                Log.d(
+                    PictureFullScreenActivity::class.simpleName,
+                    "load image ${imageFile.width} ${imageFile.height}"
+                )
+
+                imageView.setImageBitmap(imageFile)
             }
         }
+
+        gestureDetector = GestureDetector(
+            applicationContext,
+            object : GestureDetector.SimpleOnGestureListener() {
+                override fun onScroll(
+                    e1: MotionEvent?,
+                    e2: MotionEvent?,
+                    distanceX: Float,
+                    distanceY: Float
+                ): Boolean {
+                    if (e1 == null || e2 == null)
+                        return false
+
+                    if (imagePivot == null) {
+                        // 이미지 피벗을 움직인 적 없으면 이미지뷰로부터 값을 가져옴
+                        fullscreenContent?.let {
+                            imagePivot = Pair(it.pivotX, it.pivotY)
+                        }
+                    }
+
+                    imagePivot?.let {
+                        // 이미지 피벗을 움직인다
+                        imagePivot = moveImageView(
+                            it, e1.rawX - e2.rawX, e1.rawY - e2.rawY
+                        )
+                    }
+                    return true
+                }
+
+                override fun onDoubleTap(e: MotionEvent?): Boolean {
+                    imageScaleFactor = scaleImageView(imageScaleFactor * 2f)
+                    return true
+                }
+            }
+        )
+        scaleGestureDetector = ScaleGestureDetector(
+            applicationContext,
+            object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
+                override fun onScale(detector: ScaleGestureDetector?): Boolean {
+                    detector?.let {
+                        imageScaleFactor = scaleImageView(imageScaleFactor * it.scaleFactor)
+                    }
+                    return true
+                }
+            })
     }
 
-    override fun onResume() {
-        super.onResume()
-        window?.decorView?.systemUiVisibility =
-            (View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
-        window?.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
-
-        // Trigger the initial hide() shortly after the activity has been
-        // created, to briefly hint to the user that UI controls
-        // are available.
-        delayedHide(100)
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        return event?.let {
+            when {
+                it.pointerCount > 1 -> scaleGestureDetector?.onTouchEvent(event)
+                else -> gestureDetector?.onTouchEvent(event)
+            }
+        } ?: false
     }
 
-    override fun onPause() {
-        super.onPause()
-        window?.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
-        window?.decorView?.systemUiVisibility = 0
-        show()
-    }
+    private fun moveImageView(
+        prevPivot: Pair<Float, Float>,
+        distX: Float,
+        distY: Float
+    ): Pair<Float, Float>? {
 
-    override fun onDestroy() {
-        super.onDestroy()
-        btnCancel = null
-        fullscreenDummyContent = null
-        fullscreenContentControls = null
-    }
+        fullscreenContent?.let { imageView ->
+            val displayMetrics = imageView.context.resources.displayMetrics
+            // 1. 피벗값 계산
+            // [오프셋] = ([좌표값] × [이미지뷰크기]) / ([화면크기] × [확대비율])
+            val offsetX =
+                (distX * imageViewportWidth) / (displayMetrics.widthPixels * imageScaleFactor)
+            val offsetY =
+                (distY * imageViewportHeight) / (displayMetrics.heightPixels * imageScaleFactor)
 
-    private fun toggle() {
-        if (showActionBar) {
-            hide()
-        } else {
-            show()
+            // 이미지뷰 피벗 계산
+            val pivotX = prevPivot.first + offsetX
+            val pivotY = prevPivot.second + offsetY
+            Log.d(PictureFullScreenActivity::class.java.simpleName, "pivot $pivotX $pivotY")
+
+            // 2. 피벗값 범위 계산
+            // [피벗 최대이동거리 계산] = [이미지뷰크기] - ([화면크기] ÷ [확대비율])
+            val maxDistX =
+                imageViewportWidth - displayMetrics.widthPixels / imageScaleFactor
+            val maxDistY =
+                imageViewportHeight - displayMetrics.heightPixels / imageScaleFactor
+
+            // 이미지뷰 피벗값 범위 제한
+            var rangedPivotX = max(
+                (displayMetrics.widthPixels - maxDistX) / 2,
+                min(pivotX, (displayMetrics.widthPixels + maxDistX) / 2)
+            )
+            var rangedPivotY = max(
+                (displayMetrics.heightPixels - maxDistY) / 2,
+                min(pivotY, (displayMetrics.heightPixels + maxDistY) / 2)
+            )
+
+            // 3. 피벗값 범위 계산2
+            // [이미지뷰크기] < ([화면크기] ÷ [확대비율]) 이면 이미지뷰가 화면 중앙으로 오도록 설정
+            if (imageViewportWidth * imageScaleFactor < displayMetrics.widthPixels.toFloat()) {
+                // center horizontal
+                rangedPivotX = displayMetrics.widthPixels.toFloat() / 2
+            }
+            if (imageViewportHeight * imageScaleFactor < displayMetrics.heightPixels.toFloat()) {
+                // center vertical
+                rangedPivotY = displayMetrics.heightPixels.toFloat() / 2
+            }
+
+            imageView.pivotX = rangedPivotX
+            imageView.pivotY = rangedPivotY
+            return Pair(rangedPivotX, rangedPivotY)
         }
+        return null
     }
 
-    private fun hide() {
-        // Hide UI first
-        fullscreenContentControls?.visibility = View.GONE
-        showActionBar = false
+    private fun scaleImageView(factor: Float): Float {
+        var rangedFactor =
+            max(MIN_SCALE_FACTOR, min(factor, MAX_SCALE_FACTOR))
 
-        // Schedule a runnable to remove the status and navigation bar after a delay
-        hideHandler.removeCallbacks(showPart2Runnable)
-        hideHandler.postDelayed(hidePart2Runnable, UI_ANIMATION_DELAY.toLong())
+        if (rangedFactor == MAX_SCALE_FACTOR && factor == rangedFactor) {
+            rangedFactor = 1f
+        }
+
+        fullscreenContent?.let { imageView ->
+            imageView.scaleX = rangedFactor
+            imageView.scaleY = rangedFactor
+        }
+
+        return rangedFactor
     }
 
-    @Suppress("InlinedApi")
-    private fun show() {
-        // Show the system bar
-        fullscreenDummyContent?.fitsSystemWindows = true
-        showActionBar = true
-
-        // Schedule a runnable to display UI elements after a delay
-        hideHandler.removeCallbacks(hidePart2Runnable)
-        hideHandler.postDelayed(showPart2Runnable, UI_ANIMATION_DELAY.toLong())
-        supportActionBar?.show()
-    }
-
-    /**
-     * Schedules a call to hide() in [delayMillis], canceling any
-     * previously scheduled calls.
-     */
-    private fun delayedHide(delayMillis: Int) {
-        hideHandler.removeCallbacks(hideRunnable)
-        hideHandler.postDelayed(hideRunnable, delayMillis.toLong())
-    }
-
-    companion object {
-        /**
-         * Whether or not the system UI should be auto-hidden after
-         * [AUTO_HIDE_DELAY_MILLIS] milliseconds.
-         */
-        private const val AUTO_HIDE = true
-
-        /**
-         * If [AUTO_HIDE] is set, the number of milliseconds to wait after
-         * user interaction before hiding the system UI.
-         */
-        private const val AUTO_HIDE_DELAY_MILLIS = 3000
-
-        /**
-         * Some older devices needs a small delay between UI widget updates
-         * and a change of the status and navigation bar.
-         */
-        private const val UI_ANIMATION_DELAY = 300
-    }
 }

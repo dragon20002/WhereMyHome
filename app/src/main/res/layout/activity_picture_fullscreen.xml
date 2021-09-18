@@ -1,55 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:theme="@style/ThemeOverlay.WhereMyHome.FullscreenContainer"
-    android:background="?attr/fullscreenBackgroundColor"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/fullscreenBackgroundColor"
+    android:theme="@style/ThemeOverlay.WhereMyHome.FullscreenContainer"
     tools:context=".view.picturefullscreen.PictureFullScreenActivity">
 
     <!-- The primary full-screen view. This can be replaced with whatever view
          is needed to present your content, e.g. VideoView, SurfaceView,
          TextureView, etc. -->
-    <TextView android:id="@+id/fullscreen_dummy_content"
+    <TextView
+        android:id="@+id/fullscreen_dummy_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:gravity="center"
         android:keepScreenOn="true"
-        android:textStyle="bold"
-        android:textSize="50sp"
+        android:text="@string/dummy_image"
         android:textColor="?attr/fullscreenTextColor"
-        android:gravity="center"
-        android:text="@string/dummy_image" />
+        android:textSize="50sp"
+        android:textStyle="bold" />
 
-    <ImageView android:id="@+id/fullscreen_content"
+    <ImageView
+        android:id="@+id/fullscreen_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:keepScreenOn="true"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/picture"
         android:gravity="center"
-        android:contentDescription="@string/picture"/>
-
-    <!-- This FrameLayout insets its children based on system windows using
-         android:fitsSystemWindows. -->
-    <FrameLayout android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="true">
-
-        <LinearLayout android:id="@+id/fullscreen_content_controls"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal"
-            android:orientation="horizontal"
-            tools:ignore="UselessParent"
-            style="@style/Widget.MaterialComponents.AppBarLayout.Primary">
-
-            <Button android:id="@+id/btn_cancel"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/close"
-                android:textColor="@color/primary_dark"
-                style="@style/Widget.MaterialComponents.Button" />
-
-        </LinearLayout>
-    </FrameLayout>
-
+        android:keepScreenOn="true" />
 </FrameLayout>
