@@ -92,14 +92,24 @@ class PictureFullScreenActivity : AppCompatActivity() {
                     imagePivot?.let {
                         // 이미지 피벗을 움직인다
                         imagePivot = moveImageView(
-                            it, e1.rawX - e2.rawX, e1.rawY - e2.rawY
+                            it, distanceX, distanceY
                         )
                     }
                     return true
                 }
 
                 override fun onDoubleTap(e: MotionEvent?): Boolean {
-                    imageScaleFactor = scaleImageView(imageScaleFactor * 2f)
+                    val nextScaleFactor = scaleImageView(imageScaleFactor * 2f)
+
+                    if (nextScaleFactor == MAX_SCALE_FACTOR && imageScaleFactor == nextScaleFactor) {
+                        fullscreenContent?.let {
+                            it.scaleX = 1f
+                            it.scaleY = 1f
+                        }
+                        imageScaleFactor = 1f
+                    } else {
+                        imageScaleFactor = nextScaleFactor
+                    }
                     return true
                 }
             }
@@ -136,9 +146,9 @@ class PictureFullScreenActivity : AppCompatActivity() {
             // 1. 피벗값 계산
             // [오프셋] = ([좌표값] × [이미지뷰크기]) / ([화면크기] × [확대비율])
             val offsetX =
-                (distX * imageViewportWidth) / (displayMetrics.widthPixels * imageScaleFactor)
+                (distX * imageViewportWidth) / displayMetrics.widthPixels
             val offsetY =
-                (distY * imageViewportHeight) / (displayMetrics.heightPixels * imageScaleFactor)
+                (distY * imageViewportHeight) / displayMetrics.heightPixels
 
             // 이미지뷰 피벗 계산
             val pivotX = prevPivot.first + offsetX
@@ -181,16 +191,24 @@ class PictureFullScreenActivity : AppCompatActivity() {
     }
 
     private fun scaleImageView(factor: Float): Float {
-        var rangedFactor =
+        val rangedFactor =
             max(MIN_SCALE_FACTOR, min(factor, MAX_SCALE_FACTOR))
-
-        if (rangedFactor == MAX_SCALE_FACTOR && factor == rangedFactor) {
-            rangedFactor = 1f
-        }
 
         fullscreenContent?.let { imageView ->
             imageView.scaleX = rangedFactor
             imageView.scaleY = rangedFactor
+
+            // 피벗값 범위 계산
+            // [이미지뷰크기] < ([화면크기] ÷ [확대비율]) 이면 이미지뷰가 화면 중앙으로 오도록 설정
+            val displayMetrics = imageView.context.resources.displayMetrics
+            if (imageViewportWidth * imageScaleFactor < displayMetrics.widthPixels.toFloat()) {
+                // center horizontal
+                imageView.pivotX = displayMetrics.widthPixels.toFloat() / 2
+            }
+            if (imageViewportHeight * imageScaleFactor < displayMetrics.heightPixels.toFloat()) {
+                // center vertical
+                imageView.pivotY = displayMetrics.heightPixels.toFloat() / 2
+            }
         }
 
         return rangedFactor
