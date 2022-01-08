@@ -20,6 +20,7 @@
 [3.](#스터디) 스터디<br>
 &nbsp;&nbsp;[3.1.](#viewmodel) ViewModel<br>
 &nbsp;&nbsp;[3.2.](#navcontroller) NavController<br>
+&nbsp;&nbsp;[3.3.](#줌인된-이미지-스크롤하기) 줌인된 이미지 스크롤하기<br>
 [4.](#license) License<br>
 
 ---
