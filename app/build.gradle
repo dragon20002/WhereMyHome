@@ -13,8 +13,8 @@ android {
         applicationId "com.minuminu.haruu.wheremyhome"
         minSdkVersion 22
         targetSdkVersion 30
-        versionCode 12
-        versionName "1.2"
+        versionCode 13
+        versionName "1.3"
 
         javaCompileOptions {
             annotationProcessorOptions {
