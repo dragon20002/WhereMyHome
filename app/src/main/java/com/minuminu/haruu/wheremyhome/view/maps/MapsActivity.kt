@@ -56,23 +56,21 @@ class MapsActivity : AppCompatActivity() {
     private lateinit var locationRequest: LocationRequest
     private lateinit var location: Location
     private val locationCallback = object : LocationCallback() {
-        override fun onLocationResult(locationResult: LocationResult?) {
-            locationResult?.let {
-                super.onLocationResult(locationResult)
+        override fun onLocationResult(locationResult: LocationResult) {
+            super.onLocationResult(locationResult)
 
-                locationResult.locations.let { locations ->
-                    location = locations[locations.size - 1]
+            locationResult.locations.let { locations ->
+                location = locations[locations.size - 1]
 
-                    currentPosition = LatLng(location.latitude, location.longitude).also {
-                        val markerTitle = getCurrentAddress(it)
-                        val markerSnippet = "${it.latitude}/${it.longitude}"
-                        Log.d(javaClass.name, "onLocationResult $markerSnippet")
+                currentPosition = LatLng(location.latitude, location.longitude).also {
+                    val markerTitle = getCurrentAddress(it)
+                    val markerSnippet = "${it.latitude}/${it.longitude}"
+                    Log.d(javaClass.name, "onLocationResult $markerSnippet")
 
-                        // 현재 위치에 마커 생성하고 위치로 이동
-                        setCurrentLocation(location, markerTitle, markerSnippet)
-                    }
-                    currentLocation = location
+                    // 현재 위치에 마커 생성하고 위치로 이동
+                    setCurrentLocation(location, markerTitle, markerSnippet)
                 }
+                currentLocation = location
             }
         }
     }

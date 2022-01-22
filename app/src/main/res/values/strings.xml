@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">울집 어디?</string>
+    <string name="app_name">메모집</string>
     <string name="action_settings">설정</string>
 
     <!-- Strings used for fragments for navigation -->

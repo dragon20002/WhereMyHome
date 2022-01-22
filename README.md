@@ -430,7 +430,7 @@ maxPivot = disp / 2 + maxDist / 줌인비율
 
 ## License
 
-> 앱 아이콘 제작자 <a href="https://smashicons.com/" title="Smashicons">Smashicons</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
+> 앱 아이콘 제작자 <a href="https://www.flaticon.com/kr/free-icons/" title="부동산 아이콘">부동산 아이콘  제작자: Freepik - Flaticon</a>
 
 > +/- 아이콘 제작자 <a href="https://www.flaticon.com/authors/dmitri13" title="dmitri13">dmitri13</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>
 
