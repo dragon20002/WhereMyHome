@@ -28,7 +28,7 @@ class EvalFormGroupListFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModel = ViewModelProvider(this).get(EvalFormGroupListViewModel::class.java).apply {
+        viewModel = ViewModelProvider(this)[EvalFormGroupListViewModel::class.java].apply {
             init(AppDatabase.getDatabase(requireContext()))
         }
     }
@@ -52,23 +52,20 @@ class EvalFormGroupListFragment : Fragment() {
 
         view?.findViewById<FloatingActionButton>(R.id.eval_form_group_fab)?.setOnClickListener {
             findNavController().navigate(
-                R.id.action_EvalFormGroupListFragment_to_EvalFormGroupDetailsFragment,
-                Bundle().apply {
-                    putLong("evalFormGroupId", -1L)
-                }
+                R.id.action_EvalFormGroupListFragment_to_EvalFormGroupDetailsFragment
             )
         }
 
         viewModel?.run {
-            evalFormGroupListLiveData.observe(viewLifecycleOwner, { _evalFormGroupList ->
+            evalFormGroupListLiveData.observe(viewLifecycleOwner) { _evalFormGroupList ->
                 evalFormGroupList.clear()
                 evalFormGroupList.addAll(_evalFormGroupList)
 
                 activity?.getSharedPreferences("evalFormGroup", Context.MODE_PRIVATE)
-                    ?.getLong("checkedId", 1L)?.let { checkedId ->
+                    ?.getLong("checkedId", -1L)?.let { checkedId ->
                         checked.set(checkedId)
                     }
-            })
+            }
 
             loadEvalFormGroupList()
         }

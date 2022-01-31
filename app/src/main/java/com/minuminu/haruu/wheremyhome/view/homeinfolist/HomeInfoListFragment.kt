@@ -27,7 +27,7 @@ class HomeInfoListFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModel = ViewModelProvider(this).get(HomeInfoListViewModel::class.java).apply {
+        viewModel = ViewModelProvider(this)[HomeInfoListViewModel::class.java].apply {
             init(AppDatabase.getDatabase(requireContext()))
         }
     }
@@ -52,15 +52,15 @@ class HomeInfoListFragment : Fragment() {
             findNavController().navigate(
                 R.id.action_HomeInfoListFragment_to_HomeInfoDetailsFragment,
                 Bundle().apply {
-                    putLong("homeInfoId", -1L)
+                    putLong("homeInfoId", 0L)
                 })
         }
 
         viewModel?.run {
-            homeInfoListLiveData.observe(viewLifecycleOwner, { _homeInfoList ->
+            homeInfoListLiveData.observe(viewLifecycleOwner) { _homeInfoList ->
                 homeInfoList.clear()
                 homeInfoList.addAll(_homeInfoList)
-            })
+            }
 
             loadHomeInfoList()
         }

@@ -47,10 +47,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/modify"
-                    android:textColor="@color/primary_dark"
+                    android:textColor="@color/color_state_material_button"
                     android:visibility='@{viewModel.isEditing ? View.GONE : View.VISIBLE}'
+                    android:enabled='@{viewModel.isReadOnly ? false : true}'
                     app:icon="@drawable/ic_edit_24"
-                    app:iconTint="@color/primary_dark"
+                    app:iconTint="@color/color_state_material_button"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 

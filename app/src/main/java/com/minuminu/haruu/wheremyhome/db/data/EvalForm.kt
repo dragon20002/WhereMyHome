@@ -11,7 +11,7 @@ data class EvalForm(
     var category: String = "", // 구분
     var num: Int = 0, // 번호
     var content: String = "", // 평가내용
-    val method: String = "", // 평가방식 ('Count', 'YesOrNo')
+    val method: String = "", // 평가방식 ('Int', 'Boolean')
     val weight: Float = 1f, // 가중치
     @ColumnInfo(name = "eval_form_group_id")
     var evalFormGroupId: Long? = null, // join

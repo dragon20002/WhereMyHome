@@ -3,18 +3,23 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'androidx.navigation.safeargs.kotlin'
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
+
+def propertiesFile = rootProject.file("local.properties")
+def properties = new Properties()
+properties.load(new FileInputStream(propertiesFile))
 
 android {
     compileSdkVersion 32
-    buildToolsVersion "32.0.0"
+    buildToolsVersion "32.1.0-rc1"
 
     defaultConfig {
         applicationId "com.minuminu.haruu.wheremyhome"
         minSdkVersion 22
         targetSdkVersion 32
-        versionCode 14
-        versionName "1.4"
+        versionCode 15
+        versionName "1.5"
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -25,9 +30,18 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        config {
+            keyAlias properties['keyAlias']
+            keyPassword properties['keyPassword']
+            storeFile file(properties['storeFile'])
+            storePassword properties['storePassword']
+        }
+    }
+
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }

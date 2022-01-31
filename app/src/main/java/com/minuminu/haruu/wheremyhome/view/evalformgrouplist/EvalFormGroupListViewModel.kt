@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.minuminu.haruu.wheremyhome.db.AppDatabase
 import com.minuminu.haruu.wheremyhome.db.data.EvalFormGroup
+import com.minuminu.haruu.wheremyhome.utils.DataUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -26,7 +27,9 @@ class EvalFormGroupListViewModel : ViewModel() {
     fun loadEvalFormGroupList() {
         CoroutineScope(Dispatchers.IO).launch {
             db?.evalFormGroupDao()?.getAll()?.let { evalFormGroupList ->
-                evalFormGroupListLiveData.postValue(evalFormGroupList)
+                evalFormGroupListLiveData.postValue(
+                    arrayListOf(DataUtils.createEvalFormGroupTemplate()) + evalFormGroupList
+                )
             }
         }
     }

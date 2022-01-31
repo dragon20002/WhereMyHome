@@ -36,7 +36,6 @@ import com.minuminu.haruu.wheremyhome.view.maps.MapsActivity
 import kotlinx.coroutines.launch
 import java.io.IOException
 import java.util.*
-import kotlin.collections.ArrayList
 
 class HomeInfoDetailsFragment : Fragment() {
 
@@ -74,7 +73,7 @@ class HomeInfoDetailsFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModel = ViewModelProvider(this).get(HomeInfoDetailsViewModel::class.java).apply {
+        viewModel = ViewModelProvider(this)[HomeInfoDetailsViewModel::class.java].apply {
             init(AppDatabase.getDatabase(requireContext()))
         }
     }
@@ -189,7 +188,7 @@ class HomeInfoDetailsFragment : Fragment() {
         }
 
         viewModel?.run {
-            homeInfoLiveData.observe(viewLifecycleOwner, { homeInfo ->
+            homeInfoLiveData.observe(viewLifecycleOwner) { homeInfo ->
                 // Log.d(javaClass.name, "homeInfoViewData - observe $it")
 
                 name.set(homeInfo.name)
@@ -214,29 +213,24 @@ class HomeInfoDetailsFragment : Fragment() {
                     loadPictureList(homeInfoId)
                     loadEvalInfoList(homeInfoId)
                 }
-            })
+            }
 
-            pictureListLiveData.observe(viewLifecycleOwner, { _pictureList ->
+            pictureListLiveData.observe(viewLifecycleOwner) { _pictureList ->
                 pictureList.clear()
                 pictureList.addAll(_pictureList)
-            })
+            }
 
-            evalInfoListLiveData.observe(viewLifecycleOwner, { _evalInfoList ->
+            evalInfoListLiveData.observe(viewLifecycleOwner) { _evalInfoList ->
                 evalInfoList.clear()
                 evalInfoList.addAll(_evalInfoList)
-            })
+            }
         }
 
-        val homeInfoId = arguments?.getLong("homeInfoId")
+        val homeInfoId = arguments?.getLong("homeInfoId", 0L)
         Log.d(javaClass.name, "homeInfoId $homeInfoId")
 
         when (homeInfoId) {
-            null -> {
-                view?.let { _view ->
-                    Snackbar.make(_view, "존재하지 않는 집 정보입니다.", Snackbar.LENGTH_SHORT).show()
-                }
-            }
-            -1L -> {
+            0L -> {
                 Log.d(javaClass.name, "add mode")
 
                 // Create temporary data
@@ -245,14 +239,14 @@ class HomeInfoDetailsFragment : Fragment() {
                 viewModel?.pictureListLiveData?.postValue(ArrayList())
 
                 activity?.getSharedPreferences("evalFormGroup", Context.MODE_PRIVATE)
-                    ?.getLong("checkedId", 1L)?.let { checkedId ->
+                    ?.getLong("checkedId", -1L)?.let { checkedId ->
                         viewModel?.loadEvalFormList(checkedId)
                     }
             }
             else -> {
                 Log.d(javaClass.name, "modify mode")
 
-                (homeInfoId as Long?)?.let { _itemId ->
+                homeInfoId?.let { _itemId ->
                     viewModel?.loadHomeInfo(_itemId)
                 }
             }

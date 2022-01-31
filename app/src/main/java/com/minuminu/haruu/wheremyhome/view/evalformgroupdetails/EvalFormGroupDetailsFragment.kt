@@ -33,7 +33,7 @@ class EvalFormGroupDetailsFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModel = ViewModelProvider(this).get(EvalFormGroupDetailsViewModel::class.java).apply {
+        viewModel = ViewModelProvider(this)[EvalFormGroupDetailsViewModel::class.java].apply {
             init(AppDatabase.getDatabase(requireContext()))
         }
     }
@@ -56,14 +56,14 @@ class EvalFormGroupDetailsFragment : Fragment() {
             viewModel?.isEditing?.set(true)
         }
         view?.findViewById<Button>(R.id.btn_cancel)?.setOnClickListener {
-            val evalFormGroupId = arguments?.getLong("evalFormGroupId")
+            val evalFormGroupId = arguments?.getLong("evalFormGroupId", 0L)
             Log.d(javaClass.name, "evalFormGroupId $evalFormGroupId")
 
             when (evalFormGroupId) {
                 null -> {
                     Snackbar.make(view, "존재하지 않는 평가 템플릿입니다.", Snackbar.LENGTH_SHORT).show()
                 }
-                -1L -> {
+                0L -> {
                     findNavController().popBackStack()
                 }
                 else -> {
@@ -95,31 +95,32 @@ class EvalFormGroupDetailsFragment : Fragment() {
         }
 
         viewModel?.run {
-            evalFormGroupLiveData.observe(viewLifecycleOwner, { evalFormGroup ->
+            evalFormGroupLiveData.observe(viewLifecycleOwner) { evalFormGroup ->
                 name.set(evalFormGroup.name)
                 description.set(evalFormGroup.description)
 
                 evalFormGroup.id?.let { evalFormGroupId ->
                     loadEvalFormList(evalFormGroupId)
                 }
-            })
+            }
 
-            evalFormListLiveData.observe(viewLifecycleOwner, { _evalFormList ->
+            evalFormListLiveData.observe(viewLifecycleOwner) { _evalFormList ->
                 evalFormList.clear()
                 evalFormList.addAll(_evalFormList)
-            })
+            }
         }
 
-        val evalFormGroupId = arguments?.getLong("evalFormGroupId")
+        val evalFormGroupId = arguments?.getLong("evalFormGroupId", 0L)
         Log.d(javaClass.name, "evalFormGroupId $evalFormGroupId")
 
         when (evalFormGroupId) {
-            null -> {
-                view?.let { _view ->
-                    Snackbar.make(_view, "존재하지 않는 평가 템플릿입니다.", Snackbar.LENGTH_SHORT).show()
-                }
-            }
             -1L -> {
+                Log.d(javaClass.name, "readOnly mode")
+
+                viewModel?.isReadOnly?.set(true)
+                viewModel?.loadEvalFormGroup(-1L)
+            }
+            0L -> {
                 Log.d(javaClass.name, "add mode")
 
                 // Create temporary data
@@ -130,7 +131,7 @@ class EvalFormGroupDetailsFragment : Fragment() {
             else -> {
                 Log.d(javaClass.name, "modify mode")
 
-                (evalFormGroupId as Long?)?.let { _evalFormGroupId ->
+                evalFormGroupId?.let { _evalFormGroupId ->
                     viewModel?.loadEvalFormGroup(_evalFormGroupId)
                 }
             }

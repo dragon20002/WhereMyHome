@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.minuminu.haruu.wheremyhome.db.AppDatabase
 import com.minuminu.haruu.wheremyhome.db.data.*
+import com.minuminu.haruu.wheremyhome.utils.DataUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -70,7 +71,11 @@ class HomeInfoDetailsViewModel : ViewModel() {
 
     fun loadEvalFormList(evalFormGroupId: Long) {
         CoroutineScope(Dispatchers.IO).launch {
-            val evalFormList = db?.evalFormDao()?.getAllByEvalFormGroupId(evalFormGroupId)
+            val evalFormList =
+                when (evalFormGroupId) {
+                    -1L -> DataUtils.createEvalFormListTemplate()
+                    else -> db?.evalFormDao()?.getAllByEvalFormGroupId(evalFormGroupId)
+                }
 
             evalInfoListLiveData.postValue(
                 evalFormList?.map { evalForm ->

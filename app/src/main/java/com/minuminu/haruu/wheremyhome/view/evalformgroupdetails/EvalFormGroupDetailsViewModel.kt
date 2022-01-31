@@ -11,6 +11,7 @@ import com.minuminu.haruu.wheremyhome.db.data.EvalForm
 import com.minuminu.haruu.wheremyhome.db.data.EvalFormGroup
 import com.minuminu.haruu.wheremyhome.db.data.EvalFormGroupViewData
 import com.minuminu.haruu.wheremyhome.db.data.EvalFormViewData
+import com.minuminu.haruu.wheremyhome.utils.DataUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -24,6 +25,7 @@ class EvalFormGroupDetailsViewModel : ViewModel() {
     val evalFormListLiveData = MutableLiveData<List<EvalFormViewData>>()
 
     // viewModel - view
+    val isReadOnly = ObservableField(false)
     val isEditing = ObservableField(false)
     val name = ObservableField<String>()
     val description = ObservableField<String>()
@@ -35,7 +37,10 @@ class EvalFormGroupDetailsViewModel : ViewModel() {
 
     fun loadEvalFormGroup(evalFormGroupId: Long) {
         CoroutineScope(Dispatchers.IO).launch {
-            db?.evalFormGroupDao()?.getOneById(evalFormGroupId)?.let { evalFormGroup ->
+            when (evalFormGroupId) {
+                -1L -> DataUtils.createEvalFormGroupTemplate()
+                else -> db?.evalFormGroupDao()?.getOneById(evalFormGroupId)
+            }?.let { evalFormGroup ->
                 evalFormGroupLiveData.postValue(evalFormGroup)
             }
         }
@@ -43,7 +48,10 @@ class EvalFormGroupDetailsViewModel : ViewModel() {
 
     fun loadEvalFormList(evalFormGroupId: Long) {
         CoroutineScope(Dispatchers.IO).launch {
-            db?.evalFormDao()?.getAllByEvalFormGroupId(evalFormGroupId)?.let { evalFormList ->
+            when (evalFormGroupId) {
+                -1L -> DataUtils.createEvalFormListTemplate()
+                else -> db?.evalFormDao()?.getAllByEvalFormGroupId(evalFormGroupId)
+            }?.let { evalFormList ->
                 evalFormListLiveData.postValue(evalFormList.map {
                     EvalFormViewData(
                         it.id,
@@ -60,7 +68,7 @@ class EvalFormGroupDetailsViewModel : ViewModel() {
     }
 
     suspend fun saveItem(): EvalFormGroup {
-        val evalFormGroupWithevalForms = EvalFormGroupViewData(
+        val evalFormGroupWithEvalForms = EvalFormGroupViewData(
             evalFormGroup = EvalFormGroup(
                 evalFormGroupLiveData.value?.id,
                 name.get(),
@@ -81,7 +89,7 @@ class EvalFormGroupDetailsViewModel : ViewModel() {
 
         return withContext(Dispatchers.IO) {
             // DB Insert
-            evalFormGroupWithevalForms.apply {
+            evalFormGroupWithEvalForms.apply {
                 if (evalFormGroup.id == null) { // Add
                     val ids = db?.evalFormGroupDao()?.insertAll(evalFormGroup)
                     Log.d(javaClass.name, "inserted evalFormGroup ${ids?.get(0)}")
