@@ -11,13 +11,13 @@ def properties = new Properties()
 properties.load(new FileInputStream(propertiesFile))
 
 android {
-    compileSdkVersion 32
-    buildToolsVersion "32.1.0-rc1"
+    compileSdkVersion 33
+    buildToolsVersion "33.0.1"
 
     defaultConfig {
         applicationId "com.minuminu.haruu.wheremyhome"
         minSdkVersion 22
-        targetSdkVersion 32
+        targetSdkVersion 33
         versionCode 15
         versionName "1.5"
 
@@ -55,6 +55,7 @@ android {
     buildFeatures {
         dataBinding true
     }
+    namespace 'com.minuminu.haruu.wheremyhome'
 }
 
 dependencies {
