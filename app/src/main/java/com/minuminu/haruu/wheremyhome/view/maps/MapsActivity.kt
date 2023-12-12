@@ -34,8 +34,7 @@ import java.util.*
 
 class MapsActivity : AppCompatActivity() {
     companion object {
-        const val UPDATE_INTERVAL_MS = 1000L
-        const val FASTEST_UPDATE_INTERVAL_MS = 500L
+        const val UPDATE_INTERVAL_MS = 500L
         val DEFAULT_LOCATION = LatLng(37.56, 126.97)
     }
 
@@ -127,11 +126,10 @@ class MapsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
 
-        locationRequest = LocationRequest.create().apply {
-            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-            interval = UPDATE_INTERVAL_MS
-            fastestInterval = FASTEST_UPDATE_INTERVAL_MS
-        }
+        locationRequest = LocationRequest.Builder(
+            Priority.PRIORITY_HIGH_ACCURACY,
+            UPDATE_INTERVAL_MS,
+        ).build()
 
         LocationSettingsRequest.Builder().apply {
             addLocationRequest(locationRequest)

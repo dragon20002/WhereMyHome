@@ -75,11 +75,11 @@ class PictureFullScreenActivity : AppCompatActivity() {
             object : GestureDetector.SimpleOnGestureListener() {
                 override fun onScroll(
                     e1: MotionEvent?,
-                    e2: MotionEvent?,
+                    e2: MotionEvent,
                     distanceX: Float,
                     distanceY: Float
                 ): Boolean {
-                    if (e1 == null || e2 == null)
+                    if (e1 == null)
                         return false
 
                     if (imagePivot == null) {
@@ -98,7 +98,7 @@ class PictureFullScreenActivity : AppCompatActivity() {
                     return true
                 }
 
-                override fun onDoubleTap(e: MotionEvent?): Boolean {
+                override fun onDoubleTap(e: MotionEvent): Boolean {
                     val nextScaleFactor = scaleImageView(imageScaleFactor * 2f)
 
                     if (nextScaleFactor == MAX_SCALE_FACTOR && imageScaleFactor == nextScaleFactor) {
@@ -117,10 +117,8 @@ class PictureFullScreenActivity : AppCompatActivity() {
         scaleGestureDetector = ScaleGestureDetector(
             applicationContext,
             object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
-                override fun onScale(detector: ScaleGestureDetector?): Boolean {
-                    detector?.let {
-                        imageScaleFactor = scaleImageView(imageScaleFactor * it.scaleFactor)
-                    }
+                override fun onScale(detector: ScaleGestureDetector): Boolean {
+                    imageScaleFactor = scaleImageView(imageScaleFactor * detector.scaleFactor)
                     return true
                 }
             })
